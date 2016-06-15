@@ -40,16 +40,15 @@ public final class LoginController implements ActionListener, KeyListener {
         this.pr = pr;
         this.lg.btnIngresar.addActionListener(this);
         this.pr.btnLogout.addActionListener(this);
-        this.lg.btnSalir.addActionListener(this);
-        this.pr.lblIdAdminLogin.setVisible(false);
+        this.lg.btnSalir.addActionListener(this);     
         this.lg.txtUser.addActionListener(this);
         this.lg.txtUser.addKeyListener(this);
         this.lg.txtPass.addKeyListener(this);
-        ocultarCapas();
+//        ocultarCapas();
     }
 
     public void ocultarCapas() {
-        this.pr.pnCuestionario.setVisible(false);//-> item del menu principal
+        this.pr.pnCuestionario.setVisible(true);//-> item del menu principal
 //        this.pr.pnListAdmin.setVisible(false);
 //        this.pr.pnRutinas.setVisible(false);
 //        this.pr.pnCreateRutinas.setVisible(false);
@@ -64,50 +63,29 @@ public final class LoginController implements ActionListener, KeyListener {
         if (e.getSource() == lg.btnIngresar) {
             String user = lg.txtUser.getText();
             String pass = new String(lg.txtPass.getPassword());
-            if (admDao.getExistAdmin(user, pass).size() >= 1) {
-                try {
+            if (admDao.getExistAdmin(user, pass).size() >= 1) {               
                     int rol = admDao.getExistAdmin(user, pass).get(0).getIdRol();
                     int idUserLog = admDao.getExistAdmin(user, pass).get(0).getIdUser();
                     int idGrupo = admDao.getExistAdmin(user, pass).get(0).getIdGrupo();
                     if (rol == 2) {
                         pr.pnCuestionario.setVisible(true);
                         pr.pnCreateAdmin.setVisible(false);
-                    }                   
-                    ImageIcon ii = null;
-                    ImageIcon iin = null;                   
+                    }                                   
                     administradorController = new UsersController(pr, admDao, rol, idUserLog, idGrupo);
                     administradorController.cargarAdmin(pr.tbAdmin, "", 0);
                     administradorController.cargarCboGrupo();
                     administradorController.cargarRol();
                     CuestionarioController cc = new CuestionarioController(pr, idGrupo, idUserLog);
+                    cc.cargarCuestionarioByGrupo(idGrupo);
                     enabledBtnPaginator();
                     pr.lblNombres.setText(admDao.getExistAdmin(user, pass).get(0).getNombres());
-                    pr.lblApellidos.setText(admDao.getExistAdmin(user, pass).get(0).getApellidos());                
-                    InputStream foto = admDao.getExistAdmin(user, pass).get(0).getFoto();
-                    if (foto != null) {
-                        BufferedImage bi = ImageIO.read(foto);
-                        ii = new ImageIcon(bi);
-                        Image conver = ii.getImage();
-                        Image tam = conver.getScaledInstance(pr.lblImagenAdmin.getWidth(), pr.lblImagenAdmin.getHeight(), Image.SCALE_SMOOTH);
-                        iin = new ImageIcon(tam);
-                        pr.lblImagenAdmin.setIcon(iin);
-                    } else {
-                        String path = "/Imagenes/defaultUser.png";
-                        URL url = this.getClass().getResource(path);
-                        ImageIcon icon = new ImageIcon(url);
-                        Image conver = icon.getImage();
-                        Image tam = conver.getScaledInstance(pr.lblImagenAdmin.getWidth(), pr.lblImagenAdmin.getHeight(), Image.SCALE_SMOOTH);
-                        iin = new ImageIcon(tam);
-                        pr.lblImagenAdmin.setIcon(iin);
-                    }
+                    pr.lblApellidos.setText(admDao.getExistAdmin(user, pass).get(0).getApellidos());                      
                         pr.setLocationRelativeTo(null);
                         pr.setVisible(true);
                         lg.dispose();
                         lg.txtUser.setText("");
                         lg.txtPass.setText("");                   
-                } catch (IOException ex) {
-                    System.out.println("IOException = " + ex);
-                }
+                
             } else {
                 JOptionPane.showMessageDialog(null, "Usuario incorrecto");
             }

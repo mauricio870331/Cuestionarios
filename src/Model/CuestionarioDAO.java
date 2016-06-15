@@ -49,11 +49,51 @@ public class CuestionarioDAO {
             System.out.println("error" + e);
         }
         return listaCuestionario;
-
     }
+    
+    
+     public ArrayList<Cuestionario> getCuestionarioByGrupo(int grupo) {
+        ArrayList listaCuestionario = new ArrayList();
+        Cuestionario cuestionario;
+        try {
+            sql = "SELECT * FROM c_cuestionario WHERE id_grupo = "+grupo+"";
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            while (rs.next()) {
+                cuestionario = new Cuestionario();
+                cuestionario.setIdCuestionario(rs.getInt("id_cuestionario"));
+                cuestionario.setIdUser(rs.getInt("id_user"));
+                cuestionario.setDescripcion(rs.getString("descripcion"));
+                cuestionario.setFecha(rs.getString("fecha"));
+                cuestionario.setIdAsignatura(rs.getInt("id_asignatura"));
+                cuestionario.setEstado(rs.getBoolean("estado"));
+                cuestionario.setIdGrupo(rs.getInt("id_grupo"));
+                listaCuestionario.add(cuestionario);
+            }
+        } catch (Exception e) {
+            System.out.println("error" + e);
+        }
+        return listaCuestionario;
+    }
+     
+    
+    
 
-    public Object getPreguntasCuestionario() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int getPreguntasCuestionario(int id_cuestionario) {
+        int total = 0;
+        try {
+            sql = "SELECT count(pregunta) as total FROM c_cuestionario c "
+                    + "INNER JOIN preguntas_cuestionario p ON c.id_cuestionario = p.id_cuestionario "
+                    + "WHERE c.id_cuestionario = "+id_cuestionario+"";
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            if  (rs.next()) {
+              total = rs.getInt("total");
+            }
+        } catch (Exception e) {
+            System.out.println("error" + e);
+        }        
+        return total;
     }
 
 }

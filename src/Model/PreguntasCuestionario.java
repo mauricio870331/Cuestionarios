@@ -12,12 +12,14 @@ import java.io.InputStream;
  * @author Mauricio Herrera
  */
 public class PreguntasCuestionario {
+    private int id;
     private int idPregunta;
     private String pregunta;
     private int idCuestionario;
     private InputStream imagen;
 
     public PreguntasCuestionario() {
+        this.id = 0;
         this.idPregunta = 0;
         this.pregunta = "";
         this.idCuestionario = 0;
@@ -54,6 +56,14 @@ public class PreguntasCuestionario {
 
     public void setImagen(InputStream imagen) {
         this.imagen = imagen;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
     
     
