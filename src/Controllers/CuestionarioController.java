@@ -10,6 +10,7 @@ import Model.Asignaturas;
 import Model.AsignaturasDAO;
 import Model.Cuestionario;
 import Model.CuestionarioDAO;
+import Model.GrupoDAO;
 import Model.PreguntasCuestionario;
 import Model.PreguntasCuestionarioDAO;
 import Model.RespuestasAlumno;
@@ -50,14 +51,19 @@ public final class CuestionarioController implements ActionListener, MouseListen
     RespuestasAlumnoDAO respuestasAlumnodao = new RespuestasAlumnoDAO();
     AsignaturasDAO asdao = new AsignaturasDAO();
     UsersDAO udao = new UsersDAO();
+    GrupoDAO grupdao = new GrupoDAO();
+
     DefaultTableModel modelo = new DefaultTableModel();
     Date m = new Date();//para capturar la fecha actual
     String opc = "C";
     ArrayList<RespuestasAlumno> objRespuestasAlumno = new ArrayList<>();
+    ArrayList<String> preguntasCList = new ArrayList<>();
     int idCuest = 0;
     int idUserLog;
     public JRadioButton rb[];
-    int id_pregunta;
+    int id_pregunta = 0;
+    int TotalPreguntas;
+    int cantCuestionario ;
 
     public CuestionarioController(Principal pr, int idGrupo, int idUserLog) {
         this.pr = pr;
@@ -65,12 +71,16 @@ public final class CuestionarioController implements ActionListener, MouseListen
         this.idUserLog = idUserLog;
 //        this.pr.cboAsignatura.addActionListener(this);
         this.pr.btnCancelarC.addActionListener(this);
+        this.pr.btnNextQuestion.addActionListener(this);
 //        this.pr.tbPreguntasC.addMouseListener(this);
+        llenarRespuestasAlumno();
         cargarCuestionarioByGrupo(idGrupo);
         System.out.println("user " + idUserLog);
-//        cargarAsignaturas();
-        cargarRespuestasCuestionario(0);
-        llenarRespuestasAlumno();
+        if (cantCuestionario == 1) {
+            System.out.println("hola peste");
+         showPreguntasCuestionario(0);
+        }
+        
     }
 
 //    public void cargarAsignaturas() {
@@ -85,8 +95,11 @@ public final class CuestionarioController implements ActionListener, MouseListen
 //
 //    }
     public void llenarRespuestasAlumno() {
-        int total = cuestionariodao.getPreguntasCuestionario(1);
-        for (int i = 0; i < total; i++) {
+        TotalPreguntas = cuestionariodao.getPreguntasCuestionario(1);
+        for (int i = 0; i < TotalPreguntas; i++) {
+            preguntasCList.add("");
+        }
+        for (int i = 0; i < TotalPreguntas; i++) {
             objRespuestasAlumno.add(new RespuestasAlumno());
         }
     }
@@ -115,7 +128,7 @@ public final class CuestionarioController implements ActionListener, MouseListen
 //        tbAdmin.setModel(modelo);
 //    }
     public void cargarCuestionarioByGrupo(int id_grupo) {
-        int cantCuestionario = cuestionariodao.getCuestionarioByGrupo(id_grupo).size();
+        cantCuestionario = cuestionariodao.getCuestionarioByGrupo(id_grupo).size();
         if (cantCuestionario > 1) {
             pr.cboAsignatura.removeAllItems();
             pr.cboAsignatura.addItem("-- Seleccione --");
@@ -135,20 +148,34 @@ public final class CuestionarioController implements ActionListener, MouseListen
                 if (itrC.hasNext()) {
                     Cuestionario elementoC = itrC.next();
                     pr.tProfesor.setText(udao.getProfesor(elementoC.getIdUser()));
+                    pr.tCuestionario.setText(elementoC.getDescripcion());
+                    pr.tGrado.setText(grupdao.getListGrupoToString(idGrupo).get(0).getGrupo());
+                    cargarPreguntasCuestionario(elementoC.getIdCuestionario());
                 }
+
             }
         }
     }
 
-    public void cargarPreguntasCuestionario(JTable tbAdmin, int idCuestionario) {
+    public void cargarPreguntasCuestionario(int idCuestionario) {
+        Iterator<PreguntasCuestionario> nombreIterator = preguntasdao.getPreguntasCuestionario(idCuestionario).iterator();
+        while (nombreIterator.hasNext()) {
+            PreguntasCuestionario pc = nombreIterator.next();
+            preguntasCList.set(pc.getIdPregunta(), pc.getPregunta());
+        }
+    }
 
+    public void showPreguntasCuestionario(int p) {
+        int pregunta = p + 1;
+        pr.txtPreguntas.setText(pregunta + ") " + preguntasCList.get(p));
+        cargarRespuestasCuestionario(p);
     }
 
     public void cargarRespuestasCuestionario(int idpregunta) {
         id_pregunta = idpregunta;
         int cantResp = respuestasdao.getRespuestasCuestionario(idpregunta).size();
         pr.pnRespuestas.removeAll();
-        pr.pnRespuestas.setLayout(new java.awt.GridLayout(1, cantResp));
+        pr.pnRespuestas.setLayout(new java.awt.GridLayout(2, cantResp));
         rb = new JRadioButton[cantResp];
         int i = 0;
         Iterator<RespuestasCuestionario> nombreIterator = respuestasdao.getRespuestasCuestionario(idpregunta).iterator();
@@ -181,27 +208,38 @@ public final class CuestionarioController implements ActionListener, MouseListen
             }
         }
 
-//        if (e.getSource() == pr.cboAsignatura) {
-//            String as = (String) pr.cboAsignatura.getSelectedItem();
+        if (e.getSource() == pr.btnNextQuestion) {
+            int temp = TotalPreguntas - 1;
+            showPreguntasCuestionario(id_pregunta + 1);
+            if (temp > id_pregunta) {
+                pr.btnNextQuestion.setEnabled(true);
+            } else {
+                pr.btnNextQuestion.setEnabled(false);
+            }
+        }
+
+        if (e.getSource() == pr.cboAsignatura) {
+            String asignatura = (String) pr.cboAsignatura.getSelectedItem();
 //            int asignatura = 0;
 //            if (!as.equals("-- Seleccione --")) {
 //                String[] idaseparated = as.split("-");
 //                asignatura = Integer.parseInt(idaseparated[0].trim());
 //            }
-//            Iterator<Cuestionario> nombreIterator = cuestionariodao.getCuestionario(asignatura, idGrupo).iterator();
-//            if (nombreIterator.hasNext()) {
-//                Cuestionario c = nombreIterator.next();
-//                String profesor = udao.getProfesor(c.getIdUser());
-//                idCuest = c.getIdCuestionario();
-//                pr.tProfesor.setText(profesor);
-//                pr.tCuestionario.setText(c.getDescripcion());
-//
-//            } else {
-//                pr.tCuestionario.setText("");
-//                pr.tProfesor.setText("");
-//            }
-//
-//        }
+            Iterator<Cuestionario> nombreIterator = cuestionariodao.getCuestionario(asignatura, idGrupo).iterator();
+            if (nombreIterator.hasNext()) {
+                Cuestionario c = nombreIterator.next();
+                String profesor = udao.getProfesor(c.getIdUser());
+                idCuest = c.getIdCuestionario();
+                pr.tProfesor.setText(profesor);
+                pr.tCuestionario.setText(c.getDescripcion());
+                pr.tGrado.setText(grupdao.getListGrupoToString(idGrupo).get(0).getGrupo());
+                cargarPreguntasCuestionario(c.getIdCuestionario());
+            } else {
+                pr.tCuestionario.setText("");
+                pr.tProfesor.setText("");
+            }
+
+        }
         if (e.getSource() == pr.btnCancelarC) {
 
 //            System.out.println(pr.tbPreguntasC.getModel().getValueAt(0, 2).toString());

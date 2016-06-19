@@ -76,7 +76,7 @@ public final class LoginController implements ActionListener, KeyListener {
                     administradorController.cargarCboGrupo();
                     administradorController.cargarRol();
                     CuestionarioController cc = new CuestionarioController(pr, idGrupo, idUserLog);
-                    cc.cargarCuestionarioByGrupo(idGrupo);
+//                    cc.cargarCuestionarioByGrupo(idGrupo);
                     enabledBtnPaginator();
                     pr.lblNombres.setText(admDao.getExistAdmin(user, pass).get(0).getNombres());
                     pr.lblApellidos.setText(admDao.getExistAdmin(user, pass).get(0).getApellidos());                      

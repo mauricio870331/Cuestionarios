@@ -27,11 +27,12 @@ public class CuestionarioDAO {
         cn = conexion.getConexion();
     }
 
-    public ArrayList<Cuestionario> getCuestionario(int asignatura, int grupo) {
+    public ArrayList<Cuestionario> getCuestionario(String asignatura, int grupo) {
         ArrayList listaCuestionario = new ArrayList();
         Cuestionario cuestionario;
         try {
-            sql = "SELECT * FROM c_cuestionario WHERE id_asignatura = "+asignatura+" AND id_grupo = "+grupo+"";
+            sql = "SELECT * FROM c_cuestionario c INNER JOIN asignaturas a ON a.id_asignatura = c.id_asignatura"
+                  + " WHERE a.nombre_asig = '"+asignatura+"' AND id_grupo = "+grupo+"";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             while (rs.next()) {
@@ -92,7 +93,7 @@ public class CuestionarioDAO {
             }
         } catch (Exception e) {
             System.out.println("error" + e);
-        }        
+        } 
         return total;
     }
 

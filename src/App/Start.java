@@ -25,7 +25,7 @@ public class Start {
             Properties props = new Properties();
             props.put("logoString", "M-Systems");
             AcrylLookAndFeel.setCurrentTheme(props);
-            UIManager.setLookAndFeel("com.jtattoo.plaf.acryl.AcrylLookAndFeel");
+            UIManager.setLookAndFeel("com.jtattoo.plaf.texture.TextureLookAndFeel");
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
         }       
         Login lg = new Login();
