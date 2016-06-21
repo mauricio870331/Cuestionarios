@@ -14,12 +14,15 @@ public class RespuestasCuestionario {
  private int idPregunta;
  private String respuesta;
  private boolean estado;
+ private int idfk;
 
     public RespuestasCuestionario() {
         this.idRespuesta = 0;
         this.idPregunta = 0;
         this.respuesta = "";
         this.estado = false;
+        this.idfk=0;
+        
     }
 
     public int getIdRespuesta() {
@@ -52,6 +55,14 @@ public class RespuestasCuestionario {
 
     public void setEstado(boolean estado) {
         this.estado = estado;
+    }
+
+    public int getIdfk() {
+        return idfk;
+    }
+
+    public void setIdfk(int idfk) {
+        this.idfk = idfk;
     }
     
  

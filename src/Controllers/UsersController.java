@@ -64,19 +64,19 @@ public final class UsersController implements ActionListener, KeyListener {
         this.pr.btnUltimo.addActionListener(this);
         this.pr.btnPrimero.addActionListener(this);
         this.pr.txtBuscarAdmin.addKeyListener(this);
-        this.pr.btnFotoAdmin.addActionListener(this);
-        this.pr.btnAdjuntarfoto.addActionListener(this);
         this.pr.createUsers.addActionListener(this);
         this.id_rol = id_rol;
         this.idUserLog = idUserLog;
         this.idGrupo = idGrupo;
         this.pr.rdoClientes.addActionListener(this);
-        this.pr.rdoAdmin.addActionListener(this);  
-        this.pr.rdoTodos.addActionListener(this); 
+        this.pr.rdoAdmin.addActionListener(this);
+        this.pr.rdoTodos.addActionListener(this);
         this.pr.rdoTodos.setSelected(true);
         this.pr.viewPagos.addActionListener(this);
         this.pr.mnuAddPago.addActionListener(this);
         this.pr.lblVerUsers.setText("Tipo Usuarios");
+        //        this.pr.btnFotoAdmin.addActionListener(this);
+//        this.pr.btnAdjuntarfoto.addActionListener(this);
 
     }
 
@@ -107,14 +107,14 @@ public final class UsersController implements ActionListener, KeyListener {
         pr.cboGrupo.removeAllItems();
         Iterator<Grupo> nombreIterator = null;
         if (id_rol != 4 && id_gym != 0) {
-            nombreIterator = gymDao.getListCboGym(id_gym).iterator();
+            nombreIterator = gymDao.getListGrupoById(id_gym).iterator();
             while (nombreIterator.hasNext()) {
                 Grupo elemento = nombreIterator.next();
-                pr.cboGrupo.addItem(elemento.getIdGrupo()+ " - " + elemento.getGrupo());
+                pr.cboGrupo.addItem(elemento.getIdGrupo() + " - " + elemento.getGrupo());
             }
         } else {
             pr.cboGrupo.addItem("-- Seleccione --");
-            nombreIterator = gymDao.getListCboGym(id_gym).iterator();
+            nombreIterator = gymDao.getListGrupoById(id_gym).iterator();
             while (nombreIterator.hasNext()) {
                 Grupo elemento = nombreIterator.next();
                 pr.cboGrupo.addItem(elemento.getIdGrupo() + " - " + elemento.getGrupo());
@@ -161,7 +161,7 @@ public final class UsersController implements ActionListener, KeyListener {
             String documento = pr.txtDoc.getText();
             String nombres = pr.txtNombres.getText();
             String apellidos = pr.txtApellidos.getText();
-            String pass = new String(pr.txtPass.getPassword());           
+            String pass = new String(pr.txtPass.getPassword());
             if (tipo_doc.equals("-- Seleccione --")) {
                 JOptionPane.showMessageDialog(null, "debe seleccionar un tipo de documento");
                 return;
@@ -279,38 +279,36 @@ public final class UsersController implements ActionListener, KeyListener {
 
         }
 
-        if (e.getSource() == pr.btnFotoAdmin) {
-            if (pr.txtDoc.getText().equals("")) {
-                JOptionPane.showMessageDialog(null, "El campo documento no debe estar vacio..!");
-                pr.txtDoc.requestFocus();
-            } else {
-                foto = "src/ImagenPerfilTmp/" + pr.txtDoc.getText() + ".png";
-                WebcamViewerExample wc = new WebcamViewerExample();
-                wc.setId(pr.txtDoc.getText());
-                wc.run();
-            }
-
-        }
-
-        if (e.getSource() == pr.btnAdjuntarfoto) {
-            countAction++;
-            File archivo;
-            if (countAction == 1) {
-                addFilter();
-            }
-            FileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-            if (FileChooser.showDialog(null, "Seleccionar Archivo") == JFileChooser.APPROVE_OPTION) {
-                archivo = FileChooser.getSelectedFile();
-                if (archivo.getName().endsWith("png") || archivo.getName().endsWith("jpg")) {
-                    foto = String.valueOf(archivo);
-                    String NombreArchivo = FileChooser.getName(archivo);
-                    JOptionPane.showMessageDialog(null, "Archivo Seleccionado: " + String.valueOf(NombreArchivo));
-                } else {
-                    JOptionPane.showMessageDialog(null, "Elija un formato valido");
-                }
-            }
-        }
-
+//        if (e.getSource() == pr.btnFotoAdmin) {
+//            if (pr.txtDoc.getText().equals("")) {
+//                JOptionPane.showMessageDialog(null, "El campo documento no debe estar vacio..!");
+//                pr.txtDoc.requestFocus();
+//            } else {
+//                foto = "src/ImagenPerfilTmp/" + pr.txtDoc.getText() + ".png";
+//                WebcamViewerExample wc = new WebcamViewerExample();
+//                wc.setId(pr.txtDoc.getText());
+//                wc.run();
+//            }
+//
+//        }
+//        if (e.getSource() == pr.btnAdjuntarfoto) {
+//            countAction++;
+//            File archivo;
+//            if (countAction == 1) {
+//                addFilter();
+//            }
+//            FileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+//            if (FileChooser.showDialog(null, "Seleccionar Archivo") == JFileChooser.APPROVE_OPTION) {
+//                archivo = FileChooser.getSelectedFile();
+//                if (archivo.getName().endsWith("png") || archivo.getName().endsWith("jpg")) {
+//                    foto = String.valueOf(archivo);
+//                    String NombreArchivo = FileChooser.getName(archivo);
+//                    JOptionPane.showMessageDialog(null, "Archivo Seleccionado: " + String.valueOf(NombreArchivo));
+//                } else {
+//                    JOptionPane.showMessageDialog(null, "Elija un formato valido");
+//                }
+//            }
+//        }
         if (e.getSource() == pr.createUsers) {
 //            pagina = 1;
 //            this.pr.pnCreateAdmin.setVisible(true);
@@ -339,15 +337,15 @@ public final class UsersController implements ActionListener, KeyListener {
                 cargarAdmin(pr.tbAdmin, dato, rol);
                 pagina = 1;
             }
-        }   
-         if (e.getSource() == pr.rdoTodos) {
+        }
+        if (e.getSource() == pr.rdoTodos) {
             if (pr.rdoTodos.isSelected()) {
                 this.pr.lblVerUsers.setText("Ver Todos");
                 rol = 0;
                 cargarAdmin(pr.tbAdmin, dato, rol);
                 pagina = 1;
             }
-        }  
+        }
 
     }
 

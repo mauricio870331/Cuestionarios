@@ -27,10 +27,16 @@ public class RespuetasCuestionarioDAO {
         cn = conexion.getConexion();
     }
 
-    public ArrayList<RespuestasCuestionario> getRespuestasCuestionario(int idpregunta) {
+    public ArrayList<RespuestasCuestionario> getRespuestasCuestionario(int idpregunta, int idCuestionario) {
         ArrayList ListRespuestas = new ArrayList();
         try {
-            sql = "SELECT * FROM respuestas_cuestionario WHERE id_pregunta = " + idpregunta + "";
+            sql = "SELECT r.id_pregunta as id_pregunta,"
+                       + "r.id_respuesta as id_respuesta,"
+                       + "r.respuesta as respuesta,"
+                       + "r.estado as estado"
+                + " FROM respuestas_cuestionario r INNER JOIN preguntas_cuestionario p ON p.id = r.id_fk"
+                + " INNER JOIN c_cuestionario c ON c.id_cuestionario = p.id_cuestionario AND c.id_cuestionario = "+idCuestionario+""
+                + " WHERE r.id_pregunta = " + idpregunta + "";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             while (rs.next()) {

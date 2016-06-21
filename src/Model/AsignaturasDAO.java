@@ -49,9 +49,10 @@ public class AsignaturasDAO {
     public ArrayList<Asignaturas> getAsignaturasByCuestionario(int grupo){
       ArrayList ListAsignatura = new ArrayList();
         try {
-            sql = "SELECT a.id_asignatura id_asignatura, a.nombre_asig as nombre_asig "
+            sql = "SELECT a.id_asignatura as id_asignatura, a.nombre_asig as nombre_asig "
                 + "FROM asignaturas a INNER JOIN c_cuestionario c ON a.id_asignatura = c.id_asignatura "
-                + "WHERE c.id_grupo = "+grupo+"";
+                + "INNER JOIN cuestionarios_grupos cg ON cg.id_cuestionario = c.id_cuestionario "
+                + "WHERE cg.id_grupo = "+grupo+"";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             while (rs.next()) {
@@ -61,8 +62,24 @@ public class AsignaturasDAO {
                 ListAsignatura.add(as);
             }
         } catch (Exception e) {
-            System.out.println("error" + e);
+            System.out.println("error " + e);
         }
         return ListAsignatura;
     } 
+    
+      public int getAsignaturaByName(String Asignatura) {
+        int id_asignatura = 0;
+        try {
+            sql = "SELECT id_asignatura FROM asignaturas where nombre_asig = '"+Asignatura+"'";
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            if (rs.next()) {
+               id_asignatura = rs.getInt("id_asignatura");
+            }
+        } catch (Exception e) {
+            System.out.println("error" + e);
+        }
+        return id_asignatura;
+    }
+    
 }

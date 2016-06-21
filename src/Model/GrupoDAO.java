@@ -15,35 +15,37 @@ public class GrupoDAO {
     PreparedStatement pstm;
     String sql;
     ResultSet rs;
-    Grupo gym;
+    Grupo grupo;
 
     public GrupoDAO() {
         conexion = new Conexion();
         cn = conexion.getConexion();
-        gym = new Grupo();
+        grupo = new Grupo();
     }
+    
 
-    public ArrayList<Grupo> getListCboGym(int id_gym) {
-        ArrayList ListaGym = new ArrayList();
+
+    public ArrayList<Grupo> getListGrupoById(int idGrupo) {
+        ArrayList ListaGrupo = new ArrayList();
         try {
-            if (id_gym != 0) {
-                sql = "SELECT * FROM grupo WHERE id_gym = "+id_gym+"";
+            if (idGrupo != 0) {
+                sql = "SELECT * FROM grupo WHERE id_grupo = "+idGrupo+"";
             } else {
                 sql = "SELECT * FROM grupo";
             }
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             while (rs.next()) {
-                gym = new Grupo();
-                gym.setIdGrupo(rs.getInt("id_grupo"));
-                gym.setGrupo(rs.getString("grupo"));
-                gym.setCant(rs.getString("cant_alumnos"));                
-                ListaGym.add(gym);
+                grupo = new Grupo();
+                grupo.setIdGrupo(rs.getInt("id_grupo"));
+                grupo.setGrupo(rs.getString("grupo"));
+                grupo.setCant(rs.getString("cant_alumnos"));                
+                ListaGrupo.add(grupo);
             }
         } catch (Exception e) {
             System.out.println("error" + e);
         }
-        return ListaGym;
+        return ListaGrupo;
     }
 
 //    public ArrayList<Gym> getListGym(int pagina, String dato) {

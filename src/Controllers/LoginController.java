@@ -10,17 +10,10 @@ import App.Login;
 import App.Principal;
 import Model.UsersDAO;
 import Model.GrupoDAO;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 public final class LoginController implements ActionListener, KeyListener {
@@ -70,6 +63,7 @@ public final class LoginController implements ActionListener, KeyListener {
                     if (rol == 2) {
                         pr.pnCuestionario.setVisible(true);
                         pr.pnCreateAdmin.setVisible(false);
+                        pr.pnCreateCuestionary.setVisible(false);
                     }                                   
                     administradorController = new UsersController(pr, admDao, rol, idUserLog, idGrupo);
                     administradorController.cargarAdmin(pr.tbAdmin, "", 0);

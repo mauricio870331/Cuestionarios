@@ -9,7 +9,7 @@ package App;
 
 import Controllers.LoginController;
 import Model.UsersDAO;
-import com.jtattoo.plaf.acryl.AcrylLookAndFeel;
+import com.jtattoo.plaf.texture.TextureLookAndFeel;
 import java.util.Properties;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -23,8 +23,8 @@ public class Start {
     public static void main(String[] args) {
         try {
             Properties props = new Properties();
-            props.put("logoString", "M-Systems");
-            AcrylLookAndFeel.setCurrentTheme(props);
+            props.put("logoString", "");
+            TextureLookAndFeel.setCurrentTheme(props);
             UIManager.setLookAndFeel("com.jtattoo.plaf.texture.TextureLookAndFeel");
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
         }       

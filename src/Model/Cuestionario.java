@@ -15,8 +15,7 @@ public class Cuestionario {
     private String descripcion;
     private String fecha;
     private int idAsignatura;
-    private boolean estado;
-    private int idGrupo;
+    private boolean estado;    
 
     public Cuestionario() {
         this.idCuestionario = 0;
@@ -24,8 +23,7 @@ public class Cuestionario {
         this.descripcion = "";
         this.fecha = "";
         this.idAsignatura = 0;
-        this.estado = false;
-        this.idGrupo = 0;
+        this.estado = false;       
     }
 
     public int getIdCuestionario() {
@@ -76,14 +74,7 @@ public class Cuestionario {
         this.estado = estado;
     }
 
-    public int getIdGrupo() {
-        return idGrupo;
-    }
-
-    public void setIdGrupo(int idGrupo) {
-        this.idGrupo = idGrupo;
-    }
-    
+       
     
     
     

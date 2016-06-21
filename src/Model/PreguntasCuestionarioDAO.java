@@ -35,6 +35,7 @@ public class PreguntasCuestionarioDAO {
             rs = pstm.executeQuery();
             while (rs.next()) {
                 PreguntasCuestionario prc = new PreguntasCuestionario();
+                prc.setId(rs.getInt("id"));
                 prc.setIdPregunta(rs.getInt("id_pregunta"));
                 prc.setPregunta(rs.getString("pregunta"));
                 prc.setIdCuestionario(rs.getInt("id_cuestionario"));
@@ -46,4 +47,21 @@ public class PreguntasCuestionarioDAO {
         }
         return ListPreguntas;
     }
+
+    public int nexIdPreguntaCuestionario() {
+        int id = 0;
+        try {
+            sql = "select max(id) as maxid from preguntas_cuestionario";
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            if (rs.next()) {
+                id = rs.getInt("maxid");
+            }
+        } catch (Exception e) {
+            System.out.println("error" + e);
+        }
+        return id;
+
+    }
+
 }
