@@ -9,13 +9,12 @@ public class Conexion {
         Connection con = null;
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            con = DriverManager.getConnection("jdbc:mysql://localhost/evaluacion_colegios", "root", "");
+//            con = DriverManager.getConnection("jdbc:mysql://localhost/evaluacion_colegios", "root", "");
+            con = DriverManager.getConnection("jdbc:mysql://www.db4free.net:3306/cuestionarios", "nikol0387", "m1113626301");
 //            conectar = DriverManager.getConnection("jdbc:mysql://www.db4free.net:3306/pm_medex", "mauricio", "openEHR2008");
         } catch (ClassNotFoundException | SQLException | InstantiationException | IllegalAccessException e) {
             JOptionPane.showMessageDialog(null, e);
         }
         return con;
     }
-
-
 }
