@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JTable;
 import javax.swing.SpinnerNumberModel;
@@ -63,6 +64,7 @@ public final class CuestionarioController implements ActionListener, MouseListen
     ArrayList<RespuestasAlumno> objRespuestasAlumno = new ArrayList<>();
     ArrayList<String> preguntasCList = new ArrayList<>();
     ArrayList<PreguntasCuestionario> ListPreguntas = new ArrayList<>();
+    ArrayList<PreguntasCuestionario> ListPreguntasTemp = new ArrayList<>();
     ArrayList<RespuestasCuestionario> ListRespuestas = new ArrayList<>();
     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     int idCuest = 0;
@@ -78,6 +80,7 @@ public final class CuestionarioController implements ActionListener, MouseListen
     int idNextOregunta;
     int contPregunta = 0;
     int deleteSpinner;
+    Date date = new Date();//para capturar la fecha actual
 
     public CuestionarioController(Principal pr, int idGrupo, int idUserLog) {
         this.pr = pr;
@@ -105,7 +108,7 @@ public final class CuestionarioController implements ActionListener, MouseListen
     public void cargarPreguntasToRespuestas() {
         pr.cboPreguntas.removeAllItems();
         pr.cboPreguntas.addItem("-- Seleccione --");
-        Iterator<PreguntasCuestionario> preguntas = ListPreguntas.iterator();
+        Iterator<PreguntasCuestionario> preguntas = ListPreguntasTemp.iterator();
         while (preguntas.hasNext()) {
             PreguntasCuestionario pc = preguntas.next();
             pr.cboPreguntas.addItem(pc.getPregunta());
@@ -165,7 +168,7 @@ public final class CuestionarioController implements ActionListener, MouseListen
         while (respuestas.hasNext()) {
             RespuestasCuestionario rc = respuestas.next();
             columna[0] = rc.getRespuesta();
-            columna[1] = (rc.isEstado()) ? "Verdadero" : "Falso" ;
+            columna[1] = (rc.isEstado()) ? "Verdadero" : "Falso";
             modelo.addRow(columna);
         }
         tbRespuestas.setModel(modelo);
@@ -276,16 +279,26 @@ public final class CuestionarioController implements ActionListener, MouseListen
         }
 
         if (e.getSource() == pr.btnRegistrarCuestionary) {
-            Cuestionario c = new Cuestionario();            
+            Cuestionario c = new Cuestionario();
             String desccuestionario = pr.txtDescCuestionary.getText();
             String fecha = df.format(pr.dcFechaCuestionary.getDate());
-            String asignatura = (String) pr.cboAsignature.getSelectedItem();            
+            String asignatura = (String) pr.cboAsignature.getSelectedItem();
             c.setDescripcion(desccuestionario);
             c.setEstado(estado);
             c.setFecha(fecha);
             c.setIdAsignatura(asdao.getAsignaturaByName(asignatura));
             c.setIdUser(idUserLog);
-            cuestionariodao.createCuestionary(opc, c, ListPreguntas, ListRespuestas);
+            String rptaRegistro = cuestionariodao.createCuestionary(opc, c, ListPreguntas, ListRespuestas);
+            if (rptaRegistro != null) {
+                JOptionPane.showMessageDialog(null, rptaRegistro);
+                opc = "C";
+                idToUpdate = 0;
+                limpiarForm();
+            } else if (opc.equals("C")) {
+                JOptionPane.showMessageDialog(null, "No se pudo crear el Cuestionario");
+            } else {
+                JOptionPane.showMessageDialog(null, "No se pudo actualizar el Cuestionario");
+            }
         }
 
         if (e.getSource() == pr.btnNextQuestion) {
@@ -320,7 +333,7 @@ public final class CuestionarioController implements ActionListener, MouseListen
 
         if (e.getSource() == pr.cboPreguntas) {
             String pregunta = (String) pr.cboPreguntas.getSelectedItem();
-            for (PreguntasCuestionario p : ListPreguntas) {
+            for (PreguntasCuestionario p : ListPreguntasTemp) {
                 if (p.getPregunta().equals(pregunta)) {
                     idtempfk = p.getId();
                     idPtemp = p.getIdPregunta();// aumentar el id pregunta al guardarlo en el array ListPreguntas
@@ -340,13 +353,15 @@ public final class CuestionarioController implements ActionListener, MouseListen
             pc.setIdPregunta(orden - 1);
             pc.setPregunta(pregunta);
             ListPreguntas.add(pc);
+            ListPreguntasTemp.add(pc);
             cargarPreguntasInTable(pr.tbPreguntasQ);
             cargarPreguntasToRespuestas();
             SpinnerNumberModel nm = new SpinnerNumberModel();
             nm.setMaximum(30);
             nm.setMinimum(deleteSpinner + 1);
             nm.setValue(deleteSpinner + 1);
-            pr.spnOrden.setModel(nm);           
+            pr.spnOrden.setModel(nm);
+            pr.txtDescripPregunta.setText("");
         }
 
         if (e.getSource() == pr.btnAddRespuesta) {
@@ -359,7 +374,31 @@ public final class CuestionarioController implements ActionListener, MouseListen
             rc.setRespuesta(literal + ": " + resp);
             ListRespuestas.add(rc);
             cargarRespuestasInTable(pr.tbRespuestasQ);
-//            pr.cboLiteral.removeItem(literal);
+            pr.txtRespuestaQ.setText("");
+            pr.cboLiteral.removeItem(literal);
+            System.out.println(pr.cboLiteral.getItemCount());
+            if (pr.cboLiteral.getItemCount() == 1) {
+                String pregunta = (String) pr.cboPreguntas.getSelectedItem();
+                for (PreguntasCuestionario p : ListPreguntasTemp) {
+                    if (p.getPregunta().equals(pregunta)) {
+                        ListPreguntasTemp.remove(p);
+                    }
+                }
+                cargarPreguntasToRespuestas();
+                pr.cboLiteral.removeAllItems();
+                pr.cboLiteral.addItem("-- Seleccione --");
+                pr.cboLiteral.addItem("A");
+                pr.cboLiteral.addItem("B");
+                pr.cboLiteral.addItem("C");
+                pr.cboLiteral.addItem("D");
+                pr.cboLiteral.addItem("E");
+            }
+            if (pr.cboLiteral.getItemCount() > 2) {
+                System.out.println("remover "+literal);
+                
+            }
+            pr.cboLiteral.setSelectedItem("--Seleccione--");
+
         }
 
         if (e.getSource() == pr.rdoTrue) {
@@ -448,5 +487,27 @@ public final class CuestionarioController implements ActionListener, MouseListen
                 estado = false;
             }
         }
+    }
+
+    private void limpiarForm() {
+        pr.txtDescCuestionary.setText("");
+        pr.dcFechaCuestionary.setDate(date);
+        pr.chkEstado.setSelected(false);
+        pr.cboAsignature.setSelectedItem("-- Seleccione --");
+        SpinnerNumberModel nm = new SpinnerNumberModel();
+        nm.setMaximum(30);
+        nm.setMinimum(1);
+        nm.setValue(1);
+        pr.spnOrden.setModel(nm);
+        pr.txtDescripPregunta.setText("");
+        ListPreguntas.clear();
+        ListRespuestas.clear();
+        cargarPreguntasInTable(pr.tbPreguntasQ);
+        cargarRespuestasInTable(pr.tbRespuestasQ);
+        pr.cboPreguntas.setSelectedItem("-- Seleccione --");
+        pr.cboLiteral.setSelectedItem("A");
+        pr.txtRespuestaQ.setText("");
+        pr.rdoTrue.setSelected(true);
+        pr.rdoFalse.setSelected(false);
     }
 }
