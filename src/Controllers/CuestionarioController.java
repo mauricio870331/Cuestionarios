@@ -10,7 +10,6 @@ import Model.Asignaturas;
 import Model.AsignaturasDAO;
 import Model.Cuestionario;
 import Model.CuestionarioDAO;
-import Model.Grupo;
 import Model.GrupoDAO;
 import Model.PreguntasCuestionario;
 import Model.PreguntasCuestionarioDAO;
@@ -95,8 +94,8 @@ public final class CuestionarioController implements ActionListener, MouseListen
         this.pr.chkEstado.addItemListener(this);
         this.pr.btnAddRespuesta.addActionListener(this);
         this.pr.btnAddPregunta.addActionListener(this);
-        this.pr.rdoTrue.addActionListener(this);
-        this.pr.rdoFalse.addActionListener(this);
+        this.pr.rdoTrue.addItemListener(this);
+        this.pr.rdoFalse.addItemListener(this);
         cargarComboBox();
         System.out.println("user " + idUserLog + " grupo " + idGrupo);
         cargarCuestionarioByGrupo(idGrupo);
@@ -107,6 +106,7 @@ public final class CuestionarioController implements ActionListener, MouseListen
     }
 
     public void cargarPreguntasToRespuestas(boolean v) {
+        pr.rdoTrue.setEnabled(true);
         if (v) {
             pr.cboPreguntas.removeAllItems();
             pr.cboPreguntas.addItem("-- Seleccione --");
@@ -350,12 +350,16 @@ public final class CuestionarioController implements ActionListener, MouseListen
         }
 
         if (e.getSource() == pr.btnAddPregunta) {
+            String pregunta = pr.txtDescripPregunta.getText();
+            if (pregunta.equals("")) {
+                JOptionPane.showMessageDialog(null, "Debe ingresar la pregunta..");
+                pr.txtDescripPregunta.requestFocus();
+                return;
+            }
             contPregunta = contPregunta + 1;
             PreguntasCuestionario pc = new PreguntasCuestionario();
             int orden = (int) pr.spnOrden.getValue();
             deleteSpinner = orden;
-            String pregunta = pr.txtDescripPregunta.getText();
-//            pc.setIdCuestionario(idcuestionario);
             idNextOregunta = preguntasdao.nexIdPreguntaCuestionario();
             pc.setId(idNextOregunta + contPregunta);
             pc.setIdPregunta(orden - 1);
@@ -370,15 +374,30 @@ public final class CuestionarioController implements ActionListener, MouseListen
             nm.setValue(deleteSpinner + 1);
             pr.spnOrden.setModel(nm);
             pr.txtDescripPregunta.setText("");
+            enabledAnswer();
         }
 
         if (e.getSource() == pr.btnAddRespuesta) {
-            RespuestasCuestionario rc = new RespuestasCuestionario();
             String literal = (String) pr.cboLiteral.getSelectedItem();
             String resp = pr.txtRespuestaQ.getText();
+            if (literal.equals("-- Seleccione --")) {
+                JOptionPane.showMessageDialog(null, "Debe Seleccionar un literal para la respuesta..");
+                pr.cboLiteral.requestFocus();
+                return;
+            }
+            if (resp.equals("")) {
+                JOptionPane.showMessageDialog(null, "Debe ingresar la respuesta..");
+                pr.txtRespuestaQ.requestFocus();
+                return;
+            }
+            RespuestasCuestionario rc = new RespuestasCuestionario();
             rc.setIdPregunta(idPtemp);
             rc.setIdfk(idtempfk);
             rc.setEstado(estadoRespuesta);
+            if (estadoRespuesta) {
+                pr.rdoTrue.setEnabled(false);
+                pr.rdoFalse.setSelected(true);
+            }
             rc.setRespuesta(literal + ": " + resp);
             ListRespuestas.add(rc);
             ListRespuestasTemp.add(rc);
@@ -396,7 +415,7 @@ public final class CuestionarioController implements ActionListener, MouseListen
                         }
                     }
                     cargarPreguntasToRespuestas(true);
-                }else {
+                } else {
                     cargarPreguntasToRespuestas(false);
                 }
                 pr.cboLiteral.removeAllItems();
@@ -413,14 +432,6 @@ public final class CuestionarioController implements ActionListener, MouseListen
             }
             pr.cboLiteral.setSelectedItem("-- Seleccione --");
 
-        }
-
-        if (e.getSource() == pr.rdoTrue) {
-            estadoRespuesta = true;
-        }
-
-        if (e.getSource() == pr.rdoFalse) {
-            estadoRespuesta = false;
         }
 
         if (e.getSource() == pr.btnCancelarC) {
@@ -501,6 +512,13 @@ public final class CuestionarioController implements ActionListener, MouseListen
                 estado = false;
             }
         }
+        if (e.getSource() == pr.rdoTrue) {
+            estadoRespuesta = true;
+        }
+        if (e.getSource() == pr.rdoFalse) {
+            estadoRespuesta = false;
+        }
+
     }
 
     private void limpiarForm() {
@@ -526,4 +544,9 @@ public final class CuestionarioController implements ActionListener, MouseListen
         pr.rdoTrue.setSelected(true);
         pr.rdoFalse.setSelected(false);
     }
+    
+    public void enabledAnswer(){
+    
+    }
+    
 }
