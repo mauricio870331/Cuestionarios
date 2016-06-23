@@ -66,6 +66,7 @@ public final class CuestionarioController implements ActionListener, MouseListen
     ArrayList<PreguntasCuestionario> ListPreguntas = new ArrayList<>();
     ArrayList<PreguntasCuestionario> ListPreguntasTemp = new ArrayList<>();
     ArrayList<RespuestasCuestionario> ListRespuestas = new ArrayList<>();
+    ArrayList<RespuestasCuestionario> ListRespuestasTemp = new ArrayList<>();
     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     int idCuest = 0;
     int idUserLog;
@@ -105,13 +106,18 @@ public final class CuestionarioController implements ActionListener, MouseListen
 
     }
 
-    public void cargarPreguntasToRespuestas() {
-        pr.cboPreguntas.removeAllItems();
-        pr.cboPreguntas.addItem("-- Seleccione --");
-        Iterator<PreguntasCuestionario> preguntas = ListPreguntasTemp.iterator();
-        while (preguntas.hasNext()) {
-            PreguntasCuestionario pc = preguntas.next();
-            pr.cboPreguntas.addItem(pc.getPregunta());
+    public void cargarPreguntasToRespuestas(boolean v) {
+        if (v) {
+            pr.cboPreguntas.removeAllItems();
+            pr.cboPreguntas.addItem("-- Seleccione --");
+            Iterator<PreguntasCuestionario> preguntas = ListPreguntasTemp.iterator();
+            while (preguntas.hasNext()) {
+                PreguntasCuestionario pc = preguntas.next();
+                pr.cboPreguntas.addItem(pc.getPregunta());
+            }
+        } else {
+            pr.cboPreguntas.removeAllItems();
+            pr.cboPreguntas.addItem("-- Seleccione --");
         }
 
     }
@@ -164,7 +170,7 @@ public final class CuestionarioController implements ActionListener, MouseListen
             }
         };
         Object[] columna = new Object[3];
-        Iterator<RespuestasCuestionario> respuestas = ListRespuestas.iterator();
+        Iterator<RespuestasCuestionario> respuestas = ListRespuestasTemp.iterator();
         while (respuestas.hasNext()) {
             RespuestasCuestionario rc = respuestas.next();
             columna[0] = rc.getRespuesta();
@@ -339,6 +345,8 @@ public final class CuestionarioController implements ActionListener, MouseListen
                     idPtemp = p.getIdPregunta();// aumentar el id pregunta al guardarlo en el array ListPreguntas
                 }
             }
+            ListRespuestasTemp.clear();
+            cargarRespuestasInTable(pr.tbRespuestasQ);
         }
 
         if (e.getSource() == pr.btnAddPregunta) {
@@ -355,7 +363,7 @@ public final class CuestionarioController implements ActionListener, MouseListen
             ListPreguntas.add(pc);
             ListPreguntasTemp.add(pc);
             cargarPreguntasInTable(pr.tbPreguntasQ);
-            cargarPreguntasToRespuestas();
+            cargarPreguntasToRespuestas(true);
             SpinnerNumberModel nm = new SpinnerNumberModel();
             nm.setMaximum(30);
             nm.setMinimum(deleteSpinner + 1);
@@ -373,18 +381,24 @@ public final class CuestionarioController implements ActionListener, MouseListen
             rc.setEstado(estadoRespuesta);
             rc.setRespuesta(literal + ": " + resp);
             ListRespuestas.add(rc);
+            ListRespuestasTemp.add(rc);
             cargarRespuestasInTable(pr.tbRespuestasQ);
             pr.txtRespuestaQ.setText("");
             pr.cboLiteral.removeItem(literal);
             System.out.println(pr.cboLiteral.getItemCount());
             if (pr.cboLiteral.getItemCount() == 1) {
+                System.out.println("aqui");
                 String pregunta = (String) pr.cboPreguntas.getSelectedItem();
-                for (PreguntasCuestionario p : ListPreguntasTemp) {
-                    if (p.getPregunta().equals(pregunta)) {
-                        ListPreguntasTemp.remove(p);
+                if (ListPreguntasTemp.size() > 1) {
+                    for (PreguntasCuestionario p : ListPreguntasTemp) {
+                        if (p.getPregunta().equals(pregunta)) {
+                            ListPreguntasTemp.remove(p);
+                        }
                     }
+                    cargarPreguntasToRespuestas(true);
+                }else {
+                    cargarPreguntasToRespuestas(false);
                 }
-                cargarPreguntasToRespuestas();
                 pr.cboLiteral.removeAllItems();
                 pr.cboLiteral.addItem("-- Seleccione --");
                 pr.cboLiteral.addItem("A");
@@ -394,10 +408,10 @@ public final class CuestionarioController implements ActionListener, MouseListen
                 pr.cboLiteral.addItem("E");
             }
             if (pr.cboLiteral.getItemCount() > 2) {
-                System.out.println("remover "+literal);
-                
+                System.out.println("remover " + literal);
+                System.out.println("lista " + ListPreguntasTemp.size());
             }
-            pr.cboLiteral.setSelectedItem("--Seleccione--");
+            pr.cboLiteral.setSelectedItem("-- Seleccione --");
 
         }
 
@@ -501,11 +515,13 @@ public final class CuestionarioController implements ActionListener, MouseListen
         pr.spnOrden.setModel(nm);
         pr.txtDescripPregunta.setText("");
         ListPreguntas.clear();
+        ListPreguntasTemp.clear();
         ListRespuestas.clear();
+        ListRespuestasTemp.clear();
         cargarPreguntasInTable(pr.tbPreguntasQ);
         cargarRespuestasInTable(pr.tbRespuestasQ);
         pr.cboPreguntas.setSelectedItem("-- Seleccione --");
-        pr.cboLiteral.setSelectedItem("A");
+        pr.cboLiteral.addItem("-- Seleccione --");
         pr.txtRespuestaQ.setText("");
         pr.rdoTrue.setSelected(true);
         pr.rdoFalse.setSelected(false);
