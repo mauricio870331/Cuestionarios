@@ -79,7 +79,7 @@ public final class CuestionarioController implements ActionListener, MouseListen
     boolean estadoRespuesta;
     int idNextOregunta;
     int contPregunta = 0;
-    int deleteSpinner;
+    int deleteSpinner = 0;
     Date date = new Date();//para capturar la fecha actual
 
     public CuestionarioController(Principal pr, int idGrupo, int idUserLog) {
@@ -102,7 +102,7 @@ public final class CuestionarioController implements ActionListener, MouseListen
         if (cantCuestionario == 1) {
             showPreguntasCuestionario(0);
         }
-
+        enabledAnswer();
     }
 
     public void cargarPreguntasToRespuestas(boolean v) {
@@ -358,23 +358,19 @@ public final class CuestionarioController implements ActionListener, MouseListen
             }
             contPregunta = contPregunta + 1;
             PreguntasCuestionario pc = new PreguntasCuestionario();
-            int orden = (int) pr.spnOrden.getValue();
-            deleteSpinner = orden;
+
             idNextOregunta = preguntasdao.nexIdPreguntaCuestionario();
             pc.setId(idNextOregunta + contPregunta);
-            pc.setIdPregunta(orden - 1);
+            pc.setIdPregunta(deleteSpinner);
             pc.setPregunta(pregunta);
             ListPreguntas.add(pc);
             ListPreguntasTemp.add(pc);
             cargarPreguntasInTable(pr.tbPreguntasQ);
             cargarPreguntasToRespuestas(true);
-            SpinnerNumberModel nm = new SpinnerNumberModel();
-            nm.setMaximum(30);
-            nm.setMinimum(deleteSpinner + 1);
-            nm.setValue(deleteSpinner + 1);
-            pr.spnOrden.setModel(nm);
             pr.txtDescripPregunta.setText("");
             enabledAnswer();
+            deleteSpinner++;
+            System.out.println("deleteSpinner "+deleteSpinner);
         }
 
         if (e.getSource() == pr.btnAddRespuesta) {
@@ -526,11 +522,6 @@ public final class CuestionarioController implements ActionListener, MouseListen
         pr.dcFechaCuestionary.setDate(date);
         pr.chkEstado.setSelected(false);
         pr.cboAsignature.setSelectedItem("-- Seleccione --");
-        SpinnerNumberModel nm = new SpinnerNumberModel();
-        nm.setMaximum(30);
-        nm.setMinimum(1);
-        nm.setValue(1);
-        pr.spnOrden.setModel(nm);
         pr.txtDescripPregunta.setText("");
         ListPreguntas.clear();
         ListPreguntasTemp.clear();
@@ -544,9 +535,24 @@ public final class CuestionarioController implements ActionListener, MouseListen
         pr.rdoTrue.setSelected(true);
         pr.rdoFalse.setSelected(false);
     }
-    
-    public void enabledAnswer(){
-    
+
+    public void enabledAnswer() {
+        System.out.println("lista cant = " + ListPreguntasTemp.size());
+        if (ListPreguntasTemp.size() > 1) {
+            pr.cboPreguntas.setEnabled(true);
+            pr.cboLiteral.setEnabled(true);
+            pr.txtRespuestaQ.setEnabled(true);
+            pr.rdoTrue.setEnabled(true);
+            pr.rdoFalse.setEnabled(true);
+            pr.btnAddRespuesta.setEnabled(true);
+        } else {
+            pr.cboPreguntas.setEnabled(false);
+            pr.cboLiteral.setEnabled(false);
+            pr.txtRespuestaQ.setEnabled(false);
+            pr.rdoTrue.setEnabled(false);
+            pr.rdoFalse.setEnabled(false);
+            pr.btnAddRespuesta.setEnabled(false);
+        }
     }
-    
+
 }
