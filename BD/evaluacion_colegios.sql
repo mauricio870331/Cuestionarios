@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 02-06-2016 a las 03:36:45
+-- Tiempo de generación: 27-06-2016 a las 00:42:42
 -- Versión del servidor: 10.1.10-MariaDB
 -- Versión de PHP: 7.0.2
 
@@ -42,6 +42,27 @@ INSERT INTO `asignaturas` (`id_asignatura`, `nombre_asig`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `cuestionarios_grupos`
+--
+
+CREATE TABLE `cuestionarios_grupos` (
+  `id_cuestionario` int(11) NOT NULL,
+  `id_grupo` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `cuestionarios_grupos`
+--
+
+INSERT INTO `cuestionarios_grupos` (`id_cuestionario`, `id_grupo`) VALUES
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 4);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `c_cuestionario`
 --
 
@@ -51,16 +72,15 @@ CREATE TABLE `c_cuestionario` (
   `descripcion` varchar(255) NOT NULL,
   `fecha` date NOT NULL,
   `id_asignatura` int(11) NOT NULL,
-  `estado` tinyint(1) NOT NULL,
-  `id_grupo` int(11) NOT NULL
+  `estado` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `c_cuestionario`
 --
 
-INSERT INTO `c_cuestionario` (`id_cuestionario`, `id_user`, `descripcion`, `fecha`, `id_asignatura`, `estado`, `id_grupo`) VALUES
-(1, 1, 'Conocimiento Basico', '2016-05-09', 1, 1, 1);
+INSERT INTO `c_cuestionario` (`id_cuestionario`, `id_user`, `descripcion`, `fecha`, `id_asignatura`, `estado`) VALUES
+(1, 1, 'Matematicas 1', '2016-06-22', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -91,7 +111,17 @@ CREATE TABLE `grupo` (
 --
 
 INSERT INTO `grupo` (`id_grupo`, `grupo`, `cant_alumnos`) VALUES
-(1, '5-1', 25);
+(1, '5-1', 25),
+(2, '1-0', 20),
+(3, '5-2', 25),
+(4, '1-3', 20),
+(5, '11-1', 40),
+(6, '3-1', 30),
+(7, '3-2', 30),
+(8, '7-1', 30),
+(9, '11-3', 5),
+(10, '7-2', 30),
+(11, '6-2', 30);
 
 -- --------------------------------------------------------
 
@@ -100,7 +130,8 @@ INSERT INTO `grupo` (`id_grupo`, `grupo`, `cant_alumnos`) VALUES
 --
 
 CREATE TABLE `preguntas_cuestionario` (
-  `id_pregunta` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
+  `id_pregunta` int(2) NOT NULL,
   `pregunta` varchar(500) NOT NULL,
   `id_cuestionario` int(11) NOT NULL,
   `imagen` longblob
@@ -110,8 +141,9 @@ CREATE TABLE `preguntas_cuestionario` (
 -- Volcado de datos para la tabla `preguntas_cuestionario`
 --
 
-INSERT INTO `preguntas_cuestionario` (`id_pregunta`, `pregunta`, `id_cuestionario`, `imagen`) VALUES
-(1, 'Cual es el resultado del producto: (5*3)', 1, NULL);
+INSERT INTO `preguntas_cuestionario` (`id`, `id_pregunta`, `pregunta`, `id_cuestionario`, `imagen`) VALUES
+(1, 0, '¿Cuántos lados tiene un hexágono? ------------ -------------- ------------- ------------------ ----------------', 1, NULL),
+(2, 1, '¿Cuál es el resultado de sumar una 1 y 40 minutos y 1 hora y 30 minutos?', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -136,17 +168,25 @@ CREATE TABLE `respuestas_cuestionario` (
   `id_respuesta` int(11) NOT NULL,
   `id_pregunta` int(11) NOT NULL,
   `respuesta` varchar(200) NOT NULL,
-  `estado` tinyint(1) NOT NULL DEFAULT '0'
+  `estado` tinyint(1) NOT NULL DEFAULT '0',
+  `id_fk` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `respuestas_cuestionario`
 --
 
-INSERT INTO `respuestas_cuestionario` (`id_respuesta`, `id_pregunta`, `respuesta`, `estado`) VALUES
-(1, 1, 'A: 20', 0),
-(2, 1, 'B: 15', 1),
-(3, 1, 'C: 40', 0);
+INSERT INTO `respuestas_cuestionario` (`id_respuesta`, `id_pregunta`, `respuesta`, `estado`, `id_fk`) VALUES
+(1, 0, 'A: 8 lados', 0, 1),
+(2, 0, 'B: 6 lados', 1, 1),
+(3, 0, 'C: 5 lados', 0, 1),
+(4, 0, 'D: 7 lados', 0, 1),
+(5, 0, 'E: Ninguna de  las anteriores', 0, 1),
+(6, 1, 'A: 3 horas', 0, 2),
+(7, 1, 'B: 1 hora y 40 minutos', 0, 2),
+(8, 1, 'C: 2 horas y 50 minutos', 0, 2),
+(9, 1, 'D: 3 horas y 10 minutos', 1, 2),
+(10, 1, 'E: Ninguna de las anteriores', 1, 2);
 
 -- --------------------------------------------------------
 
@@ -204,13 +244,20 @@ ALTER TABLE `asignaturas`
   ADD PRIMARY KEY (`id_asignatura`);
 
 --
+-- Indices de la tabla `cuestionarios_grupos`
+--
+ALTER TABLE `cuestionarios_grupos`
+  ADD PRIMARY KEY (`id_cuestionario`,`id_grupo`),
+  ADD KEY `id_cuestionario` (`id_cuestionario`),
+  ADD KEY `id_grupo` (`id_grupo`);
+
+--
 -- Indices de la tabla `c_cuestionario`
 --
 ALTER TABLE `c_cuestionario`
   ADD PRIMARY KEY (`id_cuestionario`),
   ADD KEY `id_user` (`id_user`),
-  ADD KEY `id_asignatura` (`id_asignatura`),
-  ADD KEY `id_grupo` (`id_grupo`);
+  ADD KEY `id_asignatura` (`id_asignatura`);
 
 --
 -- Indices de la tabla `c_cuestionario_alumno`
@@ -230,8 +277,9 @@ ALTER TABLE `grupo`
 -- Indices de la tabla `preguntas_cuestionario`
 --
 ALTER TABLE `preguntas_cuestionario`
-  ADD PRIMARY KEY (`id_pregunta`),
-  ADD KEY `id_cuestionario` (`id_cuestionario`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_cuestionario` (`id_cuestionario`),
+  ADD KEY `id_pregunta` (`id_pregunta`);
 
 --
 -- Indices de la tabla `respuestas_alumno`
@@ -247,7 +295,9 @@ ALTER TABLE `respuestas_alumno`
 --
 ALTER TABLE `respuestas_cuestionario`
   ADD PRIMARY KEY (`id_respuesta`),
-  ADD KEY `id_pregunta` (`id_pregunta`);
+  ADD UNIQUE KEY `respuesta` (`respuesta`),
+  ADD KEY `id_pregunta` (`id_pregunta`),
+  ADD KEY `id_fk` (`id_fk`);
 
 --
 -- Indices de la tabla `roles`
@@ -287,12 +337,12 @@ ALTER TABLE `c_cuestionario_alumno`
 -- AUTO_INCREMENT de la tabla `grupo`
 --
 ALTER TABLE `grupo`
-  MODIFY `id_grupo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_grupo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT de la tabla `preguntas_cuestionario`
 --
 ALTER TABLE `preguntas_cuestionario`
-  MODIFY `id_pregunta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT de la tabla `respuestas_alumno`
 --
@@ -302,7 +352,7 @@ ALTER TABLE `respuestas_alumno`
 -- AUTO_INCREMENT de la tabla `respuestas_cuestionario`
 --
 ALTER TABLE `respuestas_cuestionario`
-  MODIFY `id_respuesta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_respuesta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT de la tabla `roles`
 --
@@ -316,25 +366,6 @@ ALTER TABLE `usuarios`
 --
 -- Restricciones para tablas volcadas
 --
-
---
--- Filtros para la tabla `c_cuestionario_alumno`
---
-ALTER TABLE `c_cuestionario_alumno`
-  ADD CONSTRAINT `c_cuestionario_alumno_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `usuarios` (`id_user`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `c_cuestionario_alumno_ibfk_2` FOREIGN KEY (`id_cuestionario`) REFERENCES `c_cuestionario` (`id_cuestionario`) ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `preguntas_cuestionario`
---
-ALTER TABLE `preguntas_cuestionario`
-  ADD CONSTRAINT `preguntas_cuestionario_ibfk_1` FOREIGN KEY (`id_cuestionario`) REFERENCES `c_cuestionario` (`id_cuestionario`) ON DELETE NO ACTION ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `respuestas_cuestionario`
---
-ALTER TABLE `respuestas_cuestionario`
-  ADD CONSTRAINT `respuestas_cuestionario_ibfk_1` FOREIGN KEY (`id_pregunta`) REFERENCES `preguntas_cuestionario` (`id_pregunta`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `usuarios`
