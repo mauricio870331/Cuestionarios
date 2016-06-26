@@ -5,11 +5,15 @@
  */
 package Controllers;
 
+import App.AsignCuestionaryToGroup;
 import App.Principal;
 import Model.Asignaturas;
 import Model.AsignaturasDAO;
 import Model.Cuestionario;
 import Model.CuestionarioDAO;
+import Model.CuestionariosGrupos;
+import Model.CuestionariosGruposDAO;
+import Model.Grupo;
 import Model.GrupoDAO;
 import Model.PreguntasCuestionario;
 import Model.PreguntasCuestionarioDAO;
@@ -22,16 +26,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Random;
+import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JTable;
-import javax.swing.SpinnerNumberModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
@@ -40,7 +46,7 @@ import javax.swing.table.TableRowSorter;
  *
  * @author Mauricio Herrera
  */
-public final class CuestionarioController implements ActionListener, MouseListener, ItemListener {
+public final class CuestionarioController extends WindowAdapter implements ActionListener, ItemListener {
 
     int idToUpdate = 0;
     int id_rol;
@@ -58,19 +64,25 @@ public final class CuestionarioController implements ActionListener, MouseListen
     UsersDAO udao = new UsersDAO();
     GrupoDAO grupdao = new GrupoDAO();
     DefaultTableModel modelo = new DefaultTableModel();
+    CuestionariosGruposDAO cgruposDao = new CuestionariosGruposDAO();
     Date m = new Date();//para capturar la fecha actual
     String opc = "C";
     ArrayList<RespuestasAlumno> objRespuestasAlumno = new ArrayList<>();
-    ArrayList<String> preguntasCList = new ArrayList<>();
+    ArrayList<RespuestasAlumno> TempRespuestasAlumno = new ArrayList<>();
+    ArrayList<PreguntasCuestionario> preguntasCList = new ArrayList<>();
     ArrayList<PreguntasCuestionario> ListPreguntas = new ArrayList<>();
     ArrayList<PreguntasCuestionario> ListPreguntasTemp = new ArrayList<>();
     ArrayList<RespuestasCuestionario> ListRespuestas = new ArrayList<>();
     ArrayList<RespuestasCuestionario> ListRespuestasTemp = new ArrayList<>();
+    ArrayList<CuestionariosGrupos> ListCuestioariosGroups = new ArrayList<>();
+    ArrayList<Integer> sortQuestions = new ArrayList<>();
     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     int idCuest = 0;
     int idUserLog;
     public JRadioButton rb[];
+    public JCheckBox cb[];
     int id_pregunta = 0;
+    int pregunt = 0;
     int TotalPreguntas;
     int cantCuestionario;
     boolean estado = false;
@@ -81,6 +93,7 @@ public final class CuestionarioController implements ActionListener, MouseListen
     int contPregunta = 0;
     int deleteSpinner = 0;
     Date date = new Date();//para capturar la fecha actual
+    AsignCuestionaryToGroup ac = new AsignCuestionaryToGroup(null, true);
 
     public CuestionarioController(Principal pr, int idGrupo, int idUserLog) {
         this.pr = pr;
@@ -90,19 +103,29 @@ public final class CuestionarioController implements ActionListener, MouseListen
         this.pr.cboPreguntas.addActionListener(this);
         this.pr.btnCancelarC.addActionListener(this);
         this.pr.btnNextQuestion.addActionListener(this);
+        this.pr.btnPreviousQuestion.addActionListener(this);
         this.pr.btnRegistrarCuestionary.addActionListener(this);
         this.pr.chkEstado.addItemListener(this);
         this.pr.btnAddRespuesta.addActionListener(this);
         this.pr.btnAddPregunta.addActionListener(this);
         this.pr.rdoTrue.addItemListener(this);
         this.pr.rdoFalse.addItemListener(this);
+        this.pr.btnCancelarCuestionary.addActionListener(this);
+        this.pr.asignCuestionaryToGroup.addActionListener(this);
+        this.ac.btnSaveCtoGroup.addActionListener(this);
+        this.ac.addWindowListener(this);
+        this.pr.btnRegistrarCAlumno.addActionListener(this);
         cargarComboBox();
         System.out.println("user " + idUserLog + " grupo " + idGrupo);
         cargarCuestionarioByGrupo(idGrupo);
         if (cantCuestionario == 1) {
             showPreguntasCuestionario(0);
         }
+        if (pregunt == 0) {
+            pr.btnPreviousQuestion.setEnabled(false);
+        }
         enabledAnswer();
+        pr.dcFechaCuestionary.setDate(date);
     }
 
     public void cargarPreguntasToRespuestas(boolean v) {
@@ -124,11 +147,17 @@ public final class CuestionarioController implements ActionListener, MouseListen
 
     public void llenarRespuestasAlumno() {
         TotalPreguntas = cuestionariodao.getPreguntasCuestionario(idCuest);
+        System.out.println("totalpreg = " + TotalPreguntas);
         for (int i = 0; i < TotalPreguntas; i++) {
-            preguntasCList.add("");
+            preguntasCList.add(new PreguntasCuestionario());
+            sortQuestions.add(i);
         }
         for (int i = 0; i < TotalPreguntas; i++) {
             objRespuestasAlumno.add(new RespuestasAlumno());
+        }
+        for (Iterator<RespuestasAlumno> iterator = objRespuestasAlumno.iterator(); iterator.hasNext();) {
+            RespuestasAlumno next = iterator.next();
+            System.out.println(next.getIdPregunta());
         }
     }
 
@@ -229,27 +258,33 @@ public final class CuestionarioController implements ActionListener, MouseListen
     }
 
     public void cargarPreguntasCuestionario(int idCuestionario) {
-        Iterator<PreguntasCuestionario> nombreIterator = preguntasdao.getPreguntasCuestionario(idCuestionario).iterator();
+        Random rndm = new Random();
+        ArrayList<PreguntasCuestionario> temp = preguntasdao.getPreguntasCuestionario(idCuestionario);
+        Collections.shuffle(temp, rndm);
+        Iterator<PreguntasCuestionario> nombreIterator = temp.iterator();
+        int preg = 0;
         while (nombreIterator.hasNext()) {
             PreguntasCuestionario pc = nombreIterator.next();
-            preguntasCList.set(pc.getIdPregunta(), pc.getPregunta());
+            System.out.println("orden =" + preg + " -> " + pc.getIdPregunta() + "  vv " + pc.getPregunta());
+            preguntasCList.set(sortQuestions.get(preg), pc);
+            preg++;
         }
     }
 
     public void showPreguntasCuestionario(int p) {
         int pregunta = p + 1;
-        pr.txtPreguntas.setText(pregunta + ") " + preguntasCList.get(p));
+        pr.txtPreguntas.setText(pregunta + ") " + preguntasCList.get(p).getPregunta());
         cargarRespuestasCuestionario(p);
     }
 
-    public void cargarRespuestasCuestionario(int idpregunta) {
-        id_pregunta = idpregunta;
-        int cantResp = respuestasdao.getRespuestasCuestionario(idpregunta, idCuest).size();
+    public void cargarRespuestasCuestionario(int p) {
+        id_pregunta = preguntasCList.get(p).getIdPregunta();
+        int cantResp = respuestasdao.getRespuestasCuestionario(id_pregunta, idCuest).size();
         pr.pnRespuestas.removeAll();
         pr.pnRespuestas.setLayout(new java.awt.GridLayout(cantResp, 1));
         rb = new JRadioButton[cantResp];
         int i = 0;
-        Iterator<RespuestasCuestionario> nombreIterator = respuestasdao.getRespuestasCuestionario(idpregunta, idCuest).iterator();
+        Iterator<RespuestasCuestionario> nombreIterator = respuestasdao.getRespuestasCuestionario(id_pregunta, idCuest).iterator();
         while (nombreIterator.hasNext()) {
             RespuestasCuestionario rc = nombreIterator.next();
             rb[i] = new JRadioButton();
@@ -264,10 +299,35 @@ public final class CuestionarioController implements ActionListener, MouseListen
             pr.btnNextQuestion.setEnabled(true);
         } else {
             pr.btnNextQuestion.setEnabled(false);
+            pr.btnPreviousQuestion.setEnabled(false);
         }
 
     }
 
+    public void cargarGruposToCuestionary() {
+        int cantGrupos = grupdao.getListGrupos().size();
+        System.out.println("grupos = " + cantGrupos);
+        ac.pnGruposAdd.removeAll();
+        ac.pnGruposAdd.setLayout(new java.awt.GridLayout(6, cantGrupos));
+        cb = new JCheckBox[cantGrupos];
+        int i = 0;
+        Iterator<Grupo> nombreIterator = grupdao.getListGrupos().iterator();
+        while (nombreIterator.hasNext()) {
+            Grupo g = nombreIterator.next();
+            cb[i] = new JCheckBox();
+            cb[i].setText(g.getGrupo());
+            cb[i].addActionListener(this);
+            cb[i].addItemListener(this);
+            ac.pnGruposAdd.add(cb[i]);
+            i++;
+        }
+        cargarCuestionariesToAddGrup(ac);
+        ac.pnGruposAdd.updateUI();
+        ac.setLocationRelativeTo(null);
+        ac.setVisible(true);
+    }
+
+    // ACTION PERFORMED
     @Override
     public void actionPerformed(ActionEvent e) {
         for (int i = 0; i < pr.pnRespuestas.getComponentCount(); i++) {
@@ -276,15 +336,57 @@ public final class CuestionarioController implements ActionListener, MouseListen
                 ra.setIdPregunta(id_pregunta);
                 ra.setIdRespuesta(respuestasdao.getIdRespuesta(id_pregunta, rb[i].getText().trim()));
                 objRespuestasAlumno.set(id_pregunta, ra);
-                Iterator<RespuestasAlumno> nombreIterator = objRespuestasAlumno.iterator();
-                while (nombreIterator.hasNext()) {
-                    RespuestasAlumno p = nombreIterator.next();
-                    System.out.println("pregunta " + p.getIdPregunta() + " Respuesta " + p.getIdRespuesta());
-                }
+                // Para probar las respuestas
+//                Iterator<RespuestasAlumno> nombreIterator = objRespuestasAlumno.iterator();
+//                while (nombreIterator.hasNext()) {
+//                    RespuestasAlumno p = nombreIterator.next();
+//                    System.out.println("pregunta " + p.getIdPregunta() + " Respuesta " + p.getIdRespuesta());
+//                }
+            }
+        }
+
+        if (e.getSource() == pr.asignCuestionaryToGroup) {
+            cargarGruposToCuestionary();
+        }
+
+        if (e.getSource() == ac.btnSaveCtoGroup) {
+            if (ListCuestioariosGroups.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "No has seleccionado grupo(s) para asignar al cuestionario");
+                ac.cboCuestionaries.requestFocus();
+                return;
+            }
+            String rpta = cgruposDao.addGroupToCuestionario(ListCuestioariosGroups, opc);
+            if (rpta != null) {
+                JOptionPane.showMessageDialog(null, rpta);
+                limpiarformToasingGroup();
+                ac.dispose();
+                opc = "C";
+            } else if (opc.equals("C")) {
+                JOptionPane.showMessageDialog(null, "No se pudo crear el Cuestionario");
+            } else {
+                JOptionPane.showMessageDialog(null, "No se pudo actualizar el Cuestionario");
             }
         }
 
         if (e.getSource() == pr.btnRegistrarCuestionary) {
+            if (pr.txtDescCuestionary.getText().equals("")) {
+                JOptionPane.showMessageDialog(null, "Debe ingresar el titulo del cuestionario..");
+                pr.txtDescCuestionary.requestFocus();
+                return;
+            }
+            if (pr.cboAsignature.getSelectedItem().equals("-- Seleccione --")) {
+                JOptionPane.showMessageDialog(null, "Debe seleccionar una asignatura.");
+                pr.cboAsignature.requestFocus();
+                return;
+            }
+            if (ListPreguntas.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Aún no ha ingresado preguntas para el cuestionario");
+                return;
+            }
+            if (ListRespuestas.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Aún no ha ingresado respuestas para las preguntas del cuestionario");
+                return;
+            }
             Cuestionario c = new Cuestionario();
             String desccuestionario = pr.txtDescCuestionary.getText();
             String fecha = df.format(pr.dcFechaCuestionary.getDate());
@@ -308,12 +410,28 @@ public final class CuestionarioController implements ActionListener, MouseListen
         }
 
         if (e.getSource() == pr.btnNextQuestion) {
+            pregunt++;
             int temp = TotalPreguntas - 1;
-            showPreguntasCuestionario(id_pregunta + 1);
-            if (temp > id_pregunta) {
+            showPreguntasCuestionario(pregunt);
+            System.out.println("temp = " + temp + " pregunt = " + pregunt);
+            if (temp > pregunt) {
                 pr.btnNextQuestion.setEnabled(true);
             } else {
                 pr.btnNextQuestion.setEnabled(false);
+                pr.btnPreviousQuestion.setEnabled(true);
+            }
+        }
+
+        if (e.getSource() == pr.btnPreviousQuestion) {
+            pregunt--;
+            int temp = TotalPreguntas - 1;
+            showPreguntasCuestionario(pregunt);
+            System.out.println("temp = " + temp + " pregunt = " + pregunt);
+            if (pregunt > 0) {
+                pr.btnPreviousQuestion.setEnabled(true);
+            } else {
+                pr.btnPreviousQuestion.setEnabled(false);
+                pr.btnNextQuestion.setEnabled(true);
             }
         }
 
@@ -324,12 +442,16 @@ public final class CuestionarioController implements ActionListener, MouseListen
                 Cuestionario c = nombreIterator.next();
                 String profesor = udao.getProfesor(c.getIdUser());
                 idCuest = c.getIdCuestionario();
-                llenarRespuestasAlumno();
+                if (cantCuestionario > 1) {
+                    llenarRespuestasAlumno();
+                }
                 pr.tProfesor.setText(profesor);
                 pr.tCuestionario.setText(c.getDescripcion());
                 pr.tGrado.setText(grupdao.getListGrupoToString(idGrupo).get(0).getGrupo());
-                cargarPreguntasCuestionario(idCuest);
-                showPreguntasCuestionario(0);
+                if (cantCuestionario > 1) {
+                    cargarPreguntasCuestionario(idCuest);
+                    showPreguntasCuestionario(0);
+                }
             } else {
                 pr.tCuestionario.setText("");
                 pr.tProfesor.setText("");
@@ -347,6 +469,7 @@ public final class CuestionarioController implements ActionListener, MouseListen
             }
             ListRespuestasTemp.clear();
             cargarRespuestasInTable(pr.tbRespuestasQ);
+            pr.cboPreguntas.setEnabled(false);
         }
 
         if (e.getSource() == pr.btnAddPregunta) {
@@ -358,7 +481,6 @@ public final class CuestionarioController implements ActionListener, MouseListen
             }
             contPregunta = contPregunta + 1;
             PreguntasCuestionario pc = new PreguntasCuestionario();
-
             idNextOregunta = preguntasdao.nexIdPreguntaCuestionario();
             pc.setId(idNextOregunta + contPregunta);
             pc.setIdPregunta(deleteSpinner);
@@ -370,7 +492,6 @@ public final class CuestionarioController implements ActionListener, MouseListen
             pr.txtDescripPregunta.setText("");
             enabledAnswer();
             deleteSpinner++;
-            System.out.println("deleteSpinner "+deleteSpinner);
         }
 
         if (e.getSource() == pr.btnAddRespuesta) {
@@ -421,6 +542,7 @@ public final class CuestionarioController implements ActionListener, MouseListen
                 pr.cboLiteral.addItem("C");
                 pr.cboLiteral.addItem("D");
                 pr.cboLiteral.addItem("E");
+                pr.cboPreguntas.setEnabled(true);
             }
             if (pr.cboLiteral.getItemCount() > 2) {
                 System.out.println("remover " + literal);
@@ -430,75 +552,32 @@ public final class CuestionarioController implements ActionListener, MouseListen
 
         }
 
-        if (e.getSource() == pr.btnCancelarC) {
-
-//            System.out.println(pr.tbPreguntasC.getModel().getValueAt(0, 2).toString());
-//            probarvalores();
+        if (e.getSource() == pr.btnCancelarCuestionary) {
+            limpiarForm();
         }
+
+        if (e.getSource() == pr.btnRegistrarCAlumno) {
+            // Para probar las respuestas
+            Iterator<RespuestasAlumno> nombreIterator = objRespuestasAlumno.iterator();
+            int cont = 0;
+            while (nombreIterator.hasNext()) {
+                RespuestasAlumno p = nombreIterator.next();
+                if (p.getIdPregunta() == 0 && p.getIdRespuesta() == 0) {
+                    cont++;
+                }
+            }
+            if (cont > 0) {
+                int response = JOptionPane.showConfirmDialog(null, "<html>Está seguro enviar el Cuestionario?<br>Aún hay"
+                        + " "+cont+" preguntas sin contestar </html>", "Aviso..!",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                if (response == JOptionPane.YES_OPTION) {
+                   //pendiente guardar respuestas
+                }
+            }
+        }
+
     }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-//        int fila = pr.tbPreguntasC.rowAtPoint(e.getPoint());
-//        int columna = pr.tbPreguntasC.columnAtPoint(e.getPoint());
-//        String valor = pr.tbPreguntasC.getModel().getValueAt(fila, columna).toString();
-//        if (!valor.equals("")) {
-//            System.out.println(valor);
-//        }
-
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e
-    ) {
-
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e
-    ) {
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e
-    ) {
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e
-    ) {
-    }
-
-//    private void probarvalores() {       
-//        int filas = pr.tbPreguntasC.getRowCount();
-//        int columnas = pr.tbPreguntasC.getColumnCount();
-//        RespuestasAlumno ra;        
-//        int pregunta = 0;
-//        for (int i = 0; i < filas; i++) {
-//            ra = new RespuestasAlumno();
-//            for (int j = 0; j < columnas; j++) {
-//                switch (j) {
-//                    case 0:
-//                        String idPregunta = (String) pr.tbPreguntasC.getModel().getValueAt(i, j).toString();                        
-//                        String[] idPSeparated = idPregunta.split("-");
-//                        pregunta = Integer.parseInt(idPSeparated[0].trim());
-//                        ra.setIdPregunta(pregunta);
-//                        break;
-//                    case 5:
-//                        String rpta = pr.tbPreguntasC.getModel().getValueAt(i, j).toString();                        
-//                        ra.setIdRespuesta(respuestasdao.getIdRespuesta(pregunta, rpta.trim()));
-//                        break;
-//                }
-//            }
-//            objAlumno.add(ra);
-//        }
-//        Iterator<RespuestasAlumno> nombreIterator = objAlumno.iterator();
-//        while (nombreIterator.hasNext()) {
-//            RespuestasAlumno p = nombreIterator.next();
-//            System.out.println("pregunta "+p.getIdPregunta() + " Respuesta "+p.getIdRespuesta());
-//        }
-//
-//    }
     @Override
     public void itemStateChanged(ItemEvent e) {
         if (e.getSource() == pr.chkEstado) {
@@ -513,6 +592,37 @@ public final class CuestionarioController implements ActionListener, MouseListen
         }
         if (e.getSource() == pr.rdoFalse) {
             estadoRespuesta = false;
+        }
+
+        for (int i = 0; i < ac.pnGruposAdd.getComponentCount(); i++) {
+            if (e.getSource() == cb[i]) {
+                if (cb[i].isSelected()) {
+                    System.out.println(cb[i].getText() + " = " + grupdao.getIdGrupoByName(cb[i].getText().trim()));
+                    if (ac.cboCuestionaries.getSelectedItem().equals("-- Seleccione --")) {
+                        JOptionPane.showMessageDialog(null, "Debes Seleccionar un cuestionario primero..");
+                        ac.cboCuestionaries.requestFocus();
+                        cb[i].setSelected(false);
+                        System.out.println("tamaño if lista = " + ListCuestioariosGroups.size());
+                        return;
+                    }
+                    CuestionariosGrupos cg = new CuestionariosGrupos();
+                    cg.setIdCuestionario(cuestionariodao.getCuestionariosByName((String) ac.cboCuestionaries.getSelectedItem()));
+                    cg.setIdGrupo(grupdao.getIdGrupoByName(cb[i].getText().trim()));
+                    ListCuestioariosGroups.add(cg);
+                    System.out.println("tamaño lista 2if= " + ListCuestioariosGroups.size());
+                } else {
+                    System.out.println("true " + cb[i].getText().trim());
+                    Iterator<CuestionariosGrupos> cg = ListCuestioariosGroups.iterator();
+                    while (cg.hasNext()) {
+                        CuestionariosGrupos borrar = cg.next();
+                        System.out.println("obj =" + borrar.getIdGrupo());
+                        if (borrar.getIdGrupo() == grupdao.getIdGrupoByName(cb[i].getText().trim())) {
+                            cg.remove();
+                        }
+                    }
+                }
+
+            }
         }
 
     }
@@ -537,12 +647,12 @@ public final class CuestionarioController implements ActionListener, MouseListen
     }
 
     public void enabledAnswer() {
-        System.out.println("lista cant = " + ListPreguntasTemp.size());
-        if (ListPreguntasTemp.size() > 1) {
+        if (ListPreguntasTemp.size() > 0) {
             pr.cboPreguntas.setEnabled(true);
             pr.cboLiteral.setEnabled(true);
             pr.txtRespuestaQ.setEnabled(true);
             pr.rdoTrue.setEnabled(true);
+            pr.rdoTrue.setSelected(true);
             pr.rdoFalse.setEnabled(true);
             pr.btnAddRespuesta.setEnabled(true);
         } else {
@@ -553,6 +663,27 @@ public final class CuestionarioController implements ActionListener, MouseListen
             pr.rdoFalse.setEnabled(false);
             pr.btnAddRespuesta.setEnabled(false);
         }
+    }
+
+    private void cargarCuestionariesToAddGrup(AsignCuestionaryToGroup ac) {
+        ac.cboCuestionaries.removeAllItems();
+        ac.cboCuestionaries.addItem("-- Seleccione --");
+        Iterator<Cuestionario> nombreIterator = cuestionariodao.getCuestionariosByProfesor(idUserLog).iterator();
+        while (nombreIterator.hasNext()) {
+            Cuestionario elemento = nombreIterator.next();
+            ac.cboCuestionaries.addItem(elemento.getDescripcion());
+        }
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+        if (e.getSource() == ac) {
+            ListCuestioariosGroups.clear();
+        }
+    }
+
+    private void limpiarformToasingGroup() {
+        ac.cboCuestionaries.removeAllItems();
     }
 
 }

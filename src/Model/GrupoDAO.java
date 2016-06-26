@@ -23,6 +23,27 @@ public class GrupoDAO {
         grupo = new Grupo();
     }
     
+    
+    
+     public ArrayList<Grupo> getListGrupos() {
+        ArrayList ListaGrupo = new ArrayList();        
+        try {
+            sql = "SELECT * FROM grupo";
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            while (rs.next()) {
+                grupo = new Grupo();
+                grupo.setIdGrupo(rs.getInt("id_grupo"));
+                grupo.setGrupo(rs.getString("grupo"));  
+                grupo.setCant(rs.getString("cant_alumnos")); 
+                ListaGrupo.add(grupo);
+            }
+        } catch (Exception e) {
+            System.out.println("error" + e);
+        }
+        return ListaGrupo;
+
+    }
 
 
     public ArrayList<Grupo> getListGrupoById(int idGrupo) {
@@ -115,6 +136,22 @@ public class GrupoDAO {
             System.out.println("error" + e);
         }
         return ListaGrupo;
+
+    }
+    
+      public int getIdGrupoByName(String grupo) {
+        int idGrupo = 0;
+        try {
+            sql = "SELECT id_grupo FROM grupo WHERE grupo = '"+grupo+"'";
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            if (rs.next()) {
+                idGrupo = rs.getInt("id_grupo");                
+            }
+        } catch (Exception e) {
+            System.out.println("error" + e);
+        }
+        return idGrupo;
 
     }
     

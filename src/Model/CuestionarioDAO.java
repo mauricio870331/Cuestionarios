@@ -191,4 +191,45 @@ public class CuestionarioDAO {
         return rpta;
     }
 
+    public ArrayList<Cuestionario> getCuestionariosByProfesor(int user) {
+        ArrayList listaCuestionario = new ArrayList();
+        Cuestionario cuestionario;
+        try {
+            sql = "SELECT * FROM c_cuestionario WHERE id_user = " + user + "";
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            while (rs.next()) {
+                cuestionario = new Cuestionario();
+                cuestionario.setIdCuestionario(rs.getInt("id_cuestionario"));
+                cuestionario.setIdUser(rs.getInt("id_user"));
+                cuestionario.setDescripcion(rs.getString("descripcion"));
+                cuestionario.setFecha(rs.getString("fecha"));
+                cuestionario.setIdAsignatura(rs.getInt("id_asignatura"));
+                cuestionario.setEstado(rs.getBoolean("estado"));
+                listaCuestionario.add(cuestionario);
+            }
+
+        } catch (Exception e) {
+            System.out.println("error aqui" + e);
+        }
+        return listaCuestionario;
+    }
+
+    public int getCuestionariosByName(String descuestionario) {
+        int idCuestionario = 0;
+        try {
+            sql = "SELECT * FROM c_cuestionario WHERE descripcion = '" + descuestionario + "'";
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            if (rs.next()) {
+                idCuestionario = rs.getInt("id_cuestionario");
+
+            }
+
+        } catch (Exception e) {
+            System.out.println("error aqui" + e);
+        }
+        return idCuestionario;
+    }
+
 }
