@@ -336,6 +336,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
                 ra.setIdPregunta(id_pregunta);
                 ra.setIdRespuesta(respuestasdao.getIdRespuesta(id_pregunta, rb[i].getText().trim()));
                 objRespuestasAlumno.set(id_pregunta, ra);
+                rb[i].setSelected(true);
                 // Para probar las respuestas
 //                Iterator<RespuestasAlumno> nombreIterator = objRespuestasAlumno.iterator();
 //                while (nombreIterator.hasNext()) {
