@@ -75,6 +75,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
     ArrayList<RespuestasCuestionario> ListRespuestas = new ArrayList<>();
     ArrayList<RespuestasCuestionario> ListRespuestasTemp = new ArrayList<>();
     ArrayList<CuestionariosGrupos> ListCuestioariosGroups = new ArrayList<>();
+    ArrayList<String> tempEstados = new ArrayList<>();
     ArrayList<Integer> sortQuestions = new ArrayList<>();
     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     int idCuest = 0;
@@ -151,6 +152,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         for (int i = 0; i < TotalPreguntas; i++) {
             preguntasCList.add(new PreguntasCuestionario());
             sortQuestions.add(i);
+            tempEstados.add(i,"");
         }
         for (int i = 0; i < TotalPreguntas; i++) {
             objRespuestasAlumno.add(new RespuestasAlumno());
@@ -280,6 +282,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
     public void cargarRespuestasCuestionario(int p) {
         id_pregunta = preguntasCList.get(p).getIdPregunta();
         int cantResp = respuestasdao.getRespuestasCuestionario(id_pregunta, idCuest).size();
+        int cantTempEstados = tempEstados.size();
         pr.pnRespuestas.removeAll();
         pr.pnRespuestas.setLayout(new java.awt.GridLayout(cantResp, 1));
         rb = new JRadioButton[cantResp];
@@ -288,10 +291,17 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         while (nombreIterator.hasNext()) {
             RespuestasCuestionario rc = nombreIterator.next();
             rb[i] = new JRadioButton();
+            rb[i].setName("rpta"+i);
             rb[i].setText(rc.getRespuesta());
             rb[i].addActionListener(this);
             pr.GrupoRespuestas.add(rb[i]);
             pr.pnRespuestas.add(rb[i]);
+            if (cantTempEstados>p) {
+                System.out.println("mayor que 0");
+                if (tempEstados.get(p).equals(rb[i].getName())) {
+                   rb[i].setSelected(true);
+                } 
+            }
             i++;
         }
         pr.pnRespuestas.updateUI();
@@ -315,8 +325,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         while (nombreIterator.hasNext()) {
             Grupo g = nombreIterator.next();
             cb[i] = new JCheckBox();
-            cb[i].setText(g.getGrupo());
-            cb[i].addActionListener(this);
+            cb[i].setText(g.getGrupo());            
             cb[i].addItemListener(this);
             ac.pnGruposAdd.add(cb[i]);
             i++;
@@ -333,10 +342,10 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         for (int i = 0; i < pr.pnRespuestas.getComponentCount(); i++) {
             if (e.getSource() == rb[i]) {
                 RespuestasAlumno ra = new RespuestasAlumno();
-                ra.setIdPregunta(id_pregunta);
+                ra.setIdPregunta(id_pregunta);                
                 ra.setIdRespuesta(respuestasdao.getIdRespuesta(id_pregunta, rb[i].getText().trim()));
-                objRespuestasAlumno.set(id_pregunta, ra);
-                rb[i].setSelected(true);
+                objRespuestasAlumno.set(id_pregunta, ra);  
+                tempEstados.set(pregunt,rb[i].getName());
                 // Para probar las respuestas
 //                Iterator<RespuestasAlumno> nombreIterator = objRespuestasAlumno.iterator();
 //                while (nombreIterator.hasNext()) {
@@ -413,8 +422,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         if (e.getSource() == pr.btnNextQuestion) {
             pregunt++;
             int temp = TotalPreguntas - 1;
-            showPreguntasCuestionario(pregunt);
-            System.out.println("temp = " + temp + " pregunt = " + pregunt);
+            showPreguntasCuestionario(pregunt);            
             if (temp > pregunt) {
                 pr.btnNextQuestion.setEnabled(true);
             } else {

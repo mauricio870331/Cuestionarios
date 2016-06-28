@@ -14,12 +14,14 @@ public class RespuestasAlumno {
     private int idPregunta;
     private int idRespuesta;
     private int idCuestionarioAlumno;
+    private boolean tempEstado;
 
     public RespuestasAlumno() {
         this.idRespuestaA = 0;
         this.idPregunta = 0;
         this.idRespuesta = 0;
         this.idCuestionarioAlumno = 0;
+        this.tempEstado = false;
     }
 
     public int getIdRespuestaA() {
@@ -52,6 +54,14 @@ public class RespuestasAlumno {
 
     public void setIdCuestionarioAlumno(int idCuestionarioAlumno) {
         this.idCuestionarioAlumno = idCuestionarioAlumno;
+    }
+
+    public boolean isTempEstado() {
+        return tempEstado;
+    }
+
+    public void setTempEstado(boolean tempEstado) {
+        this.tempEstado = tempEstado;
     }
     
 }
