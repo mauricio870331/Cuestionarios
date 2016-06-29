@@ -29,28 +29,27 @@ public class CCuestionarioAlumnoDAO {
     }
 
     public int createCuestionarioAlumno(CCuestionarioAlumno c, String opc) {
-        int rpta = 0;
+        int idcAlumno = 0;
         try {
             if (opc.equals("C")) {
                 sql = "INSERT INTO c_cuestionario_alumno (id_user, id_cuestionario) VALUES (?,?)";
                 pstm = cn.prepareStatement(sql);
                 pstm.setInt(1, c.getIdAlumno());
                 pstm.setInt(2, c.getIdCuestionario());
-                pstm.executeUpdate();
-                if (pstm.executeUpdate()==1) {
-                    
+                int rowafected = pstm.executeUpdate();
+                if (rowafected > 0) {
+                    sql = "SELECT id_c_alumno FROM c_cuestionario_alumno ORDER BY id_c_alumno DESC LIMIT 1";
+                    pstm = cn.prepareStatement(sql);
+                    rs = pstm.executeQuery();
+                    if (rs.next()) {
+                        idcAlumno = rs.getInt("id_c_alumno");
+                    }
                 }
             }
-//            if (opc.equals("C")) {
-////                rpta = "Grupos asignados a cuestionaro con éxito";
-//            } else {
-////                rpta = "Grupos actualizada con éxito";
-//            }
-
         } catch (Exception e) {
-            System.err.println("CuestionarioGrupoDao AddQuest : " + e);
+            System.err.println("CCuestionarioAlumnoDao AddQuest : " + e);
         }
-        return rpta;
+        return idcAlumno;
     }
 
 }

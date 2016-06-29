@@ -17,9 +17,9 @@ public class RespuestasAlumno {
     private boolean tempEstado;
 
     public RespuestasAlumno() {
-        this.idRespuestaA = 0;
-        this.idPregunta = 0;
-        this.idRespuesta = 0;
+        this.idRespuestaA = -1;
+        this.idPregunta = -1;
+        this.idRespuesta = -1;
         this.idCuestionarioAlumno = 0;
         this.tempEstado = false;
     }

@@ -9,6 +9,8 @@ import App.AsignCuestionaryToGroup;
 import App.Principal;
 import Model.Asignaturas;
 import Model.AsignaturasDAO;
+import Model.CCuestionarioAlumno;
+import Model.CCuestionarioAlumnoDAO;
 import Model.Cuestionario;
 import Model.CuestionarioDAO;
 import Model.CuestionariosGrupos;
@@ -63,6 +65,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
     AsignaturasDAO asdao = new AsignaturasDAO();
     UsersDAO udao = new UsersDAO();
     GrupoDAO grupdao = new GrupoDAO();
+    CCuestionarioAlumnoDAO ccuestionarioalumnodao = new CCuestionarioAlumnoDAO();
     DefaultTableModel modelo = new DefaultTableModel();
     CuestionariosGruposDAO cgruposDao = new CuestionariosGruposDAO();
     Date m = new Date();//para capturar la fecha actual
@@ -152,7 +155,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         for (int i = 0; i < TotalPreguntas; i++) {
             preguntasCList.add(new PreguntasCuestionario());
             sortQuestions.add(i);
-            tempEstados.add(i,"");
+            tempEstados.add(i, "");
         }
         for (int i = 0; i < TotalPreguntas; i++) {
             objRespuestasAlumno.add(new RespuestasAlumno());
@@ -291,16 +294,16 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         while (nombreIterator.hasNext()) {
             RespuestasCuestionario rc = nombreIterator.next();
             rb[i] = new JRadioButton();
-            rb[i].setName("rpta"+i);
+            rb[i].setName("rpta" + i);
             rb[i].setText(rc.getRespuesta());
             rb[i].addActionListener(this);
             pr.GrupoRespuestas.add(rb[i]);
             pr.pnRespuestas.add(rb[i]);
-            if (cantTempEstados>p) {
+            if (cantTempEstados > p) {
                 System.out.println("mayor que 0");
                 if (tempEstados.get(p).equals(rb[i].getName())) {
-                   rb[i].setSelected(true);
-                } 
+                    rb[i].setSelected(true);
+                }
             }
             i++;
         }
@@ -325,7 +328,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         while (nombreIterator.hasNext()) {
             Grupo g = nombreIterator.next();
             cb[i] = new JCheckBox();
-            cb[i].setText(g.getGrupo());            
+            cb[i].setText(g.getGrupo());
             cb[i].addItemListener(this);
             ac.pnGruposAdd.add(cb[i]);
             i++;
@@ -342,16 +345,16 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         for (int i = 0; i < pr.pnRespuestas.getComponentCount(); i++) {
             if (e.getSource() == rb[i]) {
                 RespuestasAlumno ra = new RespuestasAlumno();
-                ra.setIdPregunta(id_pregunta);                
+                ra.setIdPregunta(id_pregunta);
                 ra.setIdRespuesta(respuestasdao.getIdRespuesta(id_pregunta, rb[i].getText().trim()));
-                objRespuestasAlumno.set(id_pregunta, ra);  
-                tempEstados.set(pregunt,rb[i].getName());
+                objRespuestasAlumno.set(id_pregunta, ra);
+                tempEstados.set(pregunt, rb[i].getName());
                 // Para probar las respuestas
-//                Iterator<RespuestasAlumno> nombreIterator = objRespuestasAlumno.iterator();
-//                while (nombreIterator.hasNext()) {
-//                    RespuestasAlumno p = nombreIterator.next();
-//                    System.out.println("pregunta " + p.getIdPregunta() + " Respuesta " + p.getIdRespuesta());
-//                }
+                Iterator<RespuestasAlumno> nombreIterator = objRespuestasAlumno.iterator();
+                while (nombreIterator.hasNext()) {
+                    RespuestasAlumno p = nombreIterator.next();
+                    System.out.println("pregunta " + p.getIdPregunta() + " Respuesta " + p.getIdRespuesta());
+                }
             }
         }
 
@@ -422,7 +425,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         if (e.getSource() == pr.btnNextQuestion) {
             pregunt++;
             int temp = TotalPreguntas - 1;
-            showPreguntasCuestionario(pregunt);            
+            showPreguntasCuestionario(pregunt);
             if (temp > pregunt) {
                 pr.btnNextQuestion.setEnabled(true);
             } else {
@@ -565,23 +568,24 @@ public final class CuestionarioController extends WindowAdapter implements Actio
             limpiarForm();
         }
 
-        if (e.getSource() == pr.btnRegistrarCAlumno) {
-            // Para probar las respuestas
+        if (e.getSource() == pr.btnRegistrarCAlumno) {          
             Iterator<RespuestasAlumno> nombreIterator = objRespuestasAlumno.iterator();
             int cont = 0;
             while (nombreIterator.hasNext()) {
                 RespuestasAlumno p = nombreIterator.next();
-                if (p.getIdPregunta() == 0 && p.getIdRespuesta() == 0) {
+                if (p.getIdPregunta() == -1 && p.getIdRespuesta() == -1) {
                     cont++;
                 }
-            }
-            if (cont > 0) {
+            }           
+            if (cont > 0) {                
                 int response = JOptionPane.showConfirmDialog(null, "<html>Está seguro enviar el Cuestionario?<br>Aún hay"
-                        + " "+cont+" preguntas sin contestar </html>", "Aviso..!",
+                        + " " + cont + " preguntas sin contestar </html>", "Aviso..!",
                         JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                 if (response == JOptionPane.YES_OPTION) {
-                   //pendiente guardar respuestas
+                    guardarCuestionarioAlumno();
                 }
+            } else {
+                guardarCuestionarioAlumno();
             }
         }
 
@@ -693,6 +697,30 @@ public final class CuestionarioController extends WindowAdapter implements Actio
 
     private void limpiarformToasingGroup() {
         ac.cboCuestionaries.removeAllItems();
+    }
+
+    private void limpiarformRespuestasAlumno() {
+        objRespuestasAlumno.clear();
+        tempEstados.clear();
+        sortQuestions.clear();
+    }
+
+    private void guardarCuestionarioAlumno() {
+        System.out.println("4 aqui");
+        CCuestionarioAlumno cca = new CCuestionarioAlumno();
+        cca.setIdAlumno(idUserLog);
+        cca.setIdCuestionario(idCuest);
+        int idca = ccuestionarioalumnodao.createCuestionarioAlumno(cca, opc);
+        if (idca > 0) {
+            System.out.println("5 aqui");
+            String rpta = respuestasAlumnodao.Create(objRespuestasAlumno, idca, opc);
+            if (rpta != null) {
+                JOptionPane.showMessageDialog(null, rpta);
+                limpiarformRespuestasAlumno();
+            } else {
+                JOptionPane.showMessageDialog(null, "Error al guardar el cuestionario");
+            }
+        }
     }
 
 }

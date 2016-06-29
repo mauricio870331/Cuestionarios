@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *
@@ -27,35 +29,26 @@ public class RespuestasAlumnoDAO {
         cn = conexion.getConexion();
     }
 
-    public String Create(RespuestasAlumno ra, String opc) {
-        String responseCreate = "";
+    public String Create(ArrayList<RespuestasAlumno> objRespuestasAlumno, int idca, String opc) {
+        String responseCreate = null;
         try {
             if (opc.equals("C")) {
-                sql = "INSERT INTO respuestas_alumno (id_pregunta, id_respuesta) VALUES (?, ?)";
-            }
-            if (opc.equals("U")) {
-                sql = "";
-            }
-            pstm = cn.prepareStatement(sql);
-            pstm.setInt(1, ra.getIdPregunta());
-            pstm.setInt(2, ra.getIdRespuesta());
-            //            if (opc.equals("U")) {
-//
-//            }
-//            if (opc.equals("C")) {
-//
-//            }
-            int rowAfected = pstm.executeUpdate();
-            if (rowAfected > 0) {
-
-                if (opc.equals("C")) {
-                    responseCreate = "Registro creado con exito";
-                } else {
-                    responseCreate = "Registro actualizado con exito";
+                Iterator<RespuestasAlumno> nombreIterator = objRespuestasAlumno.iterator();
+                while (nombreIterator.hasNext()) {
+                    RespuestasAlumno ra = nombreIterator.next();
+                    sql = "INSERT INTO respuestas_alumno (id_pregunta, id_respuesta, id_c_alumno) VALUES (?, ?, ?)";
+                    pstm = cn.prepareStatement(sql);
+                    pstm.setInt(1, ra.getIdPregunta());
+                    pstm.setInt(2, ra.getIdRespuesta());
+                    pstm.setInt(3, idca);
+                    int rowAfected = pstm.executeUpdate();
+                    if (rowAfected > 0) {
+                        responseCreate = "Cuestionario guardado con exito";
+                    }
                 }
             }
         } catch (SQLException e) {
-            System.out.println("error = " + e);
+            System.out.println("RespuestasAlumnoDao = " + e);
         }
         return responseCreate;
     }
