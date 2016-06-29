@@ -108,7 +108,7 @@ public class Principal extends javax.swing.JFrame {
         pnRespuestas = new javax.swing.JPanel();
         btnNextQuestion = new javax.swing.JButton();
         btnPreviousQuestion = new javax.swing.JButton();
-        jPanel11 = new javax.swing.JPanel();
+        pnfinishCuestionario = new javax.swing.JPanel();
         pnCreateCuestionary = new javax.swing.JPanel();
         jPanel10 = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
@@ -673,19 +673,19 @@ public class Principal extends javax.swing.JFrame {
                 .addGap(35, 35, 35))
         );
 
-        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
-        jPanel11.setLayout(jPanel11Layout);
-        jPanel11Layout.setHorizontalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout pnfinishCuestionarioLayout = new javax.swing.GroupLayout(pnfinishCuestionario);
+        pnfinishCuestionario.setLayout(pnfinishCuestionarioLayout);
+        pnfinishCuestionarioLayout.setHorizontalGroup(
+            pnfinishCuestionarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 1049, Short.MAX_VALUE)
         );
-        jPanel11Layout.setVerticalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        pnfinishCuestionarioLayout.setVerticalGroup(
+            pnfinishCuestionarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 295, Short.MAX_VALUE)
         );
 
         jLayeredPane1.setLayer(pnPregunta, javax.swing.JLayeredPane.PALETTE_LAYER);
-        jLayeredPane1.setLayer(jPanel11, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(pnfinishCuestionario, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
         jLayeredPane1.setLayout(jLayeredPane1Layout);
@@ -693,13 +693,13 @@ public class Principal extends javax.swing.JFrame {
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(pnPregunta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(pnfinishCuestionario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jLayeredPane1Layout.setVerticalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(pnPregunta, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(pnfinishCuestionario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
@@ -1158,7 +1158,6 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel14;
     private javax.swing.JPanel jPanel17;
     private javax.swing.JPanel jPanel2;
@@ -1192,6 +1191,7 @@ public class Principal extends javax.swing.JFrame {
     public javax.swing.JPanel pnRespuestas;
     private javax.swing.JScrollPane pnTbPreguntas;
     private javax.swing.JScrollPane pnTbPreguntas2;
+    public javax.swing.JPanel pnfinishCuestionario;
     public javax.swing.JRadioButton rdoAdmin;
     public javax.swing.JRadioButton rdoClientes;
     public javax.swing.JRadioButton rdoFalse;

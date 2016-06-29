@@ -568,7 +568,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
             limpiarForm();
         }
 
-        if (e.getSource() == pr.btnRegistrarCAlumno) {          
+        if (e.getSource() == pr.btnRegistrarCAlumno) {
             Iterator<RespuestasAlumno> nombreIterator = objRespuestasAlumno.iterator();
             int cont = 0;
             while (nombreIterator.hasNext()) {
@@ -576,8 +576,8 @@ public final class CuestionarioController extends WindowAdapter implements Actio
                 if (p.getIdPregunta() == -1 && p.getIdRespuesta() == -1) {
                     cont++;
                 }
-            }           
-            if (cont > 0) {                
+            }
+            if (cont > 0) {
                 int response = JOptionPane.showConfirmDialog(null, "<html>Está seguro enviar el Cuestionario?<br>Aún hay"
                         + " " + cont + " preguntas sin contestar </html>", "Aviso..!",
                         JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
@@ -703,16 +703,18 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         objRespuestasAlumno.clear();
         tempEstados.clear();
         sortQuestions.clear();
+        ListPreguntas.clear();
+        ListPreguntasTemp.clear();
+        ListRespuestas.clear();
+        ListRespuestasTemp.clear();
     }
 
     private void guardarCuestionarioAlumno() {
-        System.out.println("4 aqui");
         CCuestionarioAlumno cca = new CCuestionarioAlumno();
         cca.setIdAlumno(idUserLog);
         cca.setIdCuestionario(idCuest);
         int idca = ccuestionarioalumnodao.createCuestionarioAlumno(cca, opc);
         if (idca > 0) {
-            System.out.println("5 aqui");
             String rpta = respuestasAlumnodao.Create(objRespuestasAlumno, idca, opc);
             if (rpta != null) {
                 JOptionPane.showMessageDialog(null, rpta);

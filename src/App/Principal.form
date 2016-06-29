@@ -1242,7 +1242,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="pnPregunta" alignment="0" max="32767" attributes="0"/>
                               <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-                                  <Component id="jPanel11" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="pnfinishCuestionario" alignment="0" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
@@ -1250,7 +1250,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="pnPregunta" alignment="1" max="32767" attributes="0"/>
                               <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-                                  <Component id="jPanel11" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="pnfinishCuestionario" alignment="0" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
@@ -1361,7 +1361,10 @@
                             </Component>
                           </SubComponents>
                         </Container>
-                        <Container class="javax.swing.JPanel" name="jPanel11">
+                        <Container class="javax.swing.JPanel" name="pnfinishCuestionario">
+                          <AuxValues>
+                            <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+                          </AuxValues>
 
                           <Layout>
                             <DimensionLayout dim="0">
