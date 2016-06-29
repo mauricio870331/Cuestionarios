@@ -109,6 +109,7 @@ public class Principal extends javax.swing.JFrame {
         btnNextQuestion = new javax.swing.JButton();
         btnPreviousQuestion = new javax.swing.JButton();
         pnfinishCuestionario = new javax.swing.JPanel();
+        jLabel21 = new javax.swing.JLabel();
         pnCreateCuestionary = new javax.swing.JPanel();
         jPanel10 = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
@@ -673,15 +674,24 @@ public class Principal extends javax.swing.JFrame {
                 .addGap(35, 35, 35))
         );
 
+        jLabel21.setFont(new java.awt.Font("Tahoma", 3, 24)); // NOI18N
+        jLabel21.setText("La Prueba ha finalizado..");
+
         javax.swing.GroupLayout pnfinishCuestionarioLayout = new javax.swing.GroupLayout(pnfinishCuestionario);
         pnfinishCuestionario.setLayout(pnfinishCuestionarioLayout);
         pnfinishCuestionarioLayout.setHorizontalGroup(
             pnfinishCuestionarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1049, Short.MAX_VALUE)
+            .addGroup(pnfinishCuestionarioLayout.createSequentialGroup()
+                .addGap(247, 247, 247)
+                .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 456, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(346, Short.MAX_VALUE))
         );
         pnfinishCuestionarioLayout.setVerticalGroup(
             pnfinishCuestionarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 295, Short.MAX_VALUE)
+            .addGroup(pnfinishCuestionarioLayout.createSequentialGroup()
+                .addGap(89, 89, 89)
+                .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(122, Short.MAX_VALUE))
         );
 
         jLayeredPane1.setLayer(pnPregunta, javax.swing.JLayeredPane.PALETTE_LAYER);
@@ -1145,6 +1155,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

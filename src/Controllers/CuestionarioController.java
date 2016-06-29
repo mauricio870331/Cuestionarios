@@ -93,7 +93,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
     int idPtemp;
     int idtempfk;
     boolean estadoRespuesta;
-    int idNextOregunta;
+    int idNextPregunta;
     int contPregunta = 0;
     int deleteSpinner = 0;
     Date date = new Date();//para capturar la fecha actual
@@ -493,8 +493,8 @@ public final class CuestionarioController extends WindowAdapter implements Actio
             }
             contPregunta = contPregunta + 1;
             PreguntasCuestionario pc = new PreguntasCuestionario();
-            idNextOregunta = preguntasdao.nexIdPreguntaCuestionario();
-            pc.setId(idNextOregunta + contPregunta);
+            idNextPregunta = preguntasdao.nexIdPreguntaCuestionario();
+            pc.setId(idNextPregunta + contPregunta);
             pc.setIdPregunta(deleteSpinner);
             pc.setPregunta(pregunta);
             ListPreguntas.add(pc);
@@ -707,6 +707,11 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         ListPreguntasTemp.clear();
         ListRespuestas.clear();
         ListRespuestasTemp.clear();
+        pr.cboAsignatura.removeItem((String) pr.cboAsignatura.getSelectedItem());
+        pr.btnRegistrarCAlumno.setEnabled(false);
+        pr.pnPregunta.setVisible(false);
+        pr.pnfinishCuestionario.setVisible(true);
+        
     }
 
     private void guardarCuestionarioAlumno() {

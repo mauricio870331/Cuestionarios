@@ -5,7 +5,6 @@
  */
 package Controllers;
 
-
 import App.Login;
 import App.Principal;
 import Model.UsersDAO;
@@ -22,30 +21,33 @@ public final class LoginController implements ActionListener, KeyListener {
     Login lg;
     Principal pr;
     UsersDAO admDao;
-    GrupoDAO gymdao = new GrupoDAO();    
+    GrupoDAO gymdao = new GrupoDAO();
     UsersController administradorController;
-    
 
     public LoginController(Login lg, UsersDAO admDao, Principal pr) {
         this.lg = lg;
         this.admDao = admDao;
-        this.administradorController = null;        
+        this.administradorController = null;
         this.pr = pr;
         this.lg.btnIngresar.addActionListener(this);
         this.pr.btnLogout.addActionListener(this);
-        this.lg.btnSalir.addActionListener(this);     
+        this.lg.btnSalir.addActionListener(this);
         this.lg.txtUser.addActionListener(this);
         this.lg.txtUser.addKeyListener(this);
         this.lg.txtPass.addKeyListener(this);
-//        ocultarCapas();
     }
 
-    public void ocultarCapas() {
-        this.pr.pnCuestionario.setVisible(true);//-> item del menu principal
-//        this.pr.pnListAdmin.setVisible(false);
-//        this.pr.pnRutinas.setVisible(false);
-//        this.pr.pnCreateRutinas.setVisible(false);
-//        this.pr.pnPagos.setVisible(false);
+    public void ocultarCapas(int rol) {
+        if (rol == 1) {
+            pr.pnCreateAdmin.setVisible(true);
+            pr.pnCuestionario.setVisible(false);
+            pr.pnCreateCuestionary.setVisible(false);
+        }
+        if (rol == 2) {
+            pr.pnCuestionario.setVisible(true);   
+            pr.pnCreateAdmin.setVisible(false);
+            pr.pnCreateCuestionary.setVisible(false);
+        }
     }
 
     @Override
@@ -56,30 +58,27 @@ public final class LoginController implements ActionListener, KeyListener {
         if (e.getSource() == lg.btnIngresar) {
             String user = lg.txtUser.getText();
             String pass = new String(lg.txtPass.getPassword());
-            if (admDao.getExistAdmin(user, pass).size() >= 1) {               
-                    int rol = admDao.getExistAdmin(user, pass).get(0).getIdRol();
-                    int idUserLog = admDao.getExistAdmin(user, pass).get(0).getIdUser();
-                    int idGrupo = admDao.getExistAdmin(user, pass).get(0).getIdGrupo();
-                    if (rol == 2) {
-                        pr.pnCuestionario.setVisible(true);
-                        pr.pnCreateAdmin.setVisible(false);
-                        pr.pnCreateCuestionary.setVisible(false);
-                    }                                   
-                    administradorController = new UsersController(pr, admDao, rol, idUserLog, idGrupo);
-                    administradorController.cargarAdmin(pr.tbAdmin, "", 0);
-                    administradorController.cargarCboGrupo();
-                    administradorController.cargarRol();
-                    CuestionarioController cc = new CuestionarioController(pr, idGrupo, idUserLog);
+            if (admDao.getExistAdmin(user, pass).size() >= 1) {
+                int rol = admDao.getExistAdmin(user, pass).get(0).getIdRol();
+                int idUserLog = admDao.getExistAdmin(user, pass).get(0).getIdUser();
+                int idGrupo = admDao.getExistAdmin(user, pass).get(0).getIdGrupo();
+                System.out.println("rol " + rol);
+                ocultarCapas(rol);
+                administradorController = new UsersController(pr, admDao, rol, idUserLog, idGrupo);
+                administradorController.cargarAdmin(pr.tbAdmin, "", 0);
+                administradorController.cargarCboGrupo();
+                administradorController.cargarRol();
+                CuestionarioController cc = new CuestionarioController(pr, idGrupo, idUserLog);
 //                    cc.cargarCuestionarioByGrupo(idGrupo);
-                    enabledBtnPaginator();
-                    pr.lblNombres.setText(admDao.getExistAdmin(user, pass).get(0).getNombres());
-                    pr.lblApellidos.setText(admDao.getExistAdmin(user, pass).get(0).getApellidos());                      
-                        pr.setLocationRelativeTo(null);
-                        pr.setVisible(true);
-                        lg.dispose();
-                        lg.txtUser.setText("");
-                        lg.txtPass.setText("");                   
-                
+                enabledBtnPaginator();
+                pr.lblNombres.setText(admDao.getExistAdmin(user, pass).get(0).getNombres());
+                pr.lblApellidos.setText(admDao.getExistAdmin(user, pass).get(0).getApellidos());
+                pr.setLocationRelativeTo(null);
+                pr.setVisible(true);
+                lg.dispose();
+                lg.txtUser.setText("");
+                lg.txtPass.setText("");
+
             } else {
                 JOptionPane.showMessageDialog(null, "Usuario incorrecto");
             }
@@ -94,7 +93,7 @@ public final class LoginController implements ActionListener, KeyListener {
                 pr.lblNombres.setText("");
                 pr.lblApellidos.setText("");
                 pr.dispose();
-                administradorController = null;               
+                administradorController = null;
                 pr = null;
                 LoginController lgc = new LoginController(lg = new Login(), admDao = new UsersDAO(), pr = new Principal());
                 lg.setVisible(true);
