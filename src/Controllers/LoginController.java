@@ -71,8 +71,7 @@ public final class LoginController implements ActionListener, KeyListener {
                 CuestionarioController cc = new CuestionarioController(pr, idGrupo, idUserLog);
 //                    cc.cargarCuestionarioByGrupo(idGrupo);
                 enabledBtnPaginator();
-                pr.lblNombres.setText(admDao.getExistAdmin(user, pass).get(0).getNombres());
-                pr.lblApellidos.setText(admDao.getExistAdmin(user, pass).get(0).getApellidos());
+                pr.txtAlumnoName.setText(admDao.getExistAdmin(user, pass).get(0).getNombres()+" "+admDao.getExistAdmin(user, pass).get(0).getApellidos());               
                 pr.setLocationRelativeTo(null);
                 pr.setVisible(true);
                 lg.dispose();
@@ -90,8 +89,7 @@ public final class LoginController implements ActionListener, KeyListener {
             int response = JOptionPane.showConfirmDialog(null, "Esta seguro de cerrar la sesion ?", "Aviso..!",
                     JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (response == JOptionPane.YES_OPTION) {
-                pr.lblNombres.setText("");
-                pr.lblApellidos.setText("");
+                pr.txtAlumnoName.setText("");                
                 pr.dispose();
                 administradorController = null;
                 pr = null;

@@ -87,18 +87,16 @@ public class Principal extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
-        tGrado = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        tCuestionario = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        tProfesor = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         cboAsignatura = new javax.swing.JComboBox<>();
         jButton1 = new javax.swing.JButton();
         jLabel13 = new javax.swing.JLabel();
+        txtAlumnoName = new javax.swing.JTextField();
+        tGrado = new javax.swing.JTextField();
+        tCuestionario = new javax.swing.JTextField();
         jPanel9 = new javax.swing.JPanel();
-        lblNombres = new javax.swing.JLabel();
-        lblApellidos = new javax.swing.JLabel();
         btnCancelarC = new javax.swing.JButton();
         btnRegistrarCAlumno = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -460,24 +458,9 @@ public class Principal extends javax.swing.JFrame {
 
         jLabel7.setText("Grado:");
 
-        tGrado.setBackground(new java.awt.Color(255, 255, 255));
-        tGrado.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        tGrado.setText("---");
-        tGrado.setOpaque(true);
-
         jLabel4.setText("Cuestionario:");
 
-        tCuestionario.setBackground(new java.awt.Color(255, 255, 255));
-        tCuestionario.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        tCuestionario.setText("---");
-        tCuestionario.setOpaque(true);
-
-        jLabel5.setText("Profesor:");
-
-        tProfesor.setBackground(new java.awt.Color(255, 255, 255));
-        tProfesor.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        tProfesor.setText("---");
-        tProfesor.setOpaque(true);
+        jLabel5.setText("Alumno:");
 
         jLabel11.setText("Asignatura:");
 
@@ -489,6 +472,12 @@ public class Principal extends javax.swing.JFrame {
         jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel13.setText("Explicacion para comenzar la prueba");
         jLabel13.setOpaque(true);
+
+        txtAlumnoName.setEnabled(false);
+
+        tGrado.setEnabled(false);
+
+        tCuestionario.setEnabled(false);
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -502,17 +491,18 @@ public class Principal extends javax.swing.JFrame {
                             .addComponent(jLabel7)
                             .addComponent(jLabel5))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(tGrado, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
-                            .addComponent(tProfesor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel11))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tCuestionario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cboAsignatura, 0, 391, Short.MAX_VALUE)))
+                            .addComponent(tGrado)
+                            .addComponent(txtAlumnoName, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cboAsignatura, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(tCuestionario, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE))
+                        .addGap(1, 1, 1))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
                         .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, 664, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -524,21 +514,21 @@ public class Principal extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
+                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel11))
+                        .addComponent(tCuestionario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel7)
-                            .addComponent(tGrado)
-                            .addComponent(tCuestionario))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(tGrado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel5)
-                                .addComponent(tProfesor))
-                            .addComponent(cboAsignatura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(txtAlumnoName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(cboAsignatura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel11)))))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
@@ -547,12 +537,6 @@ public class Principal extends javax.swing.JFrame {
         );
 
         jPanel9.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        lblNombres.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lblNombres.setText("-------");
-
-        lblApellidos.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lblApellidos.setText("-------");
 
         btnCancelarC.setText("Cancelar");
 
@@ -574,10 +558,7 @@ public class Principal extends javax.swing.JFrame {
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
                     .addGroup(jPanel9Layout.createSequentialGroup()
-                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblNombres, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblApellidos, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnRegistrarCAlumno, javax.swing.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE)
                             .addComponent(btnCancelarC, javax.swing.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE))))
@@ -587,13 +568,9 @@ public class Principal extends javax.swing.JFrame {
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel9Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lblNombres, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnRegistrarCAlumno))
+                .addComponent(btnRegistrarCAlumno)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lblApellidos)
-                    .addComponent(btnCancelarC))
+                .addComponent(btnCancelarC)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -1181,8 +1158,6 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel9;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JScrollPane jpnTadmin;
-    public javax.swing.JLabel lblApellidos;
-    public javax.swing.JLabel lblNombres;
     public javax.swing.JLabel lblVerUsers;
     public javax.swing.JMenuItem mnuAddPago;
     public javax.swing.JMenuItem mnuAddRutina;
@@ -1208,12 +1183,12 @@ public class Principal extends javax.swing.JFrame {
     public javax.swing.JRadioButton rdoFalse;
     public javax.swing.JRadioButton rdoTodos;
     public javax.swing.JRadioButton rdoTrue;
-    public javax.swing.JLabel tCuestionario;
-    public javax.swing.JLabel tGrado;
-    public javax.swing.JLabel tProfesor;
+    public javax.swing.JTextField tCuestionario;
+    public javax.swing.JTextField tGrado;
     public javax.swing.JTable tbAdmin;
     public javax.swing.JTable tbPreguntasQ;
     public javax.swing.JTable tbRespuestasQ;
+    public javax.swing.JTextField txtAlumnoName;
     public javax.swing.JTextField txtApellidos;
     public javax.swing.JTextField txtBuscarAdmin;
     public javax.swing.JTextField txtDescCuestionary;

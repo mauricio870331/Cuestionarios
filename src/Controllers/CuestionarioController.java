@@ -252,7 +252,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
                     Cuestionario elementoC = itrC.next();
                     idCuest = elementoC.getIdCuestionario();
                     llenarRespuestasAlumno();
-                    pr.tProfesor.setText(udao.getProfesor(elementoC.getIdUser()));
+                    pr.txtAlumnoName.setText(udao.getProfesor(elementoC.getIdUser()));
                     pr.tCuestionario.setText(elementoC.getDescripcion());
                     pr.tGrado.setText(grupdao.getListGrupoToString(idGrupo).get(0).getGrupo());
                     cargarPreguntasCuestionario(elementoC.getIdCuestionario());
@@ -452,12 +452,11 @@ public final class CuestionarioController extends WindowAdapter implements Actio
             Iterator<Cuestionario> nombreIterator = cuestionariodao.getCuestionario(asignatura, idGrupo).iterator();
             if (nombreIterator.hasNext()) {
                 Cuestionario c = nombreIterator.next();
-                String profesor = udao.getProfesor(c.getIdUser());
+//                String profesor = udao.getProfesor(c.getIdUser());
                 idCuest = c.getIdCuestionario();
                 if (cantCuestionario > 1) {
                     llenarRespuestasAlumno();
-                }
-                pr.tProfesor.setText(profesor);
+                }              
                 pr.tCuestionario.setText(c.getDescripcion());
                 pr.tGrado.setText(grupdao.getListGrupoToString(idGrupo).get(0).getGrupo());
                 if (cantCuestionario > 1) {
@@ -466,7 +465,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
                 }
             } else {
                 pr.tCuestionario.setText("");
-                pr.tProfesor.setText("");
+                pr.txtAlumnoName.setText("");
             }
 
         }
