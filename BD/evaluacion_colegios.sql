@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 27-06-2016 a las 00:42:42
+-- Tiempo de generación: 03-07-2016 a las 15:27:48
 -- Versión del servidor: 10.1.10-MariaDB
 -- Versión de PHP: 7.0.2
 
@@ -38,6 +38,17 @@ CREATE TABLE `asignaturas` (
 INSERT INTO `asignaturas` (`id_asignatura`, `nombre_asig`) VALUES
 (1, 'Matematicas'),
 (2, 'Castellano');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `asignaturas_profesor`
+--
+
+CREATE TABLE `asignaturas_profesor` (
+  `id_user` int(11) NOT NULL,
+  `id_asignatura` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -93,6 +104,13 @@ CREATE TABLE `c_cuestionario_alumno` (
   `id_user` int(11) NOT NULL,
   `id_cuestionario` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `c_cuestionario_alumno`
+--
+
+INSERT INTO `c_cuestionario_alumno` (`id_c_alumno`, `id_user`, `id_cuestionario`) VALUES
+(1, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -157,6 +175,14 @@ CREATE TABLE `respuestas_alumno` (
   `id_respuesta` int(11) NOT NULL,
   `id_c_alumno` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `respuestas_alumno`
+--
+
+INSERT INTO `respuestas_alumno` (`id_respuesta_a`, `id_pregunta`, `id_respuesta`, `id_c_alumno`) VALUES
+(1, 0, 3, 1),
+(2, 1, 6, 1);
 
 -- --------------------------------------------------------
 
@@ -242,6 +268,12 @@ INSERT INTO `usuarios` (`id_user`, `tipo_doc`, `documento`, `nombres`, `apellido
 --
 ALTER TABLE `asignaturas`
   ADD PRIMARY KEY (`id_asignatura`);
+
+--
+-- Indices de la tabla `asignaturas_profesor`
+--
+ALTER TABLE `asignaturas_profesor`
+  ADD PRIMARY KEY (`id_user`,`id_asignatura`);
 
 --
 -- Indices de la tabla `cuestionarios_grupos`
@@ -332,7 +364,7 @@ ALTER TABLE `c_cuestionario`
 -- AUTO_INCREMENT de la tabla `c_cuestionario_alumno`
 --
 ALTER TABLE `c_cuestionario_alumno`
-  MODIFY `id_c_alumno` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_c_alumno` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT de la tabla `grupo`
 --
@@ -342,12 +374,12 @@ ALTER TABLE `grupo`
 -- AUTO_INCREMENT de la tabla `preguntas_cuestionario`
 --
 ALTER TABLE `preguntas_cuestionario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT de la tabla `respuestas_alumno`
 --
 ALTER TABLE `respuestas_alumno`
-  MODIFY `id_respuesta_a` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_respuesta_a` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT de la tabla `respuestas_cuestionario`
 --
