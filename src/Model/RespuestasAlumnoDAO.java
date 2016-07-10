@@ -29,7 +29,7 @@ public class RespuestasAlumnoDAO {
         cn = conexion.getConexion();
     }
 
-    public boolean Create(ArrayList<RespuestasAlumno> objRespuestasAlumno, int idca, String opc) {
+    public boolean Create(ArrayList<RespuestasAlumno> objRespuestasAlumno, int idca, String opc, boolean auto) {
         boolean responseCreate = false;
         try {
             if (opc.equals("C")) {
@@ -58,6 +58,18 @@ public class RespuestasAlumnoDAO {
                         }
                     } else {
                         responseCreate = true;
+                    }
+
+                    if (auto && ra.getIdPregunta() == -1 && ra.getIdRespuesta() == -1) {
+                        sql = "INSERT INTO respuestas_alumno (id_pregunta, id_respuesta, id_c_alumno) VALUES (?, ?, ?)";
+                        pstm = cn.prepareStatement(sql);
+                        pstm.setInt(1, ra.getIdPregunta());
+                        pstm.setInt(2, ra.getIdRespuesta());
+                        pstm.setInt(3, idca);
+                        int rowAfected = pstm.executeUpdate();
+                        if (rowAfected > 0) {
+                            responseCreate = true;
+                        }
                     }
 
                 }

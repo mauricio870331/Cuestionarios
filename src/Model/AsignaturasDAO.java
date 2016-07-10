@@ -56,10 +56,12 @@ public class AsignaturasDAO {
         return responseCreate;
     }
 
-    public ArrayList<Asignaturas> getListCboAsignaturas() {
+    public ArrayList<Asignaturas> getListCboAsignaturas(int profesor) {
         ArrayList ListAsignatura = new ArrayList();
         try {
-            sql = "SELECT * FROM asignaturas";
+            sql = "SELECT * FROM asignaturas a "
+                + "INNER JOIN asignaturas_profesor ap ON a.id_asignatura = ap.id_asignatura "
+                + "WHERE ap.id_user = "+profesor+"";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             while (rs.next()) {
@@ -69,7 +71,7 @@ public class AsignaturasDAO {
                 ListAsignatura.add(as);
             }
         } catch (Exception e) {
-            System.out.println("error" + e);
+            System.out.println("error "+ e);
         }
         return ListAsignatura;
     }

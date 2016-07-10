@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 03-07-2016 a las 15:27:48
+-- Tiempo de generación: 11-07-2016 a las 01:12:49
 -- Versión del servidor: 10.1.10-MariaDB
 -- Versión de PHP: 7.0.2
 
@@ -37,7 +37,8 @@ CREATE TABLE `asignaturas` (
 
 INSERT INTO `asignaturas` (`id_asignatura`, `nombre_asig`) VALUES
 (1, 'Matematicas'),
-(2, 'Castellano');
+(2, 'Castellano'),
+(3, 'Nueva Asignatura');
 
 -- --------------------------------------------------------
 
@@ -49,6 +50,14 @@ CREATE TABLE `asignaturas_profesor` (
   `id_user` int(11) NOT NULL,
   `id_asignatura` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `asignaturas_profesor`
+--
+
+INSERT INTO `asignaturas_profesor` (`id_user`, `id_asignatura`) VALUES
+(1, 1),
+(1, 2);
 
 -- --------------------------------------------------------
 
@@ -66,10 +75,7 @@ CREATE TABLE `cuestionarios_grupos` (
 --
 
 INSERT INTO `cuestionarios_grupos` (`id_cuestionario`, `id_grupo`) VALUES
-(1, 1),
-(1, 2),
-(1, 3),
-(1, 4);
+(1, 1);
 
 -- --------------------------------------------------------
 
@@ -81,17 +87,20 @@ CREATE TABLE `c_cuestionario` (
   `id_cuestionario` int(11) NOT NULL,
   `id_user` int(11) NOT NULL,
   `descripcion` varchar(255) NOT NULL,
+  `objetivo` text,
   `fecha` date NOT NULL,
   `id_asignatura` int(11) NOT NULL,
-  `estado` tinyint(1) NOT NULL
+  `estado` tinyint(1) NOT NULL,
+  `vigencia` date DEFAULT NULL,
+  `duracion` int(3) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `c_cuestionario`
 --
 
-INSERT INTO `c_cuestionario` (`id_cuestionario`, `id_user`, `descripcion`, `fecha`, `id_asignatura`, `estado`) VALUES
-(1, 1, 'Matematicas 1', '2016-06-22', 1, 1);
+INSERT INTO `c_cuestionario` (`id_cuestionario`, `id_user`, `descripcion`, `objetivo`, `fecha`, `id_asignatura`, `estado`, `vigencia`, `duracion`) VALUES
+(1, 1, 'Matematicas 1', 'Evaluar el conocimiento e interpretacion matematica', '2016-07-10', 1, 1, '2016-07-18', 1);
 
 -- --------------------------------------------------------
 
@@ -160,8 +169,8 @@ CREATE TABLE `preguntas_cuestionario` (
 --
 
 INSERT INTO `preguntas_cuestionario` (`id`, `id_pregunta`, `pregunta`, `id_cuestionario`, `imagen`) VALUES
-(1, 0, '¿Cuántos lados tiene un hexágono? ------------ -------------- ------------- ------------------ ----------------', 1, NULL),
-(2, 1, '¿Cuál es el resultado de sumar una 1 y 40 minutos y 1 hora y 30 minutos?', 1, NULL);
+(1, 0, 'Si el radio de un círculo mide 10 cm, ¿Cuánto mide su diámetro?', 1, NULL),
+(2, 1, '¿Qué es más ligero?', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -181,8 +190,8 @@ CREATE TABLE `respuestas_alumno` (
 --
 
 INSERT INTO `respuestas_alumno` (`id_respuesta_a`, `id_pregunta`, `id_respuesta`, `id_c_alumno`) VALUES
-(1, 0, 3, 1),
-(2, 1, 6, 1);
+(1, 0, 1, 1),
+(2, -1, -1, 1);
 
 -- --------------------------------------------------------
 
@@ -203,16 +212,16 @@ CREATE TABLE `respuestas_cuestionario` (
 --
 
 INSERT INTO `respuestas_cuestionario` (`id_respuesta`, `id_pregunta`, `respuesta`, `estado`, `id_fk`) VALUES
-(1, 0, 'A: 8 lados', 0, 1),
-(2, 0, 'B: 6 lados', 1, 1),
-(3, 0, 'C: 5 lados', 0, 1),
-(4, 0, 'D: 7 lados', 0, 1),
-(5, 0, 'E: Ninguna de  las anteriores', 0, 1),
-(6, 1, 'A: 3 horas', 0, 2),
-(7, 1, 'B: 1 hora y 40 minutos', 0, 2),
-(8, 1, 'C: 2 horas y 50 minutos', 0, 2),
-(9, 1, 'D: 3 horas y 10 minutos', 1, 2),
-(10, 1, 'E: Ninguna de las anteriores', 1, 2);
+(1, 0, 'A: 50 cm', 0, 1),
+(2, 0, 'B: 20 cm', 1, 1),
+(3, 0, 'C: 30 cm', 0, 1),
+(4, 0, 'D: 1 metro', 0, 1),
+(5, 0, 'E: todas las anteriores', 0, 1),
+(6, 1, 'A: 1 kilo de plumas', 1, 2),
+(7, 1, 'B: 100 gramos de hierro', 0, 2),
+(8, 1, 'C: 1 kilo de lana', 0, 2),
+(9, 1, 'E: 1 kilo de algodón', 0, 2),
+(10, 1, 'D: todas son erroneas', 0, 2);
 
 -- --------------------------------------------------------
 
@@ -354,7 +363,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `asignaturas`
 --
 ALTER TABLE `asignaturas`
-  MODIFY `id_asignatura` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_asignatura` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT de la tabla `c_cuestionario`
 --

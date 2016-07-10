@@ -16,15 +16,19 @@ public class Cuestionario {
     private String fecha;
     private String objetivo;
     private int idAsignatura;
-    private boolean estado;    
+    private boolean estado;   
+    private String vigencia;
+    private int duracion;
 
     public Cuestionario() {
         this.idCuestionario = 0;
         this.idUser = 0;
         this.descripcion = "";
         this.fecha = "";
+        this.vigencia = "";
         this.objetivo = "";
         this.idAsignatura = 0;
+        this.duracion = 0;
         this.estado = false;       
     }
 
@@ -82,6 +86,22 @@ public class Cuestionario {
 
     public void setObjetivo(String objetivo) {
         this.objetivo = objetivo;
+    }
+
+    public String getVigencia() {
+        return vigencia;
+    }
+
+    public void setVigencia(String vigencia) {
+        this.vigencia = vigencia;
+    }
+
+    public int getDuracion() {
+        return duracion;
+    }
+
+    public void setDuracion(int duracion) {
+        this.duracion = duracion;
     }
 
        

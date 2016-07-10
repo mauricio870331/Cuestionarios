@@ -46,7 +46,7 @@ public final class LoginController implements ActionListener, KeyListener {
             pr.pnCreateCuestionary.setVisible(false);
         }
         if (rol == 2) {
-            pr.pnCuestionario.setVisible(true);   
+            pr.pnCuestionario.setVisible(true);
             pr.pnCreateAdmin.setVisible(false);
             pr.pnCreateCuestionary.setVisible(false);
         }
@@ -61,6 +61,9 @@ public final class LoginController implements ActionListener, KeyListener {
             String user = lg.txtUser.getText();
             String pass = new String(lg.txtPass.getPassword());
             if (admDao.getExistAdmin(user, pass).size() >= 1) {
+                lg.dispose();
+                lg.txtUser.setText("");
+                lg.txtPass.setText("");
                 int rol = admDao.getExistAdmin(user, pass).get(0).getIdRol();
                 int idUserLog = admDao.getExistAdmin(user, pass).get(0).getIdUser();
                 int idGrupo = admDao.getExistAdmin(user, pass).get(0).getIdGrupo();
@@ -71,16 +74,13 @@ public final class LoginController implements ActionListener, KeyListener {
                 administradorController.cargarCboGrupo();
                 administradorController.cargarRol();
                 CuestionarioController cc = new CuestionarioController(pr, idGrupo, idUserLog, rol);
-                ac = new AsignaturaController(pr);
+                ac = new AsignaturaController(pr, idUserLog);
                 ac.cargarCboAsignaturas();
 //                    cc.cargarCuestionarioByGrupo(idGrupo);
                 enabledBtnPaginator();
-                pr.txtAlumnoName.setText(admDao.getExistAdmin(user, pass).get(0).getNombres()+" "+admDao.getExistAdmin(user, pass).get(0).getApellidos());               
+                pr.txtAlumnoName.setText(admDao.getExistAdmin(user, pass).get(0).getNombres() + " " + admDao.getExistAdmin(user, pass).get(0).getApellidos());
                 pr.setLocationRelativeTo(null);
                 pr.setVisible(true);
-                lg.dispose();
-                lg.txtUser.setText("");
-                lg.txtPass.setText("");
 
             } else {
                 JOptionPane.showMessageDialog(null, "Usuario incorrecto");
@@ -93,7 +93,7 @@ public final class LoginController implements ActionListener, KeyListener {
             int response = JOptionPane.showConfirmDialog(null, "Esta seguro de cerrar la sesion ?", "Aviso..!",
                     JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (response == JOptionPane.YES_OPTION) {
-                pr.txtAlumnoName.setText("");                
+                pr.txtAlumnoName.setText("");
                 pr.dispose();
                 administradorController = null;
                 pr = null;

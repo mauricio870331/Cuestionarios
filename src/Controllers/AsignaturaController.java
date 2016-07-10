@@ -37,10 +37,12 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
     String opc = "C";
     int idArea = 0;
     AddAsignatura aa;
+    int profesor;
 
-    public AsignaturaController(Principal pr) {
+    public AsignaturaController(Principal pr, int profesor) {
         aa = new AddAsignatura(null, true);
         this.pr = pr;
+        this.profesor = profesor;
         this.pr.btnAddAsignatura.addActionListener(this);
         aa.btnCreateAsignatura.addActionListener(this);
         aa.mnuUpdateAsignatura.addActionListener(this);
@@ -78,11 +80,11 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
     public void cargarCboAsignaturas() {
         pr.cboAsignature.removeAllItems();
         pr.cboAsignature.addItem("-- Seleccione --");
-        Iterator<Asignaturas> nombreIterator = asignaturadao.getListCboAsignaturas().iterator();
+        Iterator<Asignaturas> nombreIterator = asignaturadao.getListCboAsignaturas(profesor).iterator();
         while (nombreIterator.hasNext()) {
             Asignaturas elemento = nombreIterator.next();
             pr.cboAsignature.addItem(elemento.getNombreAsignatura());
-        }       
+        }
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -92,9 +94,9 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
             aa.setLocationRelativeTo(null);
             aa.setVisible(true);
         }
-        
+
         if (e.getSource() == aa.btnCancelaAsignatura) {
-            limpiarForm();            
+            limpiarForm();
         }
 
         if (e.getSource() == aa.btnCreateAsignatura) {
@@ -105,7 +107,7 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
                 return;
             }
             if (asignaturadao.existAsignatura(asignatura)) {
-                JOptionPane.showMessageDialog(null, "La Asignatura: "+asignatura+" coincide con una existente\nNo es necesario crearla otra vez.\nSi lo desea puede actualizarla..!");
+                JOptionPane.showMessageDialog(null, "La Asignatura: " + asignatura + " coincide con una existente\nNo es necesario crearla otra vez.\nSi lo desea puede actualizarla..!");
                 aa.txtNomAsignatura.setText("");
                 aa.txtNomAsignatura.requestFocus();
                 return;
@@ -117,7 +119,7 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
             if (rptaRegistro != null) {
                 JOptionPane.showMessageDialog(null, rptaRegistro);
                 cargarCboAsignaturas();
-                try {                    
+                try {
                     Thread.sleep(200);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(AsignaturaController.class.getName()).log(Level.SEVERE, null, ex);
@@ -176,7 +178,7 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if (e.getSource() == aa.txtFindAsignatura) {         
+        if (e.getSource() == aa.txtFindAsignatura) {
             dato = aa.txtFindAsignatura.getText();
             cargarAsignaturas(aa.tbAsignatura, dato);
         }
@@ -194,7 +196,7 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
 
     private void limpiarForm() {
         aa.txtNomAsignatura.setText("");
-        opc="C";       
+        opc = "C";
     }
 
     public void setArea() {
@@ -205,8 +207,9 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
         }
 
     }
-     public void mouseClicked(MouseEvent e) {
-        if (e.getClickCount() == 2) {           
+
+    public void mouseClicked(MouseEvent e) {
+        if (e.getClickCount() == 2) {
             int fila = aa.tbAsignatura.getSelectedRow();
             if (fila >= 0) {
                 pr.cboAsignature.setSelectedItem(aa.tbAsignatura.getValueAt(fila, 1).toString());
