@@ -14,6 +14,7 @@ public class Cuestionario {
     private int idUser;
     private String descripcion;
     private String fecha;
+    private String objetivo;
     private int idAsignatura;
     private boolean estado;    
 
@@ -22,6 +23,7 @@ public class Cuestionario {
         this.idUser = 0;
         this.descripcion = "";
         this.fecha = "";
+        this.objetivo = "";
         this.idAsignatura = 0;
         this.estado = false;       
     }
@@ -72,6 +74,14 @@ public class Cuestionario {
 
     public void setEstado(boolean estado) {
         this.estado = estado;
+    }
+
+    public String getObjetivo() {
+        return objetivo;
+    }
+
+    public void setObjetivo(String objetivo) {
+        this.objetivo = objetivo;
     }
 
        

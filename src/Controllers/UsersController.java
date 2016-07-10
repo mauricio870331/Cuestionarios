@@ -71,8 +71,7 @@ public final class UsersController implements ActionListener, KeyListener {
         this.pr.rdoClientes.addActionListener(this);
         this.pr.rdoAdmin.addActionListener(this);
         this.pr.rdoTodos.addActionListener(this);
-        this.pr.rdoTodos.setSelected(true);
-        this.pr.viewPagos.addActionListener(this);
+        this.pr.rdoTodos.setSelected(true);        
         this.pr.mnuAddPago.addActionListener(this);
         this.pr.lblVerUsers.setText("Tipo Usuarios");
         //        this.pr.btnFotoAdmin.addActionListener(this);

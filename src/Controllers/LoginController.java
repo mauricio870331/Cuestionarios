@@ -23,6 +23,7 @@ public final class LoginController implements ActionListener, KeyListener {
     UsersDAO admDao;
     GrupoDAO gymdao = new GrupoDAO();
     UsersController administradorController;
+    AsignaturaController ac;
 
     public LoginController(Login lg, UsersDAO admDao, Principal pr) {
         this.lg = lg;
@@ -35,6 +36,7 @@ public final class LoginController implements ActionListener, KeyListener {
         this.lg.txtUser.addActionListener(this);
         this.lg.txtUser.addKeyListener(this);
         this.lg.txtPass.addKeyListener(this);
+        this.ac = null;
     }
 
     public void ocultarCapas(int rol) {
@@ -68,7 +70,9 @@ public final class LoginController implements ActionListener, KeyListener {
                 administradorController.cargarAdmin(pr.tbAdmin, "", 0);
                 administradorController.cargarCboGrupo();
                 administradorController.cargarRol();
-                CuestionarioController cc = new CuestionarioController(pr, idGrupo, idUserLog);
+                CuestionarioController cc = new CuestionarioController(pr, idGrupo, idUserLog, rol);
+                ac = new AsignaturaController(pr);
+                ac.cargarCboAsignaturas();
 //                    cc.cargarCuestionarioByGrupo(idGrupo);
                 enabledBtnPaginator();
                 pr.txtAlumnoName.setText(admDao.getExistAdmin(user, pass).get(0).getNombres()+" "+admDao.getExistAdmin(user, pass).get(0).getApellidos());               

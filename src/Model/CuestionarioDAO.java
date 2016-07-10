@@ -38,7 +38,8 @@ public class CuestionarioDAO {
                     + "c.fecha as fecha, "
                     + "c.id_asignatura as id_asignatura, "
                     + "c.id_asignatura as id_asignatura, "
-                    + "c.estado as estado FROM c_cuestionario c "
+                    + "c.estado as estado, "
+                    + "c.objetivo as objetivo FROM c_cuestionario c "
                     + "INNER JOIN asignaturas a ON a.id_asignatura = c.id_asignatura "
                     + "INNER JOIN cuestionarios_grupos cg ON cg.id_cuestionario = c.id_cuestionario "
                     + "AND cg.id_grupo = " + grupo + ""
@@ -53,6 +54,7 @@ public class CuestionarioDAO {
                 cuestionario.setFecha(rs.getString("fecha"));
                 cuestionario.setIdAsignatura(rs.getInt("id_asignatura"));
                 cuestionario.setEstado(rs.getBoolean("estado"));
+                cuestionario.setObjetivo(rs.getString("objetivo"));
                 listaCuestionario.add(cuestionario);
             }
         } catch (Exception e) {
@@ -132,13 +134,14 @@ public class CuestionarioDAO {
         int id_cues = nexIdCuestionario();
         try {
             if (opc.equals("C")) {
-                sql = "INSERT INTO c_cuestionario (id_user, descripcion, fecha, id_asignatura, estado) VALUES (?,?,?,?,?)";
+                sql = "INSERT INTO c_cuestionario (id_user, descripcion, objetivo, fecha, id_asignatura, estado) VALUES (?,?,?,?,?,?)";
                 pstm = cn.prepareStatement(sql);
                 pstm.setInt(1, c.getIdUser());
                 pstm.setString(2, c.getDescripcion());
-                pstm.setString(3, c.getFecha());
-                pstm.setInt(4, c.getIdAsignatura());
-                pstm.setBoolean(5, c.isEstado());
+                pstm.setString(3, c.getObjetivo());
+                pstm.setString(4, c.getFecha());
+                pstm.setInt(5, c.getIdAsignatura());
+                pstm.setBoolean(6, c.isEstado());
                 int rowAfected = pstm.executeUpdate();
                 if (rowAfected > 0) {
                     Iterator<PreguntasCuestionario> preguntas = ListPreguntas.iterator();

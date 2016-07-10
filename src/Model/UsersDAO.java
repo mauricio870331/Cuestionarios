@@ -213,7 +213,7 @@ public class UsersDAO {
         return listaAdmin;
     }
 
-    public String getProfesor(int id) {
+    public String getUser(int id) {
         String profesor = "";       
         try {
             sql = "SELECT nombres, apellidos FROM usuarios where id_user = ?";
