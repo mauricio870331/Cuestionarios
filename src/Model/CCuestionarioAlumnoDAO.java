@@ -36,10 +36,12 @@ public class CCuestionarioAlumnoDAO {
                 if (rs.next()) {
                     idcAlumno = rs.getInt("id_c_alumno");
                 } else {
-                    sql = "INSERT INTO c_cuestionario_alumno (id_user, id_cuestionario) VALUES (?,?)";
+                    sql = "INSERT INTO c_cuestionario_alumno (id_user, id_cuestionario, repetir, finalizacion) VALUES (?,?,?,?)";
                     pstm = cn.prepareStatement(sql);
                     pstm.setInt(1, c.getIdAlumno());
                     pstm.setInt(2, c.getIdCuestionario());
+                    pstm.setInt(3, c.getRepetir());
+                    pstm.setString(4, c.getFinalizacion());
                     int rowafected = pstm.executeUpdate();
                     if (rowafected > 0) {
                         sql = "SELECT id_c_alumno FROM c_cuestionario_alumno ORDER BY id_c_alumno DESC LIMIT 1";

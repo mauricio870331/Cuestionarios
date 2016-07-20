@@ -98,6 +98,8 @@ public class Principal extends javax.swing.JFrame {
         tCuestionario = new javax.swing.JTextField();
         jPanel9 = new javax.swing.JPanel();
         lblTiempo = new javax.swing.JLabel();
+        progress = new javax.swing.JProgressBar();
+        lbltotalp = new javax.swing.JLabel();
         jLayeredPane1 = new javax.swing.JLayeredPane();
         pnPregunta = new javax.swing.JPanel();
         txtPreguntas = new javax.swing.JTextField();
@@ -146,6 +148,7 @@ public class Principal extends javax.swing.JFrame {
         createUsers = new javax.swing.JMenuItem();
         MnuCuestionarios = new javax.swing.JMenu();
         cuestionario = new javax.swing.JMenuItem();
+        editCustionario = new javax.swing.JMenuItem();
         asignCuestionaryToGroup = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         btnLogout = new javax.swing.JMenuItem();
@@ -546,20 +549,32 @@ public class Principal extends javax.swing.JFrame {
         lblTiempo.setText("00:00:00");
         lblTiempo.setOpaque(true);
 
+        progress.setFont(new java.awt.Font("Tahoma", 3, 10)); // NOI18N
+
+        lbltotalp.setFont(new java.awt.Font("Tahoma", 3, 11)); // NOI18N
+        lbltotalp.setText("Total preguntas");
+
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
         jPanel9Layout.setHorizontalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel9Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblTiempo, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblTiempo, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
+                    .addComponent(progress, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
+                    .addComponent(lbltotalp, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
-                .addContainerGap(32, Short.MAX_VALUE)
-                .addComponent(lblTiempo, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(6, 6, 6)
+                .addComponent(lbltotalp)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(progress, javax.swing.GroupLayout.DEFAULT_SIZE, 21, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblTiempo)
                 .addContainerGap())
         );
 
@@ -591,6 +606,7 @@ public class Principal extends javax.swing.JFrame {
         txtPreguntas.setOpaque(false);
 
         pnRespuestas.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        pnRespuestas.setEnabled(false);
 
         javax.swing.GroupLayout pnRespuestasLayout = new javax.swing.GroupLayout(pnRespuestas);
         pnRespuestas.setLayout(pnRespuestasLayout);
@@ -600,7 +616,7 @@ public class Principal extends javax.swing.JFrame {
         );
         pnRespuestasLayout.setVerticalGroup(
             pnRespuestasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 88, Short.MAX_VALUE)
+            .addGap(0, 89, Short.MAX_VALUE)
         );
 
         btnNextQuestion.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -629,7 +645,7 @@ public class Principal extends javax.swing.JFrame {
             pnPreguntaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnPreguntaLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(txtPreguntas, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
+                .addComponent(txtPreguntas, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
                 .addGap(9, 9, 9)
                 .addComponent(pnRespuestas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(11, 11, 11)
@@ -647,19 +663,19 @@ public class Principal extends javax.swing.JFrame {
         pnfinishCuestionarioLayout.setHorizontalGroup(
             pnfinishCuestionarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnfinishCuestionarioLayout.createSequentialGroup()
-                .addGap(247, 247, 247)
-                .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 456, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(346, Short.MAX_VALUE))
+                .addGap(337, 337, 337)
+                .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(410, Short.MAX_VALUE))
         );
         pnfinishCuestionarioLayout.setVerticalGroup(
             pnfinishCuestionarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnfinishCuestionarioLayout.createSequentialGroup()
-                .addGap(89, 89, 89)
+                .addGap(88, 88, 88)
                 .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(122, Short.MAX_VALUE))
+                .addContainerGap(123, Short.MAX_VALUE))
         );
 
-        jLayeredPane1.setLayer(pnPregunta, javax.swing.JLayeredPane.PALETTE_LAYER);
+        jLayeredPane1.setLayer(pnPregunta, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(pnfinishCuestionario, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
@@ -1007,8 +1023,11 @@ public class Principal extends javax.swing.JFrame {
 
         MnuCuestionarios.setText("Cuestionarios");
 
-        cuestionario.setText("Cuestionarios");
+        cuestionario.setText("Crear Cuestionarios");
         MnuCuestionarios.add(cuestionario);
+
+        editCustionario.setText("Editar Cuestionarios");
+        MnuCuestionarios.add(editCustionario);
 
         mnuAdministrar.add(MnuCuestionarios);
 
@@ -1117,6 +1136,7 @@ public class Principal extends javax.swing.JFrame {
     public javax.swing.JLayeredPane container;
     public javax.swing.JMenuItem createUsers;
     public javax.swing.JMenuItem cuestionario;
+    public javax.swing.JMenuItem editCustionario;
     public javax.swing.JButton jButton3;
     public javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
@@ -1142,7 +1162,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLayeredPane jLayeredPane1;
-    private javax.swing.JMenu jMenu2;
+    public javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
@@ -1160,9 +1180,10 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JScrollPane jpnTadmin;
     public javax.swing.JLabel lblTiempo;
     public javax.swing.JLabel lblVerUsers;
+    public javax.swing.JLabel lbltotalp;
     public javax.swing.JMenuItem mnuAddPago;
     public javax.swing.JMenuItem mnuAddRutina;
-    private javax.swing.JMenu mnuAdministrar;
+    public javax.swing.JMenu mnuAdministrar;
     public javax.swing.JMenuItem mnuDeleteAdmin;
     public javax.swing.JMenuItem mnuDeleteGym;
     public javax.swing.JMenuItem mnuDeleteRuUser;
@@ -1179,6 +1200,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JScrollPane pnTbPreguntas;
     private javax.swing.JScrollPane pnTbPreguntas2;
     public javax.swing.JPanel pnfinishCuestionario;
+    public javax.swing.JProgressBar progress;
     public javax.swing.JRadioButton rdoAdmin;
     public javax.swing.JRadioButton rdoClientes;
     public javax.swing.JRadioButton rdoFalse;

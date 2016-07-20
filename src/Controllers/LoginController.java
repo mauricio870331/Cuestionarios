@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Controllers;
 
 import App.Login;
@@ -41,13 +36,21 @@ public final class LoginController implements ActionListener, KeyListener {
 
     public void ocultarCapas(int rol) {
         if (rol == 1) {
-            pr.pnCreateAdmin.setVisible(true);
+            pr.pnCreateAdmin.setVisible(false);
             pr.pnCuestionario.setVisible(false);
-            pr.pnCreateCuestionary.setVisible(false);
+            pr.pnCreateCuestionary.setVisible(true);
+            pr.createUsers.setVisible(false);
         }
         if (rol == 2) {
             pr.pnCuestionario.setVisible(true);
             pr.pnCreateAdmin.setVisible(false);
+            pr.pnCreateCuestionary.setVisible(false);
+            pr.mnuAdministrar.setVisible(false);
+        }
+        
+         if (rol == 3) {
+            pr.pnCreateAdmin.setVisible(true);
+            pr.pnCuestionario.setVisible(false);
             pr.pnCreateCuestionary.setVisible(false);
         }
     }

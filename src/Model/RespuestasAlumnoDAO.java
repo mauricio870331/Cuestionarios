@@ -29,7 +29,7 @@ public class RespuestasAlumnoDAO {
         cn = conexion.getConexion();
     }
 
-    public boolean Create(ArrayList<RespuestasAlumno> objRespuestasAlumno, int idca, String opc, boolean auto) {
+    public boolean Create(ArrayList<RespuestasAlumno> objRespuestasAlumno, int idca, String opc, boolean auto, String horafin) {
         boolean responseCreate = false;
         try {
             if (opc.equals("C")) {
@@ -44,6 +44,9 @@ public class RespuestasAlumnoDAO {
                         rs = pstm.executeQuery();
                         if (rs.next()) {
                             System.out.println("ya esta");
+                            sql = "UPDATE c_cuestionario_alumno SET finalizacion = '" + horafin + "'";
+                            pstm = cn.prepareStatement(sql);
+                            pstm.executeUpdate();
                             responseCreate = true;
                         } else {
                             sql = "INSERT INTO respuestas_alumno (id_pregunta, id_respuesta, id_c_alumno) VALUES (?, ?, ?)";
@@ -53,6 +56,9 @@ public class RespuestasAlumnoDAO {
                             pstm.setInt(3, idca);
                             int rowAfected = pstm.executeUpdate();
                             if (rowAfected > 0) {
+                                sql = "UPDATE c_cuestionario_alumno SET finalizacion = '" + horafin + "'";
+                                pstm = cn.prepareStatement(sql);
+                                pstm.executeUpdate();
                                 responseCreate = true;
                             }
                         }

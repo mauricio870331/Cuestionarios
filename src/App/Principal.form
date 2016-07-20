@@ -141,6 +141,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Administracion"/>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+          </AuxValues>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="createUsers">
               <Properties>
@@ -160,7 +163,15 @@
               <SubComponents>
                 <MenuItem class="javax.swing.JMenuItem" name="cuestionario">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Cuestionarios"/>
+                    <Property name="text" type="java.lang.String" value="Crear Cuestionarios"/>
+                  </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+                  </AuxValues>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="editCustionario">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Editar Cuestionarios"/>
                   </Properties>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
@@ -192,6 +203,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Edit"/>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+          </AuxValues>
         </Menu>
       </SubComponents>
     </Menu>
@@ -1099,9 +1113,13 @@
                           <Layout>
                             <DimensionLayout dim="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
+                                  <Group type="102" attributes="0">
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="lblTiempo" pref="236" max="32767" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="lblTiempo" pref="236" max="32767" attributes="0"/>
+                                          <Component id="progress" alignment="0" pref="236" max="32767" attributes="0"/>
+                                          <Component id="lbltotalp" alignment="0" pref="236" max="32767" attributes="0"/>
+                                      </Group>
                                       <EmptySpace max="-2" attributes="0"/>
                                   </Group>
                               </Group>
@@ -1109,8 +1127,12 @@
                             <DimensionLayout dim="1">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="1" attributes="0">
-                                      <EmptySpace pref="32" max="32767" attributes="0"/>
-                                      <Component id="lblTiempo" min="-2" pref="70" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
+                                      <Component id="lbltotalp" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="progress" pref="21" max="32767" attributes="0"/>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="lblTiempo" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                   </Group>
                               </Group>
@@ -1131,6 +1153,27 @@
                                 <Property name="horizontalAlignment" type="int" value="0"/>
                                 <Property name="text" type="java.lang.String" value="00:00:00"/>
                                 <Property name="opaque" type="boolean" value="true"/>
+                              </Properties>
+                              <AuxValues>
+                                <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+                              </AuxValues>
+                            </Component>
+                            <Component class="javax.swing.JProgressBar" name="progress">
+                              <Properties>
+                                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                                  <Font name="Tahoma" size="10" style="3"/>
+                                </Property>
+                              </Properties>
+                              <AuxValues>
+                                <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+                              </AuxValues>
+                            </Component>
+                            <Component class="javax.swing.JLabel" name="lbltotalp">
+                              <Properties>
+                                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                                  <Font name="Tahoma" size="11" style="3"/>
+                                </Property>
+                                <Property name="text" type="java.lang.String" value="Total preguntas"/>
                               </Properties>
                               <AuxValues>
                                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
@@ -1170,7 +1213,6 @@
                       <SubComponents>
                         <Container class="javax.swing.JPanel" name="pnPregunta">
                           <AuxValues>
-                            <AuxValue name="JLayeredPane.layer" type="java.lang.Integer" value="100"/>
                             <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
                           </AuxValues>
 
@@ -1198,7 +1240,7 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="txtPreguntas" pref="110" max="32767" attributes="0"/>
+                                      <Component id="txtPreguntas" pref="113" max="32767" attributes="0"/>
                                       <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
                                       <Component id="pnRespuestas" max="32767" attributes="0"/>
                                       <EmptySpace min="11" pref="11" max="-2" attributes="0"/>
@@ -1233,6 +1275,7 @@
                                     <EtchetBorder/>
                                   </Border>
                                 </Property>
+                                <Property name="enabled" type="boolean" value="false"/>
                               </Properties>
                               <AuxValues>
                                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
@@ -1246,7 +1289,7 @@
                                 </DimensionLayout>
                                 <DimensionLayout dim="1">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <EmptySpace min="0" pref="88" max="32767" attributes="0"/>
+                                      <EmptySpace min="0" pref="89" max="32767" attributes="0"/>
                                   </Group>
                                 </DimensionLayout>
                               </Layout>
@@ -1284,18 +1327,18 @@
                             <DimensionLayout dim="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace min="-2" pref="247" max="-2" attributes="0"/>
-                                      <Component id="jLabel21" min="-2" pref="456" max="-2" attributes="0"/>
-                                      <EmptySpace pref="346" max="32767" attributes="0"/>
+                                      <EmptySpace min="-2" pref="337" max="-2" attributes="0"/>
+                                      <Component id="jLabel21" min="-2" pref="302" max="-2" attributes="0"/>
+                                      <EmptySpace pref="410" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                             </DimensionLayout>
                             <DimensionLayout dim="1">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace min="-2" pref="89" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="88" max="-2" attributes="0"/>
                                       <Component id="jLabel21" min="-2" pref="84" max="-2" attributes="0"/>
-                                      <EmptySpace pref="122" max="32767" attributes="0"/>
+                                      <EmptySpace pref="123" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                             </DimensionLayout>

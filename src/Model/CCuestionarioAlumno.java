@@ -13,11 +13,15 @@ public class CCuestionarioAlumno {
     private int idCAlumno;
     private int idAlumno;
     private int idCuestionario;
+    private int repetir;
+    private String finalizacion;
 
     public CCuestionarioAlumno() {
         this.idCAlumno = 0;
         this.idAlumno = 0;
         this.idCuestionario = 0;
+        this.repetir = 0;
+        this.finalizacion = "";
     }
 
     public int getIdCAlumno() {
@@ -42,6 +46,22 @@ public class CCuestionarioAlumno {
 
     public void setIdCuestionario(int idCuestionario) {
         this.idCuestionario = idCuestionario;
+    }
+
+    public int getRepetir() {
+        return repetir;
+    }
+
+    public void setRepetir(int repetir) {
+        this.repetir = repetir;
+    }
+
+    public String getFinalizacion() {
+        return finalizacion;
+    }
+
+    public void setFinalizacion(String finalizacion) {
+        this.finalizacion = finalizacion;
     }
     
     
