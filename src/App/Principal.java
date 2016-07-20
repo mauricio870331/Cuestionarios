@@ -152,7 +152,6 @@ public class Principal extends javax.swing.JFrame {
         asignCuestionaryToGroup = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         btnLogout = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
 
         mnuUpdateAdmin.setText("Actualizar");
         PopupAdmin.add(mnuUpdateAdmin);
@@ -1040,9 +1039,6 @@ public class Principal extends javax.swing.JFrame {
 
         jMenuBar1.add(mnuAdministrar);
 
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
-
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -1105,7 +1101,7 @@ public class Principal extends javax.swing.JFrame {
     public javax.swing.ButtonGroup GroupEstado;
     public javax.swing.ButtonGroup GroupRol;
     public javax.swing.ButtonGroup GrupoRespuestas;
-    private javax.swing.JMenu MnuCuestionarios;
+    public javax.swing.JMenu MnuCuestionarios;
     public javax.swing.JPopupMenu PopupAdmin;
     public javax.swing.JPopupMenu PopupGym;
     private javax.swing.JPopupMenu PopupRutinas;
@@ -1162,7 +1158,6 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLayeredPane jLayeredPane1;
-    public javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;

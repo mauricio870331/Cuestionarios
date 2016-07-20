@@ -45,7 +45,10 @@ public final class LoginController implements ActionListener, KeyListener {
             pr.pnCuestionario.setVisible(true);
             pr.pnCreateAdmin.setVisible(false);
             pr.pnCreateCuestionary.setVisible(false);
-            pr.mnuAdministrar.setVisible(false);
+            pr.mnuAdministrar.setVisible(true);
+            pr.createUsers.setVisible(false);
+            pr.MnuCuestionarios.setVisible(false);
+            pr.asignCuestionaryToGroup.setVisible(false);
         }
         
          if (rol == 3) {
