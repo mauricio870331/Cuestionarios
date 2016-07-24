@@ -228,5 +228,21 @@ public class UsersDAO {
         }
         return profesor;
     }
+    
+    public boolean getDoc(String documento) {
+        boolean esiste = false;       
+        try {
+            sql = "SELECT documento FROM usuarios where documento = ?";
+            pstm = cn.prepareStatement(sql);
+            pstm.setString(1, documento);
+            rs = pstm.executeQuery();
+            if (rs.getRow()>0) {
+                esiste = true;
+            }
+        } catch (Exception e) {
+            System.out.println("error" + e);
+        }
+        return esiste;
+    }
 
 }

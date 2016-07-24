@@ -8,6 +8,7 @@ package Model;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 /**
  *
@@ -57,6 +58,21 @@ public class CCuestionarioAlumnoDAO {
             System.err.println("CCuestionarioAlumnoDao AddQuest : " + e);
         }
         return idcAlumno;
+    }
+
+    public boolean getCuestionariosActive(int idCuestionario) {
+        boolean repetir = true;
+        try {
+            sql = "SELECT repetir FROM c_cuestionario_alumno WHERE id_cuestionario = " + idCuestionario + "";
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            if (rs.next()) {
+                repetir = rs.getBoolean("repetir");
+            }
+        } catch (Exception e) {
+            System.out.println("error aqui" + e);
+        }
+        return repetir;
     }
 
 }

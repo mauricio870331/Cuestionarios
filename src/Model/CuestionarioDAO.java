@@ -9,7 +9,17 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -22,6 +32,7 @@ public class CuestionarioDAO {
     PreparedStatement pstm;
     String sql;
     ResultSet rs;
+    private final String logo = "/Reports/logo.png";
 
     public CuestionarioDAO() {
         conexion = new Conexion();
@@ -176,13 +187,18 @@ public class CuestionarioDAO {
                     while (respuestas.hasNext()) {
                         try {
                             RespuestasCuestionario rc = respuestas.next();
-                            sql = "INSERT INTO respuestas_cuestionario (id_pregunta, respuesta, estado, id_fk) VALUES (?,?,?,?)";
+                            sql = "SELECT respuesta, id_fk FROM respuestas_cuestionario WHERE respuesta = '" + rc.getRespuesta() + "' AND id_fk = " + rc.getIdfk() + "";
                             pstm = cn.prepareStatement(sql);
-                            pstm.setInt(1, rc.getIdPregunta());
-                            pstm.setString(2, rc.getRespuesta());
-                            pstm.setBoolean(3, rc.isEstado());
-                            pstm.setInt(4, rc.getIdfk());
-                            int rowAfectedR = pstm.executeUpdate();
+                            rs = pstm.executeQuery();
+                            if (rs.getRow() == 0) {
+                                sql = "INSERT INTO respuestas_cuestionario (id_pregunta, respuesta, estado, id_fk) VALUES (?,?,?,?)";
+                                pstm = cn.prepareStatement(sql);
+                                pstm.setInt(1, rc.getIdPregunta());
+                                pstm.setString(2, rc.getRespuesta());
+                                pstm.setBoolean(3, rc.isEstado());
+                                pstm.setInt(4, rc.getIdfk());
+                                int rowAfectedR = pstm.executeUpdate();
+                            }
                         } catch (Exception e) {
                             System.err.println("CuestionarioDao AddRs : " + e);
                         }
@@ -232,6 +248,40 @@ public class CuestionarioDAO {
         return listaCuestionario;
     }
 
+    public ArrayList<Cuestionario> getCuestionariosByGrupo(String grupo) {
+        ArrayList listaCuestionario = new ArrayList();
+        int idGrupo = 0;
+        Cuestionario cuestionario;
+        try {
+            sql = "SELECT id_grupo FROM grupo WHERE grupo ='" + grupo + "'";
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            if (rs.next()) {
+                idGrupo = rs.getInt("id_grupo");
+                sql = "SELECT * FROM c_cuestionario c "
+                        + "INNER JOIN cuestionarios_grupos cg ON c.id_cuestionario = cg.id_cuestionario AND cg.id_grupo = "+idGrupo;
+                pstm = cn.prepareStatement(sql);
+                rs = pstm.executeQuery();
+                while (rs.next()) {
+                    cuestionario = new Cuestionario();
+                    cuestionario.setIdCuestionario(rs.getInt("id_cuestionario"));
+                    cuestionario.setIdUser(rs.getInt("id_user"));
+                    cuestionario.setDescripcion(rs.getString("descripcion"));
+                    cuestionario.setFecha(rs.getString("fecha"));
+                    cuestionario.setIdAsignatura(rs.getInt("id_asignatura"));
+                    cuestionario.setEstado(rs.getBoolean("estado"));
+                    cuestionario.setObjetivo(rs.getString("objetivo"));
+                    cuestionario.setVigencia(rs.getString("vigencia"));
+                    cuestionario.setDuracion(rs.getInt("duracion"));
+                    listaCuestionario.add(cuestionario);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("error aqui" + e);
+        }
+        return listaCuestionario;
+    }
+
     public int getCuestionariosByName(String descuestionario) {
         int idCuestionario = 0;
         try {
@@ -245,6 +295,46 @@ public class CuestionarioDAO {
             System.out.println("error aqui" + e);
         }
         return idCuestionario;
+    }
+
+    public void generateReporte(int idCuestionario, int id_alumno) {
+        try {
+            JasperDesign jd = JRXmlLoader.load("src/Reports/Evaluacion.jrxml");
+            //parametros de entrada
+            Map parametros = new HashMap();
+            //  parametros.clear();
+            parametros.put("logo", this.getClass().getResourceAsStream(logo));
+            parametros.put("idCuestionario", idCuestionario);
+            parametros.put("alumno", id_alumno);
+            //fin parametros de entrada
+            JasperReport jasperRep = JasperCompileManager.compileReport(jd);
+            JasperPrint JasPrint = JasperFillManager.fillReport(jasperRep, parametros, cn);
+            JasperViewer jv = new JasperViewer(JasPrint, false);
+            jv.setVisible(true);
+            jv.setTitle("Evaluación Alumno");
+        } catch (JRException ex) {
+            System.out.println("Error jasper: " + ex);
+        }
+    }
+
+    public void reporteGeneralResultados(String grupo, String cuestionario) {
+        try {
+            JasperDesign jd = JRXmlLoader.load("src/Reports/Evaluacion.jrxml");
+            //parametros de entrada
+            Map parametros = new HashMap();
+            //  parametros.clear();
+            parametros.put("logo", this.getClass().getResourceAsStream(logo));
+            parametros.put("grupo", grupo);
+            parametros.put("cuestionario", cuestionario);
+            //fin parametros de entrada
+            JasperReport jasperRep = JasperCompileManager.compileReport(jd);
+            JasperPrint JasPrint = JasperFillManager.fillReport(jasperRep, parametros, cn);
+            JasperViewer jv = new JasperViewer(JasPrint, false);
+            jv.setVisible(true);
+            jv.setTitle("Evaluación General");
+        } catch (JRException ex) {
+            System.out.println("Error jasper: " + ex);
+        }
     }
 
 }

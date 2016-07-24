@@ -147,6 +147,7 @@ public class Principal extends javax.swing.JFrame {
         mnuAdministrar = new javax.swing.JMenu();
         createUsers = new javax.swing.JMenuItem();
         MnuCuestionarios = new javax.swing.JMenu();
+        reporteResultados = new javax.swing.JMenuItem();
         cuestionario = new javax.swing.JMenuItem();
         editCustionario = new javax.swing.JMenuItem();
         asignCuestionaryToGroup = new javax.swing.JMenuItem();
@@ -598,7 +599,7 @@ public class Principal extends javax.swing.JFrame {
                 .addGap(21, 21, 21))
         );
 
-        jLayeredPane1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        pnPregunta.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         txtPreguntas.setEditable(false);
         txtPreguntas.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -653,6 +654,8 @@ public class Principal extends javax.swing.JFrame {
                     .addComponent(btnPreviousQuestion))
                 .addGap(35, 35, 35))
         );
+
+        pnfinishCuestionario.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel21.setFont(new java.awt.Font("Tahoma", 3, 24)); // NOI18N
         jLabel21.setText("La Prueba ha finalizado..");
@@ -973,8 +976,8 @@ public class Principal extends javax.swing.JFrame {
         );
 
         container.setLayer(pnCreateAdmin, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        container.setLayer(pnCuestionario, javax.swing.JLayeredPane.PALETTE_LAYER);
-        container.setLayer(pnCreateCuestionary, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        container.setLayer(pnCuestionario, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        container.setLayer(pnCreateCuestionary, javax.swing.JLayeredPane.PALETTE_LAYER);
 
         javax.swing.GroupLayout containerLayout = new javax.swing.GroupLayout(container);
         container.setLayout(containerLayout);
@@ -1021,6 +1024,9 @@ public class Principal extends javax.swing.JFrame {
         mnuAdministrar.add(createUsers);
 
         MnuCuestionarios.setText("Cuestionarios");
+
+        reporteResultados.setText("Resultados Cuestionarios");
+        MnuCuestionarios.add(reporteResultados);
 
         cuestionario.setText("Crear Cuestionarios");
         MnuCuestionarios.add(cuestionario);
@@ -1201,6 +1207,7 @@ public class Principal extends javax.swing.JFrame {
     public javax.swing.JRadioButton rdoFalse;
     public javax.swing.JRadioButton rdoTodos;
     public javax.swing.JRadioButton rdoTrue;
+    public javax.swing.JMenuItem reporteResultados;
     public javax.swing.JTextField tCuestionario;
     public javax.swing.JTextField tGrado;
     public javax.swing.JTable tbAdmin;

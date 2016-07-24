@@ -28,7 +28,7 @@ public class GrupoDAO {
      public ArrayList<Grupo> getListGrupos() {
         ArrayList ListaGrupo = new ArrayList();        
         try {
-            sql = "SELECT * FROM grupo";
+            sql = "SELECT * FROM grupo ORDER BY id_grupo";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             while (rs.next()) {

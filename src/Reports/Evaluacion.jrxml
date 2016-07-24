@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Evaluacion" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="30da9c0e-3f6d-4d0b-a780-7f287a417f0b">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Evaluacion" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="30da9c0e-3f6d-4d0b-a780-7f287a417f0b">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -10,10 +10,13 @@
 	<parameter name="idCuestionario" class="java.lang.Integer"/>
 	<parameter name="alumno" class="java.lang.Integer"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["/"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["Reports/"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="logo" class="java.io.InputStream"/>
 	<queryString>
-		<![CDATA[select c.descripcion,
+		<![CDATA[select CONCAT(u.nombres," ",u.apellidos) as nom_alumno,
+       g.grupo,
+       c.descripcion,
        p.pregunta,
        r.id_respuesta,
        r.respuesta,
@@ -21,15 +24,22 @@
        ca.id_c_alumno,
        COALESCE(ra.id_respuesta, ra.id_respuesta, 0)  as id_respuesta2,
        CASE WHEN (r.estado = 1 and r.id_respuesta = ra.id_respuesta) THEN 'Correcto' ELSE 'Incorrecto' END as calificacion,
- (select 	id_respuesta from respuestas_alumno WHERE  id_pregunta = p.id_pregunta limit 1) as parametro
+ (select id_respuesta from respuestas_alumno WHERE  id_pregunta = p.id_pregunta and id_c_alumno = ca.id_c_alumno ) as parametro,
+(SELECT CAST(count(pregunta) AS INT) from preguntas_cuestionario where id_cuestionario = $P{idCuestionario}) as total_preguntas
 from c_cuestionario c
 INNer JOIN  preguntas_cuestionario p on c.id_cuestionario = p.id_cuestionario
 INNER JOIN respuestas_cuestionario r ON r.id_fk = p.id
 INNER JOIN c_cuestionario_alumno ca ON ca.id_cuestionario = c.id_cuestionario AND ca.id_user=$P{alumno}
 LEFT JOIN respuestas_alumno ra ON  ra.id_c_alumno = ca.id_c_alumno and ra.id_respuesta = r.id_respuesta
+LEFT JOIN usuarios u  ON u.id_user = ca.id_user
+INNER JOIN grupo g ON g.id_grupo = u.id_grupo
 WHERE c.id_cuestionario = $P{idCuestionario}
 ORDER BY  p.pregunta, r.id_respuesta]]>
 	</queryString>
+	<field name="nom_alumno" class="java.lang.String"/>
+	<field name="grupo" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
 	<field name="descripcion" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
@@ -49,45 +59,48 @@ ORDER BY  p.pregunta, r.id_respuesta]]>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="id_respuesta2" class="java.lang.Long"/>
-	<field name="calificacion" class="java.lang.String"/>
+	<field name="calificacion" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
 	<field name="parametro" class="java.lang.Integer"/>
+	<field name="total_preguntas" class="java.lang.Integer"/>
 	<group name="descripcion">
 		<groupExpression><![CDATA[$F{descripcion}]]></groupExpression>
 		<groupHeader>
-			<band height="40">
+			<band height="41">
 				<textField>
-					<reportElement uuid="cb87c704-da4c-4ed8-a403-74aa00a16573" style="SubTitle" x="47" y="13" width="506" height="24" forecolor="#CC0000"/>
-					<textElement>
-						<font isBold="true"/>
+					<reportElement uuid="cb87c704-da4c-4ed8-a403-74aa00a16573" style="SubTitle" x="39" y="9" width="514" height="24" forecolor="#CC0000"/>
+					<textElement verticalAlignment="Middle">
+						<font size="15" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
 				</textField>
 				<rectangle>
-					<reportElement uuid="363e4fee-3f04-4f24-94d4-c862ae531aac" mode="Opaque" x="0" y="13" width="36" height="24" forecolor="#CCCCCC" backcolor="#CCCCCC"/>
+					<reportElement uuid="363e4fee-3f04-4f24-94d4-c862ae531aac" mode="Opaque" x="0" y="9" width="36" height="24" forecolor="#CCCCCC" backcolor="#CCCCCC"/>
 				</rectangle>
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="6"/>
+			<band height="11"/>
 		</groupFooter>
 	</group>
 	<group name="pregunta">
 		<groupExpression><![CDATA[$F{pregunta}]]></groupExpression>
 		<groupHeader>
-			<band height="30">
+			<band height="26">
 				<textField>
-					<reportElement uuid="993d01fd-32e3-4830-9f91-6ff40fcdaa19" style="SubTitle" x="0" y="4" width="460" height="20"/>
+					<reportElement uuid="993d01fd-32e3-4830-9f91-6ff40fcdaa19" style="SubTitle" x="0" y="4" width="553" height="20"/>
 					<textElement>
-						<font size="16" isBold="true"/>
+						<font size="14" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{pregunta}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="50">
+			<band height="30">
 				<subreport>
-					<reportElement uuid="edc207e0-3969-4124-9a81-5dd59706c54c" x="0" y="6" width="200" height="34"/>
+					<reportElement uuid="edc207e0-3969-4124-9a81-5dd59706c54c" x="0" y="4" width="200" height="21"/>
 					<subreportParameter name="idCuestionario">
 						<subreportParameterExpression><![CDATA[$F{id_c_alumno}]]></subreportParameterExpression>
 					</subreportParameter>
@@ -104,10 +117,10 @@ ORDER BY  p.pregunta, r.id_respuesta]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="70" splitType="Stretch">
+		<band height="81" splitType="Stretch">
 			<image>
 				<reportElement uuid="69efb880-1d70-4993-8adc-141414de4a9c" x="275" y="0" width="300" height="64"/>
-				<imageExpression><![CDATA["leaf_banner_red.png"]]></imageExpression>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement uuid="b4f2dbe3-f67c-4cf4-9d8c-93818acf1cb9" style="Title" x="0" y="13" width="263" height="33"/>
@@ -125,48 +138,62 @@ ORDER BY  p.pregunta, r.id_respuesta]]>
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="36" splitType="Stretch">
+		<band height="56" splitType="Stretch">
 			<line>
-				<reportElement uuid="8ab5c709-8933-404b-a611-3bc390d51431" positionType="FixRelativeToBottom" x="0" y="35" width="555" height="1"/>
+				<reportElement uuid="8ab5c709-8933-404b-a611-3bc390d51431" positionType="FixRelativeToBottom" x="0" y="53" width="555" height="1"/>
 				<graphicElement>
 					<pen lineWidth="0.5" lineColor="#999999"/>
 				</graphicElement>
 			</line>
+			<textField>
+				<reportElement uuid="08dc3f14-3a02-4e69-87b7-ac96b624d4ee" x="47" y="6" width="272" height="20"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nom_alumno}]]></textFieldExpression>
+			</textField>
 			<staticText>
-				<reportElement uuid="f3806b22-055a-44ab-8e47-de8054421dc1" style="Column header" x="0" y="19" width="79" height="15"/>
-				<textElement/>
-				<text><![CDATA[id_respuesta]]></text>
+				<reportElement uuid="a1f06a65-de94-4ec7-aeb5-8168be90a868" x="0" y="6" width="47" height="20"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Alumno:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="a83a529d-a3e9-404b-981d-ebb67605134c" style="Column header" x="79" y="19" width="79" height="15"/>
-				<textElement/>
-				<text><![CDATA[respuesta]]></text>
+				<reportElement uuid="a1f06a65-de94-4ec7-aeb5-8168be90a868" x="0" y="26" width="47" height="20"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Grupo:]]></text>
 			</staticText>
+			<textField>
+				<reportElement uuid="e2737735-4a2f-4810-ad4b-6692c36d5352" x="47" y="26" width="100" height="20"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{grupo}]]></textFieldExpression>
+			</textField>
 			<staticText>
-				<reportElement uuid="419bcb5f-d0ae-444f-b948-fd4620e5f6d9" style="Column header" x="158" y="19" width="79" height="15"/>
-				<textElement/>
-				<text><![CDATA[estado]]></text>
+				<reportElement uuid="a1f06a65-de94-4ec7-aeb5-8168be90a868" x="219" y="26" width="74" height="20"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Calificacion:]]></text>
 			</staticText>
-			<staticText>
-				<reportElement uuid="4329b374-3cad-49ca-a023-1c27a534e482" style="Column header" x="237" y="19" width="79" height="15"/>
-				<textElement/>
-				<text><![CDATA[id_c_alumno]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="ff730e3f-7747-44af-8d0c-1133062b41b2" style="Column header" x="316" y="19" width="79" height="15"/>
-				<textElement/>
-				<text><![CDATA[id_respuesta2]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="7f1e1d26-1331-44c9-8d32-2046c81b186b" style="Column header" x="395" y="19" width="79" height="15"/>
-				<textElement/>
-				<text><![CDATA[calificacion]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="be38ad9e-024d-4c05-8865-3475a564c895" style="Column header" x="474" y="19" width="79" height="15"/>
-				<textElement/>
-				<text><![CDATA[parametro]]></text>
-			</staticText>
+			<subreport>
+				<reportElement uuid="27e20756-18d3-4614-9628-e8b2f8d3260f" x="293" y="26" width="260" height="20"/>
+				<subreportParameter name="idAlumno">
+					<subreportParameterExpression><![CDATA[$P{alumno}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="idCuestionario">
+					<subreportParameterExpression><![CDATA[$F{id_c_alumno}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="total_preguntas">
+					<subreportParameterExpression><![CDATA[$F{total_preguntas}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Evaluacion_total_calificacion.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</columnHeader>
 	<detail>
@@ -178,44 +205,14 @@ ORDER BY  p.pregunta, r.id_respuesta]]>
 				</graphicElement>
 			</line>
 			<textField>
-				<reportElement uuid="150ea241-0cc1-4898-b7f9-3ac4c196d6aa" style="Detail" x="0" y="0" width="79" height="15"/>
-				<textElement/>
-				<textFieldExpression><![CDATA[$F{id_respuesta}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement uuid="d5de5cf2-acb5-4ca6-8f38-ad821d69d526" style="Detail" x="79" y="0" width="79" height="15"/>
+				<reportElement uuid="d5de5cf2-acb5-4ca6-8f38-ad821d69d526" style="Detail" x="0" y="0" width="553" height="15"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{respuesta}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement uuid="8a8780c3-0a58-4b64-856d-11d6eb1ef2d6" style="Detail" x="158" y="0" width="79" height="15"/>
-				<textElement/>
-				<textFieldExpression><![CDATA[$F{estado}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement uuid="758ce2f9-1b65-4e87-9ccd-ff203a986076" style="Detail" x="237" y="0" width="79" height="15"/>
-				<textElement/>
-				<textFieldExpression><![CDATA[$F{id_c_alumno}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement uuid="83a0b492-a62f-499e-9cf1-1789d34d9723" style="Detail" x="316" y="0" width="79" height="15"/>
-				<textElement/>
-				<textFieldExpression><![CDATA[$F{id_respuesta2}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement uuid="551bfaef-c036-4ec1-b0c8-e838717839cf" style="Detail" x="395" y="0" width="79" height="15"/>
-				<textElement/>
-				<textFieldExpression><![CDATA[$F{calificacion}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement uuid="47341bcf-fcd0-42dc-9870-245e2a53a5ee" style="Detail" x="474" y="0" width="79" height="15"/>
-				<textElement/>
-				<textFieldExpression><![CDATA[$F{parametro}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="45" splitType="Stretch">
+		<band height="23" splitType="Stretch">
 			<line>
 				<reportElement uuid="0bd2c233-f643-4b09-8dda-6ff8494deff0" positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1"/>
 				<graphicElement>

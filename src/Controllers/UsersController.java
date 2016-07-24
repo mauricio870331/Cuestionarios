@@ -71,7 +71,7 @@ public final class UsersController implements ActionListener, KeyListener {
         this.pr.rdoClientes.addActionListener(this);
         this.pr.rdoAdmin.addActionListener(this);
         this.pr.rdoTodos.addActionListener(this);
-        this.pr.rdoTodos.setSelected(true);        
+        this.pr.rdoTodos.setSelected(true);
         this.pr.mnuAddPago.addActionListener(this);
         this.pr.lblVerUsers.setText("Tipo Usuarios");
         //        this.pr.btnFotoAdmin.addActionListener(this);
@@ -142,10 +142,20 @@ public final class UsersController implements ActionListener, KeyListener {
             hora = calendario.get(Calendar.HOUR_OF_DAY);
             minutos = calendario.get(Calendar.MINUTE);
             segundos = calendario.get(Calendar.SECOND);
-            //String Fechacompleta = FchaHoy + " " + hora + ":" + minutos + ":" + segundos;
-//            String Horacomp = hora + ":" + minutos + ":" + segundos;
+            String documento = pr.txtDoc.getText();
+            String nombres = pr.txtNombres.getText();
+            String apellidos = pr.txtApellidos.getText();
+            String pass = new String(pr.txtPass.getPassword());
             String tipo_doc = (String) pr.cboTipoDocAdmin.getSelectedItem();
             String idGym = (String) pr.cboGrupo.getSelectedItem();
+
+            if (admDao.getDoc(documento)) {
+                JOptionPane.showMessageDialog(null, "El documento "+documento+" ya existe");
+                return;
+            }
+            //String Fechacompleta = FchaHoy + " " + hora + ":" + minutos + ":" + segundos;
+//            String Horacomp = hora + ":" + minutos + ":" + segundos;
+
             int grupo = 0;
             if (!idGym.equals("-- Seleccione --")) {
                 String[] idGymSeparated = idGym.split("-");
@@ -157,14 +167,12 @@ public final class UsersController implements ActionListener, KeyListener {
                 String[] idRolSeparated = idRol.split("-");
                 rolU = Integer.parseInt(idRolSeparated[0].trim());
             }
-            String documento = pr.txtDoc.getText();
-            String nombres = pr.txtNombres.getText();
-            String apellidos = pr.txtApellidos.getText();
-            String pass = new String(pr.txtPass.getPassword());
+
             if (tipo_doc.equals("-- Seleccione --")) {
                 JOptionPane.showMessageDialog(null, "debe seleccionar un tipo de documento");
                 return;
             }
+
             String rptaRegistro = admDao.Create(documento, tipo_doc, nombres, apellidos, grupo, rolU, pass, foto, opc, idToUpdate);
             if (rptaRegistro != null) {
                 JOptionPane.showMessageDialog(null, rptaRegistro);
