@@ -206,9 +206,9 @@ public class CuestionarioDAO {
                     }
 
                     if (opc.equals("C")) {
-                        rpta = "Cuestionario creada con éxito";
+                        rpta = "Cuestionario creado con éxito";
                     } else {
-                        rpta = "Cuestionario actualizada con éxito";
+                        rpta = "Cuestionario actualizado con éxito";
                     }
                 }
             }
@@ -259,7 +259,7 @@ public class CuestionarioDAO {
             if (rs.next()) {
                 idGrupo = rs.getInt("id_grupo");
                 sql = "SELECT * FROM c_cuestionario c "
-                        + "INNER JOIN cuestionarios_grupos cg ON c.id_cuestionario = cg.id_cuestionario AND cg.id_grupo = "+idGrupo;
+                        + "INNER JOIN cuestionarios_grupos cg ON c.id_cuestionario = cg.id_cuestionario AND cg.id_grupo = " + idGrupo;
                 pstm = cn.prepareStatement(sql);
                 rs = pstm.executeQuery();
                 while (rs.next()) {
@@ -295,6 +295,25 @@ public class CuestionarioDAO {
             System.out.println("error aqui" + e);
         }
         return idCuestionario;
+    }
+
+    public double getCalificacionAlumno(int idCuestionario, int idUser) {
+        double calificacion = 0.0;
+        try {
+            int cantPreguntas = getPreguntasCuestionario(idCuestionario);
+            sql = "SELECT  CASE WHEN (ROUND(sum(calificacion),1) > 5 ) THEN 5 ELSE ROUND(sum(calificacion),1) END as calificacion "
+                + "from (SELECT @prTotalPreguntas := "+cantPreguntas+" totPreguntas) totPreguntas, "
+                + "(SELECT @prId_Alumno := "+idUser+" alumno) alumno, "
+                + "(SELECT @prId_Cuestionario := "+idCuestionario+" cuestionario) cuestionario, nota_alumno";
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            if (rs.next()) {
+                calificacion = rs.getDouble("calificacion");
+            }
+        } catch (Exception e) {
+            System.out.println("error aqui" + e);
+        }
+        return calificacion;
     }
 
     public void generateReporte(int idCuestionario, int id_alumno) {

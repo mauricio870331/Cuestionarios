@@ -24,6 +24,8 @@ import Model.RespuestasAlumno;
 import Model.RespuestasAlumnoDAO;
 import Model.RespuestasCuestionario;
 import Model.RespuetasCuestionarioDAO;
+import Model.Resultados;
+import Model.ResultadosDAO;
 import Model.UsersDAO;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -73,6 +75,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
     GrupoDAO grupdao = new GrupoDAO();
     CCuestionarioAlumnoDAO ccuestionarioalumnodao = new CCuestionarioAlumnoDAO();
     DefaultTableModel modelo = new DefaultTableModel();
+    ResultadosDAO resultdao = new ResultadosDAO();
     CuestionariosGruposDAO cgruposDao = new CuestionariosGruposDAO();
     String opc = "C";
     ArrayList<RespuestasAlumno> objRespuestasAlumno = new ArrayList<>();
@@ -839,19 +842,19 @@ public final class CuestionarioController extends WindowAdapter implements Actio
             }
         }
 
-        if (e.getSource() == rr.btnGenerateReport) {
-            String grupo = (String) rr.cboReportGrupo.getSelectedItem();
-            String cues = (String) rr.cboReportCuestionario.getSelectedItem();
-            if (grupo.equals("-- Seleccione --")) {
-                JOptionPane.showMessageDialog(null, "Seleccione un grupo");
-                return;
-            }
-            if (cues.equals("-- Seleccione --")) {
-                JOptionPane.showMessageDialog(null, "Seleccione un cuestionario");
-                return;
-            }
-            cuestionariodao.reporteGeneralResultados(grupo, cues);
-        }
+//        if (e.getSource() == rr.btnGenerateReport) {
+//            String grupo = (String) rr.cboReportGrupo.getSelectedItem();
+//            String cues = (String) rr.cboReportCuestionario.getSelectedItem();
+//            if (grupo.equals("-- Seleccione --")) {
+//                JOptionPane.showMessageDialog(null, "Seleccione un grupo");
+//                return;
+//            }
+//            if (cues.equals("-- Seleccione --")) {
+//                JOptionPane.showMessageDialog(null, "Seleccione un cuestionario");
+//                return;
+//            }
+//            cuestionariodao.reporteGeneralResultados(grupo, cues);
+//        }
 
 //        if (e.getSource() == pr.btnRegistrarCAlumno) {
 //            Iterator<RespuestasAlumno> nombreIterator = objRespuestasAlumno.iterator();
@@ -1022,6 +1025,24 @@ public final class CuestionarioController extends WindowAdapter implements Actio
             boolean rpta = respuestasAlumnodao.Create(objRespuestasAlumno, idca, opc, auto, pr.lblTiempo.getText());
             if (rpta) {
                 if (pr.btnNextQuestion.getText().equals("Finalizar")) {
+                    double nota = cuestionariodao.getCalificacionAlumno(idCuest, idUserLog);
+                    boolean aprobo = false;
+                    if (nota >= 3.0) {
+                        aprobo = true;
+                    }
+                    Resultados r = new Resultados();
+                    r.setId_cuestionario(idCuest);
+                    r.setId_grupo(idGrupo);
+                    r.setId_user(idUserLog);
+                    r.setNota(nota);
+                    r.setTiempo(pr.lblTiempo.getText());
+                    r.setAprobo(aprobo);
+                    r.setFecha_presentacion(df.format(date));
+                    if (resultdao.create(r, "C")) {
+                        System.out.println("resultado creado");
+                    } else {
+                        System.out.println("error al crear el resultado");
+                    }
                     limpiarformRespuestasAlumno();
                     cuestionariodao.generateReporte(idCuest, idUserLog);
                 }

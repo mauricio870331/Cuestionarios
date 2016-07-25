@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 24-07-2016 a las 22:59:40
+-- Tiempo de generación: 25-07-2016 a las 03:50:49
 -- Versión del servidor: 10.1.10-MariaDB
 -- Versión de PHP: 7.0.2
 
@@ -93,8 +93,7 @@ CREATE TABLE `cuestionarios_grupos` (
 --
 
 INSERT INTO `cuestionarios_grupos` (`id_cuestionario`, `id_grupo`) VALUES
-(1, 1),
-(2, 1);
+(1, 1);
 
 -- --------------------------------------------------------
 
@@ -119,8 +118,7 @@ CREATE TABLE `c_cuestionario` (
 --
 
 INSERT INTO `c_cuestionario` (`id_cuestionario`, `id_user`, `descripcion`, `objetivo`, `fecha`, `id_asignatura`, `estado`, `vigencia`, `duracion`) VALUES
-(1, 1, 'Matematicas 1', 'Medir el conocimiento del alumno', '2016-07-23', 1, 1, '2016-07-31', 1),
-(2, 1, 'PRUEBAS DE NIVEL DE ESPAÑOL', 'Test nivel A1 - Acceso / Principiante', '2016-07-23', 2, 1, '2016-07-31', 2);
+(1, 1, 'Preguntas y problemas de matemáticas para niños', 'Medir el conocimiento obtenido por el alumno en el periodo actual', '2016-07-24', 1, 1, '2016-07-27', 1);
 
 -- --------------------------------------------------------
 
@@ -135,6 +133,37 @@ CREATE TABLE `c_cuestionario_alumno` (
   `repetir` tinyint(1) DEFAULT '0',
   `finalizacion` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `c_cuestionario_alumno`
+--
+
+INSERT INTO `c_cuestionario_alumno` (`id_c_alumno`, `id_user`, `id_cuestionario`, `repetir`, `finalizacion`) VALUES
+(1, 2, 1, 0, '00:00:24:58');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `c_resultados`
+--
+
+CREATE TABLE `c_resultados` (
+  `id_resultado` int(11) NOT NULL,
+  `id_cuestionario` int(11) NOT NULL,
+  `id_grupo` int(11) NOT NULL,
+  `id_user` int(11) NOT NULL,
+  `nota` double NOT NULL,
+  `tiempo` varchar(20) NOT NULL,
+  `aprobo` tinyint(1) NOT NULL,
+  `fecha_presentacion` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `c_resultados`
+--
+
+INSERT INTO `c_resultados` (`id_resultado`, `id_cuestionario`, `id_grupo`, `id_user`, `nota`, `tiempo`, `aprobo`, `fecha_presentacion`) VALUES
+(1, 1, 1, 2, 3.4, '00:00:24:58', 1, '2016-07-24');
 
 -- --------------------------------------------------------
 
@@ -196,11 +225,9 @@ CREATE TABLE `preguntas_cuestionario` (
 --
 
 INSERT INTO `preguntas_cuestionario` (`id`, `id_pregunta`, `pregunta`, `id_cuestionario`, `imagen`) VALUES
-(1, 0, 'Si el radio de un círculo mide 10 cm, ¿Cuánto mide su diámetro?', 1, NULL),
+(1, 0, '¿Cuántos lados tiene un hexágono?', 1, NULL),
 (2, 1, '¿Cuál es el resultado de sumar una 1 hora y 40 minutos y 1 hora y 30 minutos?', 1, NULL),
-(3, 2, 'Un triángulo equilátero tiene…', 1, NULL),
-(4, 0, 'Venimos a clase _______ la mañana.', 2, NULL),
-(5, 1, 'Tenemos dos libros _______.', 2, NULL);
+(3, 2, '¿Por cuánto tenemos que multiplicar el 6 para obtener 36?', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -214,6 +241,15 @@ CREATE TABLE `respuestas_alumno` (
   `id_respuesta` int(11) NOT NULL,
   `id_c_alumno` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `respuestas_alumno`
+--
+
+INSERT INTO `respuestas_alumno` (`id_respuesta_a`, `id_pregunta`, `id_respuesta`, `id_c_alumno`) VALUES
+(1, 0, 3, 1),
+(2, 2, 13, 1),
+(3, 1, 9, 1);
 
 -- --------------------------------------------------------
 
@@ -234,35 +270,21 @@ CREATE TABLE `respuestas_cuestionario` (
 --
 
 INSERT INTO `respuestas_cuestionario` (`id_respuesta`, `id_pregunta`, `respuesta`, `estado`, `id_fk`) VALUES
-(1, 0, '1', 0, 1),
-(2, 0, '2', 1, 1),
-(3, 0, '3', 0, 1),
-(4, 0, '4', 0, 1),
-(5, 0, '58', 0, 1),
-(6, 1, '6', 1, 2),
-(7, 1, '7', 0, 2),
-(8, 1, '8', 0, 2),
-(9, 1, '9', 0, 2),
-(10, 1, '10', 0, 2),
-(11, 2, '11', 0, 3),
-(12, 2, '12', 0, 3),
-(13, 2, '13', 1, 3),
-(14, 2, '45', 0, 3),
-(15, 2, '45', 0, 3),
-(16, 0, '12', 1, 4),
-(17, 0, '312312', 0, 4),
-(18, 0, '123123', 0, 4),
-(19, 0, '3123', 0, 4),
-(20, 0, '96', 0, 4),
-(21, 1, '97', 0, 5),
-(22, 1, '98', 1, 5),
-(23, 1, '94', 0, 5),
-(24, 1, '95', 0, 5),
-(25, 1, '925', 0, 5),
-(26, 2, NULL, 0, 6),
-(27, 2, NULL, 0, 6),
-(28, 2, NULL, 1, 6),
-(29, 2, NULL, 0, 6);
+(1, 0, 'A: 10 lados', 0, 1),
+(2, 0, 'B: 6 lados', 1, 1),
+(3, 0, 'C: 7 lados', 0, 1),
+(4, 0, 'D: 4 lados', 0, 1),
+(5, 0, 'E: Ningun lado, un hexagono es una linea', 0, 1),
+(6, 1, 'A: 3 horas', 0, 2),
+(7, 1, 'B: 2 horas y 50 minutos', 0, 2),
+(8, 1, 'C: 1 hora y 40 minutos', 0, 2),
+(9, 1, 'D: 3 horas y 10 minutos', 1, 2),
+(10, 1, 'E: Ninguna de las anteriores', 0, 2),
+(11, 2, 'A: 3', 0, 3),
+(12, 2, 'B: 8', 0, 3),
+(13, 2, 'C: 6', 1, 3),
+(14, 2, 'D: 4', 0, 3),
+(15, 2, 'E: 5', 0, 3);
 
 -- --------------------------------------------------------
 
@@ -361,6 +383,15 @@ ALTER TABLE `c_cuestionario_alumno`
   ADD KEY `id_cuestionario` (`id_cuestionario`);
 
 --
+-- Indices de la tabla `c_resultados`
+--
+ALTER TABLE `c_resultados`
+  ADD PRIMARY KEY (`id_resultado`),
+  ADD KEY `id_cuestionario` (`id_cuestionario`),
+  ADD KEY `id_grupo` (`id_grupo`),
+  ADD KEY `id_user` (`id_user`);
+
+--
 -- Indices de la tabla `grupo`
 --
 ALTER TABLE `grupo`
@@ -419,12 +450,17 @@ ALTER TABLE `asignaturas`
 -- AUTO_INCREMENT de la tabla `c_cuestionario`
 --
 ALTER TABLE `c_cuestionario`
-  MODIFY `id_cuestionario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_cuestionario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT de la tabla `c_cuestionario_alumno`
 --
 ALTER TABLE `c_cuestionario_alumno`
-  MODIFY `id_c_alumno` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_c_alumno` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT de la tabla `c_resultados`
+--
+ALTER TABLE `c_resultados`
+  MODIFY `id_resultado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT de la tabla `grupo`
 --
@@ -434,17 +470,17 @@ ALTER TABLE `grupo`
 -- AUTO_INCREMENT de la tabla `preguntas_cuestionario`
 --
 ALTER TABLE `preguntas_cuestionario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT de la tabla `respuestas_alumno`
 --
 ALTER TABLE `respuestas_alumno`
-  MODIFY `id_respuesta_a` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_respuesta_a` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT de la tabla `respuestas_cuestionario`
 --
 ALTER TABLE `respuestas_cuestionario`
-  MODIFY `id_respuesta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id_respuesta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 --
 -- AUTO_INCREMENT de la tabla `roles`
 --
