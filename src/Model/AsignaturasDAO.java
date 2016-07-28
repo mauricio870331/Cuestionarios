@@ -101,7 +101,7 @@ public class AsignaturasDAO {
     public ArrayList<Asignaturas> getAsignaturasByCuestionario(int grupo) {
         ArrayList ListAsignatura = new ArrayList();
         try {
-            sql = "SELECT a.id_asignatura as id_asignatura, a.nombre_asig as nombre_asig "
+            sql = "SELECT DISTINCT a.id_asignatura as id_asignatura, a.nombre_asig as nombre_asig "
                     + "FROM asignaturas a INNER JOIN c_cuestionario c ON a.id_asignatura = c.id_asignatura "
                     + "INNER JOIN cuestionarios_grupos cg ON cg.id_cuestionario = c.id_cuestionario "
                     + "WHERE cg.id_grupo = " + grupo + "";

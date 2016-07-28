@@ -60,10 +60,10 @@ public class CCuestionarioAlumnoDAO {
         return idcAlumno;
     }
 
-    public boolean getCuestionariosActive(int idCuestionario) {
+    public boolean getCuestionariosActive(int idCuestionario, int idestudiante) {
         boolean repetir = true;
         try {
-            sql = "SELECT repetir FROM c_cuestionario_alumno WHERE id_cuestionario = " + idCuestionario + "";
+            sql = "SELECT repetir FROM c_cuestionario_alumno WHERE id_cuestionario = " + idCuestionario + " AND id_user ="+idestudiante;
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             if (rs.next()) {

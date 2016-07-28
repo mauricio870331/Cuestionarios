@@ -33,6 +33,7 @@ public class CuestionarioDAO {
     String sql;
     ResultSet rs;
     private final String logo = "/Reports/logo.png";
+    private final String logo2 = "/Reports/logo2.png";
 
     public CuestionarioDAO() {
         conexion = new Conexion();
@@ -297,14 +298,41 @@ public class CuestionarioDAO {
         return idCuestionario;
     }
 
+    public ArrayList<Cuestionario> getCuestionariosByNameList(String descuestionario) {
+        ArrayList listaCuestionario = new ArrayList();        
+        Cuestionario cuestionario;
+        try {
+            sql = "SELECT * FROM c_cuestionario WHERE descripcion = '" + descuestionario + "'";
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            while (rs.next()) {
+                cuestionario = new Cuestionario();
+                cuestionario.setIdCuestionario(rs.getInt("id_cuestionario"));
+                cuestionario.setIdUser(rs.getInt("id_user"));
+                cuestionario.setDescripcion(rs.getString("descripcion"));
+                cuestionario.setFecha(rs.getString("fecha"));
+                cuestionario.setIdAsignatura(rs.getInt("id_asignatura"));
+                cuestionario.setEstado(rs.getBoolean("estado"));
+                cuestionario.setObjetivo(rs.getString("objetivo"));
+                cuestionario.setVigencia(rs.getString("vigencia"));
+                cuestionario.setDuracion(rs.getInt("duracion"));
+                listaCuestionario.add(cuestionario);
+            }
+
+        } catch (Exception e) {
+            System.out.println("error aqui" + e);
+        }
+        return listaCuestionario;
+    }
+
     public double getCalificacionAlumno(int idCuestionario, int idUser) {
         double calificacion = 0.0;
         try {
             int cantPreguntas = getPreguntasCuestionario(idCuestionario);
             sql = "SELECT  CASE WHEN (ROUND(sum(calificacion),1) > 5 ) THEN 5 ELSE ROUND(sum(calificacion),1) END as calificacion "
-                + "from (SELECT @prTotalPreguntas := "+cantPreguntas+" totPreguntas) totPreguntas, "
-                + "(SELECT @prId_Alumno := "+idUser+" alumno) alumno, "
-                + "(SELECT @prId_Cuestionario := "+idCuestionario+" cuestionario) cuestionario, nota_alumno";
+                    + "from (SELECT @prTotalPreguntas := " + cantPreguntas + " totPreguntas) totPreguntas, "
+                    + "(SELECT @prId_Alumno := " + idUser + " alumno) alumno, "
+                    + "(SELECT @prId_Cuestionario := " + idCuestionario + " cuestionario) cuestionario, nota_alumno";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             if (rs.next()) {
@@ -316,7 +344,8 @@ public class CuestionarioDAO {
         return calificacion;
     }
 
-    public void generateReporte(int idCuestionario, int id_alumno) {
+    public void generateReporte(int idCuestionario, int id_alumno, int idca, int total_preguntas, double nota, String notaString) {
+        System.out.println(idCuestionario + " " + id_alumno + " " + idca);
         try {
             JasperDesign jd = JRXmlLoader.load("src/Reports/Evaluacion.jrxml");
             //parametros de entrada
@@ -324,7 +353,11 @@ public class CuestionarioDAO {
             //  parametros.clear();
             parametros.put("logo", this.getClass().getResourceAsStream(logo));
             parametros.put("idCuestionario", idCuestionario);
+            parametros.put("idCuestionarioAlumno", idca);
             parametros.put("alumno", id_alumno);
+            parametros.put("total_preguntas", total_preguntas);
+            parametros.put("nota", nota);
+            parametros.put("notaString", notaString);
             //fin parametros de entrada
             JasperReport jasperRep = JasperCompileManager.compileReport(jd);
             JasperPrint JasPrint = JasperFillManager.fillReport(jasperRep, parametros, cn);
@@ -338,11 +371,11 @@ public class CuestionarioDAO {
 
     public void reporteGeneralResultados(String grupo, String cuestionario) {
         try {
-            JasperDesign jd = JRXmlLoader.load("src/Reports/Evaluacion.jrxml");
+            JasperDesign jd = JRXmlLoader.load("src/Reports/ReporteEvaluacionGeneral.jrxml");
             //parametros de entrada
             Map parametros = new HashMap();
             //  parametros.clear();
-            parametros.put("logo", this.getClass().getResourceAsStream(logo));
+            parametros.put("logo", this.getClass().getResourceAsStream(logo2));
             parametros.put("grupo", grupo);
             parametros.put("cuestionario", cuestionario);
             //fin parametros de entrada

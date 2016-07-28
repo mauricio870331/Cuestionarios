@@ -89,7 +89,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
     ArrayList<String> tempEstados = new ArrayList<>();
     ArrayList<Integer> sortQuestions = new ArrayList<>();
     AsignCuestionaryToGroup ac = new AsignCuestionaryToGroup(null, true);
-    ReportResultados rr = new ReportResultados(null, true);
+    ReportResultados rr = new ReportResultados(null, false);
     Date date = new Date();//para capturar la fecha actual
     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     int idCuest = 0;
@@ -149,6 +149,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         this.pr.txtCantPreguntas.addKeyListener(this);
         this.pr.txtCantPreguntas.addFocusListener(this);
         this.rr.btnGenerateReport.addActionListener(this);
+        this.pr.tCuestionario.addActionListener(this);
 //        this.ac.chkEstado.addItemListener(this);
         this.ac.addWindowListener(this);
         this.pr.btnIniciarPrueba.addActionListener(this);//        this.pr.btnRegistrarCAlumno.addActionListener(this);
@@ -367,14 +368,16 @@ public final class CuestionarioController extends WindowAdapter implements Actio
                 if (itrC.hasNext()) {
                     Cuestionario elementoC = itrC.next();
                     idCuest = elementoC.getIdCuestionario();
-                    if (!ccuestionarioalumnodao.getCuestionariosActive(idCuest)) {
+                    if (!ccuestionarioalumnodao.getCuestionariosActive(idCuest, idUserLog)) {
                         JOptionPane.showMessageDialog(null, "¡Ya presentaste este cuestionario, no puedes repetirlo, la sesión se cerrará..!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
                         System.exit(0);
                     }
                     llenarRespuestasAlumno();
 //                    System.out.println("por aqui user: "+elementoC.getIdUser());
 //                    pr.txtAlumnoName.setText(udao.getUser(elementoC.getIdUser()));
-                    pr.tCuestionario.setText(elementoC.getDescripcion());
+                    pr.tCuestionario.removeAllItems();
+                    pr.tCuestionario.addItem(elementoC.getDescripcion());
+                    pr.tCuestionario.setSelectedItem(elementoC.getDescripcion());
                     pr.txtObjetivoCuestionario.setText(elementoC.getObjetivo());
                     duracionCuestionario = elementoC.getDuracion();
                     cargarPreguntasCuestionario(elementoC.getIdCuestionario());
@@ -664,13 +667,22 @@ public final class CuestionarioController extends WindowAdapter implements Actio
             if (asignatura.equals("-- Seleccione --")) {
                 clearComponent();
                 return;
+            } else if (cuestionariodao.getCuestionario(asignatura, idGrupo).size() > 1) {
+                pr.txtObjetivoCuestionario.setText("");
+                Iterator<Cuestionario> cuestionarios = cuestionariodao.getCuestionario(asignatura, idGrupo).iterator();
+                pr.tCuestionario.removeAllItems();
+                pr.tCuestionario.addItem("-- Seleccione --");
+                while (cuestionarios.hasNext()) {
+                    Cuestionario cu = cuestionarios.next();
+                    pr.tCuestionario.addItem(cu.getDescripcion());
+                }
+                pr.tCuestionario.setEnabled(true);
             } else {
                 Iterator<Cuestionario> nombreIterator = cuestionariodao.getCuestionario(asignatura, idGrupo).iterator();
                 if (nombreIterator.hasNext()) {
                     Cuestionario c = nombreIterator.next();
-//                String profesor = udao.getProfesor(c.getIdUser());
                     idCuest = c.getIdCuestionario();
-                    if (!ccuestionarioalumnodao.getCuestionariosActive(idCuest)) {
+                    if (!ccuestionarioalumnodao.getCuestionariosActive(idCuest, idUserLog)) {
                         JOptionPane.showMessageDialog(null, "¡Ya presentaste este cuestionario, no puedes repetirlo..!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
                         pr.cboAsignatura.removeItem((String) pr.cboAsignatura.getSelectedItem());
                         pr.cboAsignatura.setSelectedItem("-- Seleccione --");
@@ -678,13 +690,17 @@ public final class CuestionarioController extends WindowAdapter implements Actio
                             JOptionPane.showMessageDialog(null, "¡El sistema ha detectado que no tienes cuestionarios habilitados.\nLa sesión se cerrará..!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
                             System.exit(0);
                         }
+
                     } else {
                         pr.btnIniciarPrueba.setEnabled(true);
                         System.out.println("pase por que estoy activo");
                         if (cantCuestionario > 1) {
                             llenarRespuestasAlumno();
                         }
-                        pr.tCuestionario.setText(c.getDescripcion());
+                        pr.tCuestionario.removeAllItems();
+                        pr.tCuestionario.addItem(c.getDescripcion());
+                        pr.tCuestionario.setEnabled(false);
+                        //pr.tCuestionario.setSelectedItem(c.getDescripcion());
                         pr.txtObjetivoCuestionario.setText(c.getObjetivo());
                         duracionCuestionario = c.getDuracion();
                         if (cantCuestionario > 1) {
@@ -696,11 +712,10 @@ public final class CuestionarioController extends WindowAdapter implements Actio
                                 clearComponent();
                             }
                         }
-
                     }
 
                 } else {
-                    pr.tCuestionario.setText("");
+                    pr.tCuestionario.setSelectedItem("-- Seleccione --");
                     pr.txtObjetivoCuestionario.setText("");
                 }
             }
@@ -717,6 +732,36 @@ public final class CuestionarioController extends WindowAdapter implements Actio
             ListRespuestasTemp.clear();
             cargarRespuestasInTable(pr.tbRespuestasQ);
             pr.cboPreguntas.setEnabled(false);
+        }
+
+        if (e.getSource() == pr.tCuestionario) {
+            String descuestionario = (String) pr.tCuestionario.getSelectedItem();            
+            if (!descuestionario.equals("-- Seleccione --")) {
+                pr.btnIniciarPrueba.setEnabled(true);
+            } else {
+                pr.btnIniciarPrueba.setEnabled(false);
+            }
+            Iterator<Cuestionario> itrC = cuestionariodao.getCuestionariosByNameList(descuestionario).iterator();
+            if (itrC.hasNext()) {
+                Cuestionario elementoC = itrC.next();
+                idCuest = elementoC.getIdCuestionario();
+                if (!ccuestionarioalumnodao.getCuestionariosActive(idCuest, idUserLog)) {
+                    JOptionPane.showMessageDialog(null, "¡Ya presentaste este cuestionario, no puedes repetirlo..!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                    pr.tCuestionario.removeItem((String) pr.tCuestionario.getSelectedItem());
+                    pr.tCuestionario.setSelectedItem("-- Seleccione --");
+                    if (pr.tCuestionario.getItemCount() == 1) {
+                        JOptionPane.showMessageDialog(null, "¡El sistema ha detectado que no tienes cuestionarios habilitados.\nLa sesión se cerrará..!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                        System.exit(0);
+                    }
+                } else {
+                    pr.txtObjetivoCuestionario.setText(elementoC.getObjetivo());
+                    llenarRespuestasAlumno();
+                    cargarPreguntasCuestionario(idCuest);
+                    showPreguntasCuestionario(0);
+                }
+
+            }
+
         }
 
         if (e.getSource() == pr.btnAddPregunta) {
@@ -842,19 +887,19 @@ public final class CuestionarioController extends WindowAdapter implements Actio
             }
         }
 
-//        if (e.getSource() == rr.btnGenerateReport) {
-//            String grupo = (String) rr.cboReportGrupo.getSelectedItem();
-//            String cues = (String) rr.cboReportCuestionario.getSelectedItem();
-//            if (grupo.equals("-- Seleccione --")) {
-//                JOptionPane.showMessageDialog(null, "Seleccione un grupo");
-//                return;
-//            }
-//            if (cues.equals("-- Seleccione --")) {
-//                JOptionPane.showMessageDialog(null, "Seleccione un cuestionario");
-//                return;
-//            }
-//            cuestionariodao.reporteGeneralResultados(grupo, cues);
-//        }
+        if (e.getSource() == rr.btnGenerateReport) {
+            String grupo = (String) rr.cboReportGrupo.getSelectedItem();
+            String cues = (String) rr.cboReportCuestionario.getSelectedItem();
+            if (grupo.equals("-- Seleccione --")) {
+                JOptionPane.showMessageDialog(null, "Seleccione un grupo");
+                return;
+            }
+            if (cues.equals("-- Seleccione --")) {
+                JOptionPane.showMessageDialog(null, "Seleccione un cuestionario");
+                return;
+            }
+            cuestionariodao.reporteGeneralResultados(grupo, cues);
+        }
 
 //        if (e.getSource() == pr.btnRegistrarCAlumno) {
 //            Iterator<RespuestasAlumno> nombreIterator = objRespuestasAlumno.iterator();
@@ -1006,7 +1051,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
 //        pr.btnRegistrarCAlumno.setEnabled(false);
         pr.pnPregunta.setVisible(false);
         pr.pnfinishCuestionario.setVisible(true);
-        pr.tCuestionario.setText("");
+        pr.tCuestionario.setSelectedItem("-- Seleccione --");
         iniciar = false;
         pregunt = 0;
         pResponse = 0;
@@ -1027,8 +1072,10 @@ public final class CuestionarioController extends WindowAdapter implements Actio
                 if (pr.btnNextQuestion.getText().equals("Finalizar")) {
                     double nota = cuestionariodao.getCalificacionAlumno(idCuest, idUserLog);
                     boolean aprobo = false;
+                    String notaString = "No Aprobó";
                     if (nota >= 3.0) {
                         aprobo = true;
+                        notaString = "Aprobó";
                     }
                     Resultados r = new Resultados();
                     r.setId_cuestionario(idCuest);
@@ -1044,7 +1091,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
                         System.out.println("error al crear el resultado");
                     }
                     limpiarformRespuestasAlumno();
-                    cuestionariodao.generateReporte(idCuest, idUserLog);
+                    cuestionariodao.generateReporte(idCuest, idUserLog, idca, TotalPreguntas, nota, notaString);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Error al guardar el cuestionario");
@@ -1056,7 +1103,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         pr.txtPreguntas.setText("");
         pr.pnRespuestas.removeAll();
         pr.pnRespuestas.updateUI();
-        pr.tCuestionario.setText("");
+        pr.tCuestionario.setSelectedItem("-- Seleccione --");
         TotalPreguntas = 0;
         pr.txtObjetivoCuestionario.setText("");
         pr.lbltotalp.setText("Total Preguntas: " + TotalPreguntas);

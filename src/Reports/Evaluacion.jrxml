@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Evaluacion" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="30da9c0e-3f6d-4d0b-a780-7f287a417f0b">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="27"/>
 	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
 	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
 	<style name="Detail" fontName="Arial" fontSize="12"/>
 	<parameter name="idCuestionario" class="java.lang.Integer"/>
 	<parameter name="alumno" class="java.lang.Integer"/>
-	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["Reports/"]]></defaultValueExpression>
-	</parameter>
 	<parameter name="logo" class="java.io.InputStream"/>
+	<parameter name="idCuestionarioAlumno" class="java.lang.Integer"/>
+	<parameter name="total_preguntas" class="java.lang.Integer"/>
+	<parameter name="nota" class="java.lang.Double"/>
+	<parameter name="notaString" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select CONCAT(u.nombres," ",u.apellidos) as nom_alumno,
        g.grupo,
@@ -23,11 +24,12 @@
        r.estado,
        ca.id_c_alumno,
        COALESCE(ra.id_respuesta, ra.id_respuesta, 0)  as id_respuesta2,
-       CASE WHEN (r.estado = 1 and r.id_respuesta = ra.id_respuesta) THEN 'Correcto' ELSE 'Incorrecto' END as calificacion,
- (select id_respuesta from respuestas_alumno WHERE  id_pregunta = p.id_pregunta and id_c_alumno = ca.id_c_alumno ) as parametro,
-(SELECT CAST(count(pregunta) AS INT) from preguntas_cuestionario where id_cuestionario = $P{idCuestionario}) as total_preguntas
-from c_cuestionario c
-INNer JOIN  preguntas_cuestionario p on c.id_cuestionario = p.id_cuestionario
+      (select rc.respuesta from respuestas_alumno r INNER JOIN respuestas_cuestionario rc
+       ON r.id_respuesta = rc.id_respuesta WHERE r.id_pregunta = p.id_pregunta and r.id_c_alumno = ca.id_c_alumno ) as r_respuesta_alumno,
+      (select id_respuesta from respuestas_alumno WHERE  id_pregunta = p.id_pregunta and id_c_alumno = ca.id_c_alumno ) as parametro,
+      (select CASE WHEN (estado = 1) THEN 'Correcto' ELSE 'Incorrecto' END as cal from respuestas_cuestionario WHERE  id_respuesta = parametro) as calificacion
+FROM c_cuestionario c
+INNER JOIN  preguntas_cuestionario p on c.id_cuestionario = p.id_cuestionario
 INNER JOIN respuestas_cuestionario r ON r.id_fk = p.id
 INNER JOIN c_cuestionario_alumno ca ON ca.id_cuestionario = c.id_cuestionario AND ca.id_user=$P{alumno}
 LEFT JOIN respuestas_alumno ra ON  ra.id_c_alumno = ca.id_c_alumno and ra.id_respuesta = r.id_respuesta
@@ -59,11 +61,11 @@ ORDER BY  p.pregunta, r.id_respuesta]]>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="id_respuesta2" class="java.lang.Long"/>
+	<field name="r_respuesta_alumno" class="java.lang.String"/>
+	<field name="parametro" class="java.lang.Integer"/>
 	<field name="calificacion" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="parametro" class="java.lang.Integer"/>
-	<field name="total_preguntas" class="java.lang.Integer"/>
 	<group name="descripcion">
 		<groupExpression><![CDATA[$F{descripcion}]]></groupExpression>
 		<groupHeader>
@@ -99,17 +101,27 @@ ORDER BY  p.pregunta, r.id_respuesta]]>
 		</groupHeader>
 		<groupFooter>
 			<band height="30">
-				<subreport>
-					<reportElement uuid="edc207e0-3969-4124-9a81-5dd59706c54c" x="0" y="4" width="200" height="21"/>
-					<subreportParameter name="idCuestionario">
-						<subreportParameterExpression><![CDATA[$F{id_c_alumno}]]></subreportParameterExpression>
-					</subreportParameter>
-					<subreportParameter name="pIrespuestaA">
-						<subreportParameterExpression><![CDATA[$F{parametro}]]></subreportParameterExpression>
-					</subreportParameter>
-					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Evaluacion_subreport.jasper"]]></subreportExpression>
-				</subreport>
+				<staticText>
+					<reportElement uuid="a1f06a65-de94-4ec7-aeb5-8168be90a868" x="7" y="5" width="80" height="20"/>
+					<textElement>
+						<font size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Tu Respuesta:]]></text>
+				</staticText>
+				<textField>
+					<reportElement uuid="cb2091db-e39b-4e98-ab88-00214e10b78c" x="453" y="5" width="100" height="20"/>
+					<textElement>
+						<font size="11" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{calificacion}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="384b34a1-91b7-482a-9c74-24c6e7d4a9ee" x="87" y="5" width="366" height="20"/>
+					<textElement>
+						<font size="11" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{r_respuesta_alumno}]]></textFieldExpression>
+				</textField>
 			</band>
 		</groupFooter>
 	</group>
@@ -174,26 +186,26 @@ ORDER BY  p.pregunta, r.id_respuesta]]>
 				<textFieldExpression><![CDATA[$F{grupo}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="a1f06a65-de94-4ec7-aeb5-8168be90a868" x="219" y="26" width="74" height="20"/>
+				<reportElement uuid="a1f06a65-de94-4ec7-aeb5-8168be90a868" x="247" y="26" width="72" height="20"/>
 				<textElement>
 					<font size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Calificacion:]]></text>
 			</staticText>
-			<subreport>
-				<reportElement uuid="27e20756-18d3-4614-9628-e8b2f8d3260f" x="293" y="26" width="260" height="20"/>
-				<subreportParameter name="idAlumno">
-					<subreportParameterExpression><![CDATA[$P{alumno}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="idCuestionario">
-					<subreportParameterExpression><![CDATA[$F{id_c_alumno}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="total_preguntas">
-					<subreportParameterExpression><![CDATA[$F{total_preguntas}]]></subreportParameterExpression>
-				</subreportParameter>
-				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Evaluacion_total_calificacion.jasper"]]></subreportExpression>
-			</subreport>
+			<textField>
+				<reportElement uuid="b7ba5fbe-440e-42d1-9f56-356adfe41c55" x="319" y="26" width="100" height="20"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nota}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b7375188-3ae6-4eca-a340-727a749ad2e0" x="453" y="26" width="100" height="20"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{notaString}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>

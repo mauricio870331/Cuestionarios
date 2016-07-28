@@ -259,7 +259,7 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="container" alignment="0" pref="1089" max="32767" attributes="0"/>
+              <Component id="container" alignment="0" pref="1096" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -287,7 +287,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="1085" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="1092" max="32767" attributes="0"/>
                   <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
                       <Component id="pnCreateAdmin" alignment="0" max="32767" attributes="0"/>
                   </Group>
@@ -955,25 +955,24 @@
                                                   <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
                                                   <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                                               </Group>
-                                              <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
-                                              <Group type="103" groupAlignment="0" attributes="0">
+                                              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                                  <Component id="txtAlumnoName" pref="254" max="32767" attributes="0"/>
                                                   <Component id="tGrado" max="32767" attributes="0"/>
-                                                  <Component id="txtAlumnoName" pref="233" max="32767" attributes="0"/>
                                               </Group>
-                                              <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Component id="jLabel4" alignment="1" min="-2" max="-2" attributes="0"/>
-                                                  <Component id="jLabel11" alignment="1" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="jLabel11" alignment="0" min="-2" max="-2" attributes="0"/>
                                               </Group>
-                                              <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
                                               <Group type="103" groupAlignment="0" attributes="0">
                                                   <Component id="cboAsignatura" max="32767" attributes="0"/>
-                                                  <Component id="tCuestionario" pref="382" max="32767" attributes="0"/>
+                                                  <Component id="tCuestionario" pref="341" max="32767" attributes="0"/>
                                               </Group>
-                                              <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
                                           </Group>
                                           <Group type="102" alignment="1" attributes="0">
-                                              <Component id="txtObjetivoCuestionario" pref="664" max="32767" attributes="0"/>
+                                              <Component id="txtObjetivoCuestionario" pref="661" max="32767" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
                                               <Component id="btnIniciarPrueba" min="-2" max="-2" attributes="0"/>
                                           </Group>
@@ -986,27 +985,21 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="1" attributes="0">
                                       <EmptySpace max="32767" attributes="0"/>
+                                      <Group type="103" groupAlignment="3" attributes="0">
+                                          <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="tGrado" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cboAsignatura" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Group type="103" groupAlignment="3" attributes="0">
+                                              <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              <Component id="txtAlumnoName" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Group type="103" alignment="1" groupAlignment="3" attributes="0">
                                               <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                                               <Component id="tCuestionario" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          </Group>
-                                          <Group type="102" attributes="0">
-                                              <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
-                                                  <Component id="tGrado" alignment="0" min="-2" max="-2" attributes="0"/>
-                                              </Group>
-                                              <EmptySpace max="-2" attributes="0"/>
-                                              <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Group type="103" groupAlignment="3" attributes="0">
-                                                      <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
-                                                      <Component id="txtAlumnoName" alignment="3" min="-2" max="-2" attributes="0"/>
-                                                  </Group>
-                                                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                                                      <Component id="cboAsignatura" alignment="3" min="-2" max="-2" attributes="0"/>
-                                                      <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
-                                                  </Group>
-                                              </Group>
                                           </Group>
                                       </Group>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -1022,17 +1015,12 @@
                           <SubComponents>
                             <Component class="javax.swing.JLabel" name="jLabel7">
                               <Properties>
-                                <Property name="text" type="java.lang.String" value="Grado:"/>
-                              </Properties>
-                            </Component>
-                            <Component class="javax.swing.JLabel" name="jLabel4">
-                              <Properties>
-                                <Property name="text" type="java.lang.String" value="Cuestionario:"/>
+                                <Property name="text" type="java.lang.String" value="Grupo:"/>
                               </Properties>
                             </Component>
                             <Component class="javax.swing.JLabel" name="jLabel5">
                               <Properties>
-                                <Property name="text" type="java.lang.String" value="Alumno:"/>
+                                <Property name="text" type="java.lang.String" value="Estudiante:"/>
                               </Properties>
                             </Component>
                             <Component class="javax.swing.JLabel" name="jLabel11">
@@ -1094,11 +1082,20 @@
                                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
                               </AuxValues>
                             </Component>
-                            <Component class="javax.swing.JTextField" name="tCuestionario">
+                            <Component class="javax.swing.JLabel" name="jLabel4">
                               <Properties>
+                                <Property name="text" type="java.lang.String" value="Cuestionario:"/>
+                              </Properties>
+                            </Component>
+                            <Component class="javax.swing.JComboBox" name="tCuestionario">
+                              <Properties>
+                                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                                  <StringArray count="0"/>
+                                </Property>
                                 <Property name="enabled" type="boolean" value="false"/>
                               </Properties>
                               <AuxValues>
+                                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
                               </AuxValues>
                             </Component>
