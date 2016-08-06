@@ -8,10 +8,15 @@ package Model;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -32,8 +37,9 @@ public class CuestionarioDAO {
     PreparedStatement pstm;
     String sql;
     ResultSet rs;
-    private final String logo = "/Reports/logo.png";
-    private final String logo2 = "/Reports/logo2.png";
+    private final String logo = "/Reports/logo.png";    
+    Date date = new Date();
+    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
     public CuestionarioDAO() {
         conexion = new Conexion();
@@ -299,7 +305,7 @@ public class CuestionarioDAO {
     }
 
     public ArrayList<Cuestionario> getCuestionariosByNameList(String descuestionario) {
-        ArrayList listaCuestionario = new ArrayList();        
+        ArrayList listaCuestionario = new ArrayList();
         Cuestionario cuestionario;
         try {
             sql = "SELECT * FROM c_cuestionario WHERE descripcion = '" + descuestionario + "'";
@@ -375,7 +381,7 @@ public class CuestionarioDAO {
             //parametros de entrada
             Map parametros = new HashMap();
             //  parametros.clear();
-            parametros.put("logo", this.getClass().getResourceAsStream(logo2));
+            parametros.put("logo", this.getClass().getResourceAsStream(logo));
             parametros.put("grupo", grupo);
             parametros.put("cuestionario", cuestionario);
             //fin parametros de entrada
@@ -386,6 +392,43 @@ public class CuestionarioDAO {
             jv.setTitle("Evaluación General");
         } catch (JRException ex) {
             System.out.println("Error jasper: " + ex);
+        }
+    }
+
+    public void activeCuestionarios() {
+        try {
+            deactiveCuestionarios();
+            sql = "SELECT * FROM c_cuestionario WHERE estado = 0 AND vigencia = '" + df.format(date) + "'";
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            while (rs.next()) {
+                sql = "UPDATE c_cuestionario SET estado = ? WHERE id_cuestionario = ?";
+                pstm = cn.prepareStatement(sql);
+                pstm.setBoolean(1, true);
+                pstm.setInt(2, rs.getInt("id_cuestionario"));
+                pstm.executeUpdate();
+                System.out.println("cuestionario activado " + rs.getInt("id_cuestionario"));
+            }
+        } catch (SQLException ex) {
+            System.out.println("error activar" + ex);
+        }
+    }
+
+    public void deactiveCuestionarios() {
+        try {
+            sql = "SELECT * FROM c_cuestionario WHERE estado = 1 AND vigencia <> '" + df.format(date) + "'";
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            while (rs.next()) {
+                sql = "UPDATE c_cuestionario SET estado = ? WHERE id_cuestionario = ?";
+                pstm = cn.prepareStatement(sql);
+                pstm.setBoolean(1, false);
+                pstm.setInt(2, rs.getInt("id_cuestionario"));
+                pstm.executeUpdate();
+                System.out.println("cuestionario desactivado " + rs.getInt("id_cuestionario"));
+            }
+        } catch (SQLException ex) {
+            System.out.println("error desactivar" + ex);
         }
     }
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Evaluacion" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="30da9c0e-3f6d-4d0b-a780-7f287a417f0b">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="27"/>
+	<property name="ireport.x" value="13"/>
+	<property name="ireport.y" value="26"/>
 	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
 	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -66,6 +66,9 @@ ORDER BY  p.pregunta, r.id_respuesta]]>
 	<field name="calificacion" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
+	<variable name="rAlumno" class="java.lang.String">
+		<variableExpression><![CDATA[($F{r_respuesta_alumno}!=null) ? $F{r_respuesta_alumno} : "No respondiste"]]></variableExpression>
+	</variable>
 	<group name="descripcion">
 		<groupExpression><![CDATA[$F{descripcion}]]></groupExpression>
 		<groupHeader>
@@ -108,7 +111,7 @@ ORDER BY  p.pregunta, r.id_respuesta]]>
 					</textElement>
 					<text><![CDATA[Tu Respuesta:]]></text>
 				</staticText>
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement uuid="cb2091db-e39b-4e98-ab88-00214e10b78c" x="453" y="5" width="100" height="20"/>
 					<textElement>
 						<font size="11" isBold="true"/>
@@ -116,11 +119,11 @@ ORDER BY  p.pregunta, r.id_respuesta]]>
 					<textFieldExpression><![CDATA[$F{calificacion}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement uuid="384b34a1-91b7-482a-9c74-24c6e7d4a9ee" x="87" y="5" width="366" height="20"/>
+					<reportElement uuid="6560bb7e-5cb4-4118-b696-d0e809897115" x="87" y="5" width="366" height="20"/>
 					<textElement>
 						<font size="11" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{r_respuesta_alumno}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{rAlumno}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -131,7 +134,7 @@ ORDER BY  p.pregunta, r.id_respuesta]]>
 	<title>
 		<band height="81" splitType="Stretch">
 			<image>
-				<reportElement uuid="69efb880-1d70-4993-8adc-141414de4a9c" x="275" y="0" width="300" height="64"/>
+				<reportElement uuid="69efb880-1d70-4993-8adc-141414de4a9c" x="472" y="0" width="81" height="81"/>
 				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
 			</image>
 			<staticText>

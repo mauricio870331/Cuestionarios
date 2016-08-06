@@ -66,4 +66,20 @@ public class RolesDAO {
         return ListaRoles;
 
     }
+    
+    public int getIdRolByNombre(String rol) {
+        int idRol = 0;       
+        try {
+            sql = "SELECT id_rol FROM roles where rol = ?";
+            pstm = cn.prepareStatement(sql);
+            pstm.setString(1, rol);
+            rs = pstm.executeQuery();
+            if (rs.next()) {
+                idRol = rs.getInt("id_rol");
+            }
+        } catch (Exception e) {
+            System.out.println("error" + e);
+        }
+        return idRol;
+    }
 }

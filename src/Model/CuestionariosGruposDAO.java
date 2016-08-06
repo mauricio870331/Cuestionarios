@@ -28,7 +28,7 @@ public class CuestionariosGruposDAO {
         cn = conexion.getConexion();
     }
 
-    public String addGroupToCuestionario(ArrayList<CuestionariosGrupos> list, String opc, String fecha, boolean estado) {
+    public String addGroupToCuestionario(ArrayList<CuestionariosGrupos> list, String opc, String fecha) {
         String rpta = null;
         int idc = 0;
         try {
@@ -53,13 +53,12 @@ public class CuestionariosGruposDAO {
                         pstm.setInt(2, obj.getIdGrupo());
                         pstm.executeUpdate();
                     }
+                    sql = "UPDATE c_cuestionario SET vigencia = ? WHERE id_cuestionario = ?";
+                    pstm = cn.prepareStatement(sql);
+                    pstm.setString(1, fecha);
+                    pstm.setInt(2, obj.getIdCuestionario());
+                    pstm.executeUpdate();
                 }
-                sql = "UPDATE c_cuestionario SET estado = ?, vigencia = ? WHERE id_cuestionario = ?";
-                pstm = cn.prepareStatement(sql);
-                pstm.setBoolean(1, estado);
-                pstm.setString(2, fecha);
-                pstm.setInt(3, idc);
-                pstm.executeUpdate();
                 if (opc.equals("C")) {
                     rpta = "Grupos asignados a cuestionaro con éxito";
                 } else {

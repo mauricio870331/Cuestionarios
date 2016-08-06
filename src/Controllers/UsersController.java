@@ -50,7 +50,7 @@ public final class UsersController implements ActionListener, KeyListener {
     boolean admin = false;
     boolean secretaria = false;
     int idUserLog;
-    int idGrupo;
+    int idGrupo;   
 
     public UsersController(Principal pr, UsersDAO admDao, int id_rol, int idUserLog, int idGrupo) {
         this.pr = pr;
@@ -72,7 +72,7 @@ public final class UsersController implements ActionListener, KeyListener {
         this.pr.rdoAdmin.addActionListener(this);
         this.pr.rdoTodos.addActionListener(this);
         this.pr.rdoTodos.setSelected(true);
-        this.pr.mnuAddPago.addActionListener(this);
+        
         this.pr.lblVerUsers.setText("Tipo Usuarios");
         //        this.pr.btnFotoAdmin.addActionListener(this);
 //        this.pr.btnAdjuntarfoto.addActionListener(this);
@@ -116,7 +116,7 @@ public final class UsersController implements ActionListener, KeyListener {
             nombreIterator = gymDao.getListGrupoById(id_gym).iterator();
             while (nombreIterator.hasNext()) {
                 Grupo elemento = nombreIterator.next();
-                pr.cboGrupo.addItem(elemento.getIdGrupo() + " - " + elemento.getGrupo());
+                pr.cboGrupo.addItem(elemento.getGrupo());
             }
         }
 
@@ -128,7 +128,7 @@ public final class UsersController implements ActionListener, KeyListener {
         pr.cboIdRol.addItem("-- Seleccione --");
         while (rol.hasNext()) {
             Roles elemento = rol.next();
-            pr.cboIdRol.addItem(elemento.getIdRol() + " - " + elemento.getRol());
+            pr.cboIdRol.addItem(elemento.getRol());
         }
 
     }
@@ -147,32 +147,26 @@ public final class UsersController implements ActionListener, KeyListener {
             String apellidos = pr.txtApellidos.getText();
             String pass = new String(pr.txtPass.getPassword());
             String tipo_doc = (String) pr.cboTipoDocAdmin.getSelectedItem();
-            String idGym = (String) pr.cboGrupo.getSelectedItem();
-
+            String Grupo = (String) pr.cboGrupo.getSelectedItem();
             if (admDao.getDoc(documento)) {
-                JOptionPane.showMessageDialog(null, "El documento "+documento+" ya existe");
+                JOptionPane.showMessageDialog(null, "El documento " + documento + " ya existe");
                 return;
             }
             //String Fechacompleta = FchaHoy + " " + hora + ":" + minutos + ":" + segundos;
 //            String Horacomp = hora + ":" + minutos + ":" + segundos;
-
             int grupo = 0;
-            if (!idGym.equals("-- Seleccione --")) {
-                String[] idGymSeparated = idGym.split("-");
-                grupo = Integer.parseInt(idGymSeparated[0].trim());
+            if (!Grupo.equals("-- Seleccione --")) {                
+                grupo = gymDao.getIdGrupoByName(Grupo);
             }
             String idRol = (String) pr.cboIdRol.getSelectedItem();
             int rolU = 0;
-            if (!idRol.equals("-- Seleccione --")) {
-                String[] idRolSeparated = idRol.split("-");
-                rolU = Integer.parseInt(idRolSeparated[0].trim());
+            if (!idRol.equals("-- Seleccione --")) {                
+                rolU = rolDao.getIdRolByNombre(idRol);
             }
-
             if (tipo_doc.equals("-- Seleccione --")) {
                 JOptionPane.showMessageDialog(null, "debe seleccionar un tipo de documento");
                 return;
             }
-
             String rptaRegistro = admDao.Create(documento, tipo_doc, nombres, apellidos, grupo, rolU, pass, foto, opc, idToUpdate);
             if (rptaRegistro != null) {
                 JOptionPane.showMessageDialog(null, rptaRegistro);
@@ -330,6 +324,7 @@ public final class UsersController implements ActionListener, KeyListener {
 
         if (e.getSource() == pr.rdoClientes) {
             if (pr.rdoClientes.isSelected()) {
+              
                 this.pr.lblVerUsers.setText("Ver Profesores");
                 rol = 1;
                 cargarAdmin(pr.tbAdmin, dato, rol);
@@ -339,6 +334,7 @@ public final class UsersController implements ActionListener, KeyListener {
 
         if (e.getSource() == pr.rdoAdmin) {
             if (pr.rdoAdmin.isSelected()) {
+                
                 this.pr.lblVerUsers.setText("Ver Alumnos");
                 rol = 2;
                 cargarAdmin(pr.tbAdmin, dato, rol);
@@ -347,6 +343,7 @@ public final class UsersController implements ActionListener, KeyListener {
         }
         if (e.getSource() == pr.rdoTodos) {
             if (pr.rdoTodos.isSelected()) {
+                
                 this.pr.lblVerUsers.setText("Ver Todos");
                 rol = 0;
                 cargarAdmin(pr.tbAdmin, dato, rol);

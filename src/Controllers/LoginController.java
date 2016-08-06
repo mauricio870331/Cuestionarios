@@ -42,6 +42,7 @@ public final class LoginController implements ActionListener, KeyListener {
             pr.createUsers.setVisible(false);
         }
         if (rol == 2) {
+            pr.mnuAdministrar.setText("Menú");
             pr.pnCuestionario.setVisible(true);
             pr.pnCreateAdmin.setVisible(false);
             pr.pnCreateCuestionary.setVisible(false);
@@ -57,6 +58,8 @@ public final class LoginController implements ActionListener, KeyListener {
             pr.pnCreateAdmin.setVisible(true);
             pr.pnCuestionario.setVisible(false);
             pr.pnCreateCuestionary.setVisible(false);
+            pr.MnuCuestionarios.setVisible(false);
+            pr.asignCuestionaryToGroup.setVisible(false);
         }
     }
 

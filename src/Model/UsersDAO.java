@@ -102,7 +102,7 @@ public class UsersDAO {
     }
 
     public ArrayList<Users> getListAdministrador(int pagina, String dato, int rol) {
-        String adnWhere = "";
+        String adnWhere = "WHERE id_rol <> 3";
         String and = "WHERE documento LIKE '" + dato + "%' OR nombres LIKE '" + dato + "%' OR apellidos LIKE '" + dato + "%'";
         int regitrosXpagina = 10;
         int inicio = ((pagina - 1) * regitrosXpagina);
@@ -214,7 +214,7 @@ public class UsersDAO {
     }
 
     public String getUser(int id) {
-        String profesor = "";       
+        String profesor = "";
         try {
             sql = "SELECT nombres, apellidos FROM usuarios where id_user = ?";
             pstm = cn.prepareStatement(sql);
@@ -228,15 +228,15 @@ public class UsersDAO {
         }
         return profesor;
     }
-    
+
     public boolean getDoc(String documento) {
-        boolean esiste = false;       
+        boolean esiste = false;
         try {
             sql = "SELECT documento FROM usuarios where documento = ?";
             pstm = cn.prepareStatement(sql);
             pstm.setString(1, documento);
             rs = pstm.executeQuery();
-            if (rs.getRow()>0) {
+            if (rs.getRow() > 0) {
                 esiste = true;
             }
         } catch (Exception e) {
@@ -244,5 +244,6 @@ public class UsersDAO {
         }
         return esiste;
     }
+    
 
 }

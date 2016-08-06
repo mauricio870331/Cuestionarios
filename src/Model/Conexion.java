@@ -9,9 +9,8 @@ public class Conexion {
         Connection con = null;
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            con = DriverManager.getConnection("jdbc:mysql://localhost/evaluacion_colegios", "root", "");
-//            con = DriverManager.getConnection("jdbc:mysql://www.caleb.colombiahosting.com.co:3306/salvav_prueba", "salvav_mao", "nikol0387");
-//            con = DriverManager.getConnection("jdbc:mysql://www.db4free.net:3306/cuestionarios", "nikol0387", "m1113626301");
+//            con = DriverManager.getConnection("jdbc:mysql://localhost/evaluacion_colegios", "root", "");
+            con = DriverManager.getConnection("jdbc:mysql://localhost/evaluacion_colegios", "app", "123456");
         } catch (ClassNotFoundException | SQLException | InstantiationException | IllegalAccessException e) {
             JOptionPane.showMessageDialog(null, e);
         }
