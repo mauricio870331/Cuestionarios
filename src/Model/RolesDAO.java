@@ -30,7 +30,7 @@ public class RolesDAO {
         ArrayList ListaRoles = new ArrayList();
         Roles roles;
         try {
-            sql = "SELECT * FROM roles ORDER BY id_rol";
+            sql = "SELECT * FROM test_roles ORDER BY id_rol";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             while (rs.next()) {
@@ -51,7 +51,7 @@ public class RolesDAO {
         ArrayList ListaRoles = new ArrayList();
         Roles roles;
         try {
-            sql = "SELECT * FROM roles WHERE id_rol = "+id_rol+"";
+            sql = "SELECT * FROM test_roles WHERE id_rol = "+id_rol+"";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             if (rs.next()) {
@@ -70,7 +70,7 @@ public class RolesDAO {
     public int getIdRolByNombre(String rol) {
         int idRol = 0;       
         try {
-            sql = "SELECT id_rol FROM roles where rol = ?";
+            sql = "SELECT id_rol FROM test_roles where rol = ?";
             pstm = cn.prepareStatement(sql);
             pstm.setString(1, rol);
             rs = pstm.executeQuery();

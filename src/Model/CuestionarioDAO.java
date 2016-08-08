@@ -37,7 +37,7 @@ public class CuestionarioDAO {
     PreparedStatement pstm;
     String sql;
     ResultSet rs;
-    private final String logo = "/Reports/logo.png";    
+    private final String logo = "/Reports/logo.png";
     Date date = new Date();
     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -59,9 +59,9 @@ public class CuestionarioDAO {
                     + "c.estado as estado, "
                     + "c.objetivo as objetivo, "
                     + "c.vigencia as vigencia, "
-                    + "c.duracion as duracion FROM c_cuestionario c "
-                    + "INNER JOIN asignaturas a ON a.id_asignatura = c.id_asignatura "
-                    + "INNER JOIN cuestionarios_grupos cg ON cg.id_cuestionario = c.id_cuestionario "
+                    + "c.duracion as duracion FROM test_c_cuestionario c "
+                    + "INNER JOIN test_asignaturas a ON a.id_asignatura = c.id_asignatura "
+                    + "INNER JOIN test_cuestionarios_grupos cg ON cg.id_cuestionario = c.id_cuestionario "
                     + "AND cg.id_grupo = " + grupo + ""
                     + " WHERE a.nombre_asig = '" + asignatura + "' AND c.estado = 1";
             pstm = cn.prepareStatement(sql);
@@ -98,8 +98,8 @@ public class CuestionarioDAO {
                     + "c.estado as estado, "
                     + "c.objetivo as objetivo, "
                     + "c.vigencia as vigencia, "
-                    + "c.duracion as duracion FROM c_cuestionario c "
-                    + "INNER JOIN cuestionarios_grupos cg ON cg.id_cuestionario = c.id_cuestionario "
+                    + "c.duracion as duracion FROM test_c_cuestionario c "
+                    + "INNER JOIN test_cuestionarios_grupos cg ON cg.id_cuestionario = c.id_cuestionario "
                     + "WHERE cg.id_grupo = " + grupo + " AND c.estado = 1";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
@@ -126,8 +126,8 @@ public class CuestionarioDAO {
     public int getPreguntasCuestionario(int id_cuestionario) {
         int total = 0;
         try {
-            sql = "SELECT count(pregunta) as total FROM c_cuestionario c "
-                    + "INNER JOIN preguntas_cuestionario p ON c.id_cuestionario = p.id_cuestionario "
+            sql = "SELECT count(pregunta) as total FROM test_c_cuestionario c "
+                    + "INNER JOIN test_preguntas_cuestionario p ON c.id_cuestionario = p.id_cuestionario "
                     + "WHERE c.id_cuestionario = " + id_cuestionario + "";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
@@ -143,7 +143,7 @@ public class CuestionarioDAO {
     public int nexIdCuestionario() {
         int id = 0;
         try {
-            sql = "select max(id_cuestionario) as maxid from c_cuestionario";
+            sql = "select max(id_cuestionario) as maxid from test_c_cuestionario";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             if (rs.next()) {
@@ -162,7 +162,7 @@ public class CuestionarioDAO {
         int id_cues = nexIdCuestionario();
         try {
             if (opc.equals("C")) {
-                sql = "INSERT INTO c_cuestionario (id_user, descripcion, objetivo, fecha, id_asignatura, estado, duracion) VALUES (?,?,?,?,?,?,?)";
+                sql = "INSERT INTO test_c_cuestionario (id_user, descripcion, objetivo, fecha, id_asignatura, estado, duracion) VALUES (?,?,?,?,?,?,?)";
                 pstm = cn.prepareStatement(sql);
                 pstm.setInt(1, c.getIdUser());
                 pstm.setString(2, c.getDescripcion());
@@ -177,7 +177,7 @@ public class CuestionarioDAO {
                     while (preguntas.hasNext()) {
                         try {
                             PreguntasCuestionario pc = preguntas.next();
-                            sql = "INSERT INTO preguntas_cuestionario (id_pregunta, pregunta, id_cuestionario, imagen) VALUES (?,?,?,?)";
+                            sql = "INSERT INTO test_preguntas_cuestionario (id_pregunta, pregunta, id_cuestionario, imagen) VALUES (?,?,?,?)";
                             pstm = cn.prepareStatement(sql);
                             pstm.setInt(1, pc.getIdPregunta());
                             pstm.setString(2, pc.getPregunta());
@@ -194,11 +194,11 @@ public class CuestionarioDAO {
                     while (respuestas.hasNext()) {
                         try {
                             RespuestasCuestionario rc = respuestas.next();
-                            sql = "SELECT respuesta, id_fk FROM respuestas_cuestionario WHERE respuesta = '" + rc.getRespuesta() + "' AND id_fk = " + rc.getIdfk() + "";
+                            sql = "SELECT respuesta, id_fk FROM test_respuestas_cuestionario WHERE respuesta = '" + rc.getRespuesta() + "' AND id_fk = " + rc.getIdfk() + "";
                             pstm = cn.prepareStatement(sql);
                             rs = pstm.executeQuery();
                             if (rs.getRow() == 0) {
-                                sql = "INSERT INTO respuestas_cuestionario (id_pregunta, respuesta, estado, id_fk) VALUES (?,?,?,?)";
+                                sql = "INSERT INTO test_respuestas_cuestionario (id_pregunta, respuesta, estado, id_fk) VALUES (?,?,?,?)";
                                 pstm = cn.prepareStatement(sql);
                                 pstm.setInt(1, rc.getIdPregunta());
                                 pstm.setString(2, rc.getRespuesta());
@@ -220,7 +220,7 @@ public class CuestionarioDAO {
                 }
             }
             if (opc.equals("U")) {
-                sql = "UPDATE areas SET area = ? WHERE id_area = ?";
+                //sql = "UPDATE test_areas SET area = ? WHERE id_area = ?";
             }
         } catch (Exception e) {
             System.out.println("error CuestionarioDao : " + e);
@@ -232,7 +232,7 @@ public class CuestionarioDAO {
         ArrayList listaCuestionario = new ArrayList();
         Cuestionario cuestionario;
         try {
-            sql = "SELECT * FROM c_cuestionario WHERE id_user = " + user + "";
+            sql = "SELECT * FROM test_c_cuestionario WHERE id_user = " + user + "";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             while (rs.next()) {
@@ -260,13 +260,13 @@ public class CuestionarioDAO {
         int idGrupo = 0;
         Cuestionario cuestionario;
         try {
-            sql = "SELECT id_grupo FROM grupo WHERE grupo ='" + grupo + "'";
+            sql = "SELECT id_grupo FROM test_grupo WHERE grupo ='" + grupo + "'";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             if (rs.next()) {
                 idGrupo = rs.getInt("id_grupo");
-                sql = "SELECT * FROM c_cuestionario c "
-                        + "INNER JOIN cuestionarios_grupos cg ON c.id_cuestionario = cg.id_cuestionario AND cg.id_grupo = " + idGrupo;
+                sql = "SELECT * FROM test_c_cuestionario c "
+                        + "INNER JOIN test_cuestionarios_grupos cg ON c.id_cuestionario = cg.id_cuestionario AND cg.id_grupo = " + idGrupo;
                 pstm = cn.prepareStatement(sql);
                 rs = pstm.executeQuery();
                 while (rs.next()) {
@@ -292,7 +292,7 @@ public class CuestionarioDAO {
     public int getCuestionariosByName(String descuestionario) {
         int idCuestionario = 0;
         try {
-            sql = "SELECT * FROM c_cuestionario WHERE descripcion = '" + descuestionario + "'";
+            sql = "SELECT * FROM test_c_cuestionario WHERE descripcion = '" + descuestionario + "'";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             if (rs.next()) {
@@ -308,7 +308,7 @@ public class CuestionarioDAO {
         ArrayList listaCuestionario = new ArrayList();
         Cuestionario cuestionario;
         try {
-            sql = "SELECT * FROM c_cuestionario WHERE descripcion = '" + descuestionario + "'";
+            sql = "SELECT * FROM test_c_cuestionario WHERE descripcion = '" + descuestionario + "'";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             while (rs.next()) {
@@ -335,10 +335,13 @@ public class CuestionarioDAO {
         double calificacion = 0.0;
         try {
             int cantPreguntas = getPreguntasCuestionario(idCuestionario);
-            sql = "SELECT  CASE WHEN (ROUND(sum(calificacion),1) > 5 ) THEN 5 ELSE ROUND(sum(calificacion),1) END as calificacion "
-                    + "from (SELECT @prTotalPreguntas := " + cantPreguntas + " totPreguntas) totPreguntas, "
-                    + "(SELECT @prId_Alumno := " + idUser + " alumno) alumno, "
-                    + "(SELECT @prId_Cuestionario := " + idCuestionario + " cuestionario) cuestionario, nota_alumno";
+            sql = "select  SUM(CASE WHEN (r.estado = 1 and r.id_respuesta = ra.id_respuesta) THEN ROUND((5.0)/" + cantPreguntas + ", 1) ELSE 0 END) as calificacion "
+                    + "from test_c_cuestionario c "
+                    + "INNER JOIN  test_preguntas_cuestionario p on c.id_cuestionario = p.id_cuestionario "
+                    + "INNER JOIN test_respuestas_cuestionario r ON r.id_fk = p.id "
+                    + "INNER JOIN test_c_cuestionario_alumno ca ON ca.id_cuestionario = c.id_cuestionario AND ca.id_user= " + idUser + " "
+                    + "INNER JOIN test_respuestas_alumno ra ON  ra.id_c_alumno = ca.id_c_alumno and ra.id_respuesta = r.id_respuesta "
+                    + "WHERE c.id_cuestionario = " + idCuestionario + " limit 1";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             if (rs.next()) {
@@ -398,11 +401,11 @@ public class CuestionarioDAO {
     public void activeCuestionarios() {
         try {
             deactiveCuestionarios();
-            sql = "SELECT * FROM c_cuestionario WHERE estado = 0 AND vigencia = '" + df.format(date) + "'";
+            sql = "SELECT * FROM test_c_cuestionario WHERE estado = 0 AND vigencia = '" + df.format(date) + "'";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             while (rs.next()) {
-                sql = "UPDATE c_cuestionario SET estado = ? WHERE id_cuestionario = ?";
+                sql = "UPDATE test_c_cuestionario SET estado = ? WHERE id_cuestionario = ?";
                 pstm = cn.prepareStatement(sql);
                 pstm.setBoolean(1, true);
                 pstm.setInt(2, rs.getInt("id_cuestionario"));
@@ -416,11 +419,11 @@ public class CuestionarioDAO {
 
     public void deactiveCuestionarios() {
         try {
-            sql = "SELECT * FROM c_cuestionario WHERE estado = 1 AND vigencia <> '" + df.format(date) + "'";
+            sql = "SELECT * FROM test_c_cuestionario WHERE estado = 1 AND vigencia <> '" + df.format(date) + "'";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             while (rs.next()) {
-                sql = "UPDATE c_cuestionario SET estado = ? WHERE id_cuestionario = ?";
+                sql = "UPDATE test_c_cuestionario SET estado = ? WHERE id_cuestionario = ?";
                 pstm = cn.prepareStatement(sql);
                 pstm.setBoolean(1, false);
                 pstm.setInt(2, rs.getInt("id_cuestionario"));

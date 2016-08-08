@@ -948,7 +948,7 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        container.setLayer(pnCreateAdmin, javax.swing.JLayeredPane.PALETTE_LAYER);
+        container.setLayer(pnCreateAdmin, javax.swing.JLayeredPane.DEFAULT_LAYER);
         container.setLayer(pnCuestionario, javax.swing.JLayeredPane.DEFAULT_LAYER);
         container.setLayer(pnCreateCuestionary, javax.swing.JLayeredPane.PALETTE_LAYER);
 

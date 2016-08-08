@@ -43,11 +43,11 @@ public class UsersDAO {
             }
 
             if (opc.equals("C")) {
-                sql = "INSERT INTO usuarios (tipo_doc, documento, nombres, apellidos, id_grupo, id_rol, password, foto)"
+                sql = "INSERT INTO test_usuarios (tipo_doc, documento, nombres, apellidos, id_grupo, id_rol, password, foto)"
                         + " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             }
             if (opc.equals("U")) {
-                sql = "UPDATE usuarios SET tipo_doc = ?, documento = ?, nombres = ?, apellidos = ?, id_grupo = ?, id_rol = ?,  password = ?" + f + " WHERE id_user = ?";
+                sql = "UPDATE test_usuarios SET tipo_doc = ?, documento = ?, nombres = ?, apellidos = ?, id_grupo = ?, id_rol = ?,  password = ?" + f + " WHERE id_user = ?";
             }
             pstm = cn.prepareStatement(sql);
             pstm.setString(1, tipo_doc);
@@ -122,9 +122,9 @@ public class UsersDAO {
         Users admin;
         try {
             if (dato.equals("")) {
-                sql = "SELECT * FROM usuarios " + adnWhere + " ORDER BY id_user DESC LIMIT " + inicio + "," + regitrosXpagina + "";
+                sql = "SELECT * FROM test_usuarios " + adnWhere + " ORDER BY id_user DESC LIMIT " + inicio + "," + regitrosXpagina + "";
             } else {
-                sql = "SELECT * FROM usuarios " + adnWhere + and + "  ORDER BY id_user DESC LIMIT " + inicio + "," + regitrosXpagina + "";
+                sql = "SELECT * FROM test_usuarios " + adnWhere + and + "  ORDER BY id_user DESC LIMIT " + inicio + "," + regitrosXpagina + "";
             }
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
@@ -147,7 +147,7 @@ public class UsersDAO {
         ArrayList listaAdmin = new ArrayList();
         Users admin;
         try {
-            sql = "SELECT * FROM usuarios where documento = ? AND password = ?";
+            sql = "SELECT * FROM test_usuarios where documento = ? AND password = ?";
             pstm = cn.prepareStatement(sql);
             pstm.setString(1, usuario);
             pstm.setString(2, password);
@@ -173,9 +173,9 @@ public class UsersDAO {
         int creg = 0;
         int paginas = 0;
         if (dato.equals("")) {
-            sql = "SELECT COUNT(*) AS con FROM usuarios";
+            sql = "SELECT COUNT(*) AS con FROM test_usuarios";
         } else {
-            sql = "SELECT COUNT(*) AS con FROM usuarios WHERE documento LIKE '" + dato + "%' OR nombres LIKE '" + dato + "%' OR apellidos LIKE '" + dato + "%'";
+            sql = "SELECT COUNT(*) AS con FROM test_usuarios WHERE documento LIKE '" + dato + "%' OR nombres LIKE '" + dato + "%' OR apellidos LIKE '" + dato + "%'";
         }
         try {
             pstm = cn.prepareStatement(sql);
@@ -195,7 +195,7 @@ public class UsersDAO {
         ArrayList listaAdmin = new ArrayList();
         Users admin;
         try {
-            sql = "SELECT * FROM usuarios where documento = ?";
+            sql = "SELECT * FROM test_usuarios where documento = ?";
             pstm = cn.prepareStatement(sql);
             pstm.setString(1, documento);
             rs = pstm.executeQuery();
@@ -216,7 +216,7 @@ public class UsersDAO {
     public String getUser(int id) {
         String profesor = "";
         try {
-            sql = "SELECT nombres, apellidos FROM usuarios where id_user = ?";
+            sql = "SELECT nombres, apellidos FROM test_usuarios where id_user = ?";
             pstm = cn.prepareStatement(sql);
             pstm.setInt(1, id);
             rs = pstm.executeQuery();
@@ -232,7 +232,7 @@ public class UsersDAO {
     public boolean getDoc(String documento) {
         boolean esiste = false;
         try {
-            sql = "SELECT documento FROM usuarios where documento = ?";
+            sql = "SELECT documento FROM test_usuarios where documento = ?";
             pstm = cn.prepareStatement(sql);
             pstm.setString(1, documento);
             rs = pstm.executeQuery();

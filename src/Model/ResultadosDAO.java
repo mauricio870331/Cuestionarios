@@ -6,7 +6,6 @@
 package Model;
 
 import java.sql.*;
-import java.util.ArrayList;
 
 /**
  *
@@ -31,11 +30,11 @@ public class ResultadosDAO {
         boolean responseCreate = false;
         try {
             if (opc.equals("C")) {
-                sql = "INSERT INTO c_resultados (id_cuestionario, id_grupo, id_user, nota,  tiempo, aprobo, fecha_presentacion) "
+                sql = "INSERT INTO test_c_resultados (id_cuestionario, id_grupo, id_user, nota,  tiempo, aprobo, fecha_presentacion) "
                     + "VALUES (?, ?, ?, ?, ?, ?, ?)";
             }
             if (opc.equals("U")) {
-                sql = "UPDATE asignaturas SET nombre_asig = ? WHERE id_asignatura = ?";
+                sql = "UPDATE test_asignaturas SET nombre_asig = ? WHERE id_asignatura = ?";
             }
             pstm = cn.prepareStatement(sql);
             pstm.setInt(1, resultado.getId_cuestionario());

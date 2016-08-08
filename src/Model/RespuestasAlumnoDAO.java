@@ -37,26 +37,26 @@ public class RespuestasAlumnoDAO {
                 while (nombreIterator.hasNext()) {
                     RespuestasAlumno ra = nombreIterator.next();
                     if (ra.getIdPregunta() >= 0 && ra.getIdRespuesta() >= 0) {
-                        sql = "SELECT * FROM respuestas_alumno where id_pregunta = " + ra.getIdPregunta() + " "
+                        sql = "SELECT * FROM test_respuestas_alumno where id_pregunta = " + ra.getIdPregunta() + " "
                                 + "AND id_respuesta = " + ra.getIdRespuesta() + " "
                                 + "AND id_c_alumno = " + idca + "";
                         pstm = cn.prepareStatement(sql);
                         rs = pstm.executeQuery();
                         if (rs.next()) {
                             System.out.println("ya esta");
-                            sql = "UPDATE c_cuestionario_alumno SET finalizacion = '" + horafin + "'";
+                            sql = "UPDATE test_c_cuestionario_alumno SET finalizacion = '" + horafin + "'";
                             pstm = cn.prepareStatement(sql);
                             pstm.executeUpdate();
                             responseCreate = true;
                         } else {
-                            sql = "INSERT INTO respuestas_alumno (id_pregunta, id_respuesta, id_c_alumno) VALUES (?, ?, ?)";
+                            sql = "INSERT INTO test_respuestas_alumno (id_pregunta, id_respuesta, id_c_alumno) VALUES (?, ?, ?)";
                             pstm = cn.prepareStatement(sql);
                             pstm.setInt(1, ra.getIdPregunta());
                             pstm.setInt(2, ra.getIdRespuesta());
                             pstm.setInt(3, idca);
                             int rowAfected = pstm.executeUpdate();
                             if (rowAfected > 0) {
-                                sql = "UPDATE c_cuestionario_alumno SET finalizacion = '" + horafin + "'";
+                                sql = "UPDATE test_c_cuestionario_alumno SET finalizacion = '" + horafin + "'";
                                 pstm = cn.prepareStatement(sql);
                                 pstm.executeUpdate();
                                 responseCreate = true;
@@ -67,7 +67,7 @@ public class RespuestasAlumnoDAO {
                     }
 
                     if (auto && ra.getIdPregunta() == -1 && ra.getIdRespuesta() == -1) {
-                        sql = "INSERT INTO respuestas_alumno (id_pregunta, id_respuesta, id_c_alumno) VALUES (?, ?, ?)";
+                        sql = "INSERT INTO test_respuestas_alumno (id_pregunta, id_respuesta, id_c_alumno) VALUES (?, ?, ?)";
                         pstm = cn.prepareStatement(sql);
                         pstm.setInt(1, ra.getIdPregunta());
                         pstm.setInt(2, ra.getIdRespuesta());

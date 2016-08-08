@@ -31,10 +31,10 @@ public class AsignaturasDAO {
         String responseCreate = null;
         try {
             if (opc.equals("C")) {
-                sql = "INSERT INTO asignaturas (nombre_asig) VALUES (?)";
+                sql = "INSERT INTO test_asignaturas (nombre_asig) VALUES (?)";
             }
             if (opc.equals("U")) {
-                sql = "UPDATE asignaturas SET nombre_asig = ? WHERE id_asignatura = ?";
+                sql = "UPDATE test_asignaturas SET nombre_asig = ? WHERE id_asignatura = ?";
             }
             pstm = cn.prepareStatement(sql);
             pstm.setString(1, a.getNombreAsignatura());
@@ -59,8 +59,8 @@ public class AsignaturasDAO {
     public ArrayList<Asignaturas> getListCboAsignaturas(int profesor) {
         ArrayList ListAsignatura = new ArrayList();
         try {
-            sql = "SELECT * FROM asignaturas a "
-                + "INNER JOIN asignaturas_profesor ap ON a.id_asignatura = ap.id_asignatura "
+            sql = "SELECT * FROM test_asignaturas a "
+                + "INNER JOIN test_asignaturas_profesor ap ON a.id_asignatura = ap.id_asignatura "
                 + "WHERE ap.id_user = "+profesor+"";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
@@ -80,9 +80,9 @@ public class AsignaturasDAO {
         ArrayList ListAsignatura = new ArrayList();
         try {
             if (dato.equals("")) {
-                sql = "SELECT * FROM asignaturas";
+                sql = "SELECT * FROM test_asignaturas";
             } else {
-                sql = "SELECT * FROM asignaturas where nombre_asig LIKE '" + dato + "%'";
+                sql = "SELECT * FROM test_asignaturas where nombre_asig LIKE '" + dato + "%'";
             }
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
@@ -102,8 +102,8 @@ public class AsignaturasDAO {
         ArrayList ListAsignatura = new ArrayList();
         try {
             sql = "SELECT DISTINCT a.id_asignatura as id_asignatura, a.nombre_asig as nombre_asig "
-                    + "FROM asignaturas a INNER JOIN c_cuestionario c ON a.id_asignatura = c.id_asignatura "
-                    + "INNER JOIN cuestionarios_grupos cg ON cg.id_cuestionario = c.id_cuestionario "
+                    + "FROM test_asignaturas a INNER JOIN test_c_cuestionario c ON a.id_asignatura = c.id_asignatura "
+                    + "INNER JOIN test_cuestionarios_grupos cg ON cg.id_cuestionario = c.id_cuestionario "
                     + "WHERE cg.id_grupo = " + grupo + "";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
@@ -122,7 +122,7 @@ public class AsignaturasDAO {
     public int getAsignaturaByName(String Asignatura) {
         int id_asignatura = 0;
         try {
-            sql = "SELECT id_asignatura FROM asignaturas where nombre_asig = '" + Asignatura + "'";
+            sql = "SELECT id_asignatura FROM test_asignaturas where nombre_asig = '" + Asignatura + "'";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             if (rs.next()) {
@@ -137,7 +137,7 @@ public class AsignaturasDAO {
     public boolean existAsignatura(String asignatura) {
         boolean existe = false;
         try {
-            sql = "SELECT * FROM asignaturas WHERE nombre_asig = '" + asignatura + "' OR nombre_asig LIKE '%" + asignatura + "%'";
+            sql = "SELECT * FROM test_asignaturas WHERE nombre_asig = '" + asignatura + "' OR nombre_asig LIKE '%" + asignatura + "%'";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             if (rs.next()) {
@@ -152,18 +152,18 @@ public class AsignaturasDAO {
     public String deleteAsignatura(int idAsignatura) {
         String responseDelete = null;
         try {
-            String sqlL = "SELECT * FROM c_cuestionario WHERE id_asignatura = " + idAsignatura + "";
+            String sqlL = "SELECT * FROM test_c_cuestionario WHERE id_asignatura = " + idAsignatura + "";
             pstm = cn.prepareStatement(sqlL);
             rs = pstm.executeQuery();
             if (rs.next()) {
                 responseDelete = "La Asignatura ya tiene cuestionarios asociados\nNo se puede eliminar..";
             } else {
-                String sqlA = "DELETE FROM asignaturas_profesor WHERE id_asignatura = ?";
+                String sqlA = "DELETE FROM test_asignaturas_profesor WHERE id_asignatura = ?";
                 pstm = cn.prepareStatement(sqlA);
                 pstm.setInt(1, idAsignatura);
                 pstm.executeUpdate();
 
-                sql = "DELETE FROM asignaturas WHERE id_asignatura = ?";
+                sql = "DELETE FROM test_asignaturas WHERE id_asignatura = ?";
                 pstm = cn.prepareStatement(sql);
                 pstm.setInt(1, idAsignatura);
                 int rowDelete = pstm.executeUpdate();
@@ -181,7 +181,7 @@ public class AsignaturasDAO {
         ArrayList listaAsignaturas = new ArrayList();
         Asignaturas asignatura;
         try {
-            sql = "SELECT * FROM asignaturas ORDER BY id_asignatura DESC limit 1";
+            sql = "SELECT * FROM test_asignaturas ORDER BY id_asignatura DESC limit 1";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             if (rs.next()) {

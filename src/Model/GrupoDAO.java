@@ -28,7 +28,7 @@ public class GrupoDAO {
      public ArrayList<Grupo> getListGrupos() {
         ArrayList ListaGrupo = new ArrayList();        
         try {
-            sql = "SELECT * FROM grupo ORDER BY id_grupo";
+            sql = "SELECT * FROM test_grupo ORDER BY id_grupo";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             while (rs.next()) {
@@ -50,9 +50,9 @@ public class GrupoDAO {
         ArrayList ListaGrupo = new ArrayList();
         try {
             if (idGrupo != 0) {
-                sql = "SELECT * FROM grupo WHERE id_grupo = "+idGrupo+"";
+                sql = "SELECT * FROM test_grupo WHERE id_grupo = "+idGrupo+"";
             } else {
-                sql = "SELECT * FROM grupo";
+                sql = "SELECT * FROM test_grupo";
             }
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
@@ -66,7 +66,7 @@ public class GrupoDAO {
         } catch (Exception e) {
             System.out.println("error" + e);
         }
-        return ListaGrupo;
+        return ListaGrupo; 
     }
 
 //    public ArrayList<Gym> getListGym(int pagina, String dato) {
@@ -122,7 +122,7 @@ public class GrupoDAO {
         ArrayList ListaGrupo = new ArrayList();
         Grupo grupo;
         try {
-            sql = "SELECT * FROM grupo WHERE id_grupo = "+idgrupo+"";
+            sql = "SELECT * FROM test_grupo WHERE id_grupo = "+idgrupo+"";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             if (rs.next()) {
@@ -142,7 +142,7 @@ public class GrupoDAO {
       public int getIdGrupoByName(String grupo) {
         int idGrupo = 0;
         try {
-            sql = "SELECT id_grupo FROM grupo WHERE grupo = '"+grupo+"'";
+            sql = "SELECT id_grupo FROM test_grupo WHERE grupo = '"+grupo+"'";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             if (rs.next()) {

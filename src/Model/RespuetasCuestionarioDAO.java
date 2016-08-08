@@ -34,8 +34,8 @@ public class RespuetasCuestionarioDAO {
                        + "r.id_respuesta as id_respuesta,"
                        + "r.respuesta as respuesta,"
                        + "r.estado as estado"
-                + " FROM respuestas_cuestionario r INNER JOIN preguntas_cuestionario p ON p.id = r.id_fk"
-                + " INNER JOIN c_cuestionario c ON c.id_cuestionario = p.id_cuestionario AND c.id_cuestionario = "+idCuestionario+""
+                + " FROM test_respuestas_cuestionario r INNER JOIN test_preguntas_cuestionario p ON p.id = r.id_fk"
+                + " INNER JOIN test_c_cuestionario c ON c.id_cuestionario = p.id_cuestionario AND c.id_cuestionario = "+idCuestionario+""
                 + " WHERE r.id_pregunta = " + idpregunta + "";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
@@ -56,7 +56,7 @@ public class RespuetasCuestionarioDAO {
     public int getIdRespuesta(int pregunta, String rpta) {
         int idRpta = 0;
         try {
-            sql = "SELECT id_respuesta FROM respuestas_cuestionario "
+            sql = "SELECT id_respuesta FROM test_respuestas_cuestionario "
                 + "WHERE id_pregunta = " + pregunta  + " AND respuesta LIKE '"+rpta+"%'";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();

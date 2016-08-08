@@ -29,8 +29,6 @@ import Model.ResultadosDAO;
 import Model.UsersDAO;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
@@ -101,6 +99,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
     int pregunt = 0;
     int TotalPreguntas;
     int cantCuestionario;
+    int cantCuestioRepetir;
     boolean estado = false;
     int idPtemp;
     int idtempfk;
@@ -159,8 +158,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         this.pr.btnPreviousQuestion.setVisible(false);
         this.pr.reporteResultados.addActionListener(this);
         this.rr.cboReportGrupo.addActionListener(this);
-        activarCuestionarios();
-        System.out.println("user " + idUserLog + " grupo " + idGrupo);
+        activarCuestionarios();        
         if (rol == 2) {
             this.pr.tGrado.setText(grupdao.getListGrupoToString(idGrupo).get(0).getGrupo());
             cargarCuestionarioByGrupo(idGrupo);
@@ -168,6 +166,10 @@ public final class CuestionarioController extends WindowAdapter implements Actio
                 JOptionPane.showMessageDialog(null, "¡No hay  cuestionarios activos, la sesión se cerrará..!\nIndique a su profesor para que verifique en el sistema.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
                 System.exit(0);
             }
+            /*if (cantCuestioRepetir > 0) {
+                JOptionPane.showMessageDialog(null, "¡Ya presentaste los cuestionarios activos, la sesión se cerrará..!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                System.exit(0);
+            }*/
             if (cantCuestionario == 1) {
                 showPreguntasCuestionario(0);
                 this.pr.btnIniciarPrueba.setEnabled(true);
@@ -273,8 +275,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         pr.lbltotalp.setText("Total Preguntas: " + TotalPreguntas);
         pr.progress.setStringPainted(true);
         pr.progress.setString("Respuesta " + pResponse);
-        pr.progress.setValue(pResponse);
-        System.out.println("totalpreg = " + TotalPreguntas);
+        pr.progress.setValue(pResponse);        
         preguntasCList.clear();
         sortQuestions.clear();
         objRespuestasAlumno.clear();
@@ -289,8 +290,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
                 objRespuestasAlumno.add(new RespuestasAlumno());
             }
             for (Iterator<RespuestasAlumno> iterator = objRespuestasAlumno.iterator(); iterator.hasNext();) {
-                RespuestasAlumno next = iterator.next();
-                System.out.println("esta : " + next.getIdPregunta());//limpiar el array de respuestass
+                RespuestasAlumno next = iterator.next();                
             }
         } else {
             pregunt = 0;
@@ -355,6 +355,8 @@ public final class CuestionarioController extends WindowAdapter implements Actio
 
     public void cargarCuestionarioByGrupo(int id_grupo) {
         cantCuestionario = cuestionariodao.getCuestionarioByGrupo(id_grupo).size();
+//        cantCuestioRepetir = ccuestionarioalumnodao.getCantCuestionariosActive(idUserLog);
+     
         if (cantCuestionario > 1) {
             pr.cboAsignatura.removeAllItems();
             pr.cboAsignatura.addItem("-- Seleccione --");
@@ -381,8 +383,6 @@ public final class CuestionarioController extends WindowAdapter implements Actio
                         System.exit(0);
                     }
                     llenarRespuestasAlumno();
-//                    System.out.println("por aqui user: "+elementoC.getIdUser());
-//                    pr.txtAlumnoName.setText(udao.getUser(elementoC.getIdUser()));
                     pr.tCuestionario.removeAllItems();
                     pr.tCuestionario.addItem(elementoC.getDescripcion());
                     pr.tCuestionario.setSelectedItem(elementoC.getDescripcion());
@@ -402,8 +402,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         Iterator<PreguntasCuestionario> nombreIterator = temp.iterator();
         int preg = 0;
         while (nombreIterator.hasNext()) {
-            PreguntasCuestionario pc = nombreIterator.next();
-            System.out.println("orden =" + preg + " -> " + pc.getIdPregunta() + "  vv " + pc.getPregunta());
+            PreguntasCuestionario pc = nombreIterator.next();            
             preguntasCList.set(sortQuestions.get(preg), pc);
             preg++;
         }
@@ -432,8 +431,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
             rb[i].addActionListener(this);
             pr.GrupoRespuestas.add(rb[i]);
             pr.pnRespuestas.add(rb[i]);
-            if (cantTempEstados > p) {
-                System.out.println("mayor que 0");
+            if (cantTempEstados > p) {                
                 if (tempEstados.get(p).equals(rb[i].getName())) {
                     rb[i].setSelected(true);
                 }
@@ -451,8 +449,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
     }
 
     public void cargarGruposToCuestionary() {
-        int cantGrupos = grupdao.getListGrupos().size();
-        System.out.println("grupos = " + cantGrupos);
+        int cantGrupos = grupdao.getListGrupos().size();        
         ac.pnGruposAdd.removeAll();
         ac.pnGruposAdd.setLayout(new java.awt.GridLayout(6, cantGrupos));
         cb = new JCheckBox[cantGrupos];
@@ -488,14 +485,12 @@ public final class CuestionarioController extends WindowAdapter implements Actio
                     RespuestasAlumno ra = new RespuestasAlumno();
                     ra.setIdPregunta(id_pregunta);
                     ra.setIdRespuesta(respuestasdao.getIdRespuesta(id_pregunta, rb[i].getText().trim()));
-                    objRespuestasAlumno.set(id_pregunta, ra);
-                    System.out.println("tam despues de clear listener = " + tempEstados.size());
+                    objRespuestasAlumno.set(id_pregunta, ra);                    
                     tempEstados.set(pregunt, rb[i].getName());
                     // Para probar las respuestas
                     Iterator<RespuestasAlumno> nombreIterator = objRespuestasAlumno.iterator();
                     while (nombreIterator.hasNext()) {
-                        RespuestasAlumno p = nombreIterator.next();
-                        System.out.println("pregunta " + p.getIdPregunta() + " Respuesta " + p.getIdRespuesta());
+                        RespuestasAlumno p = nombreIterator.next();                        
                     }
                     pr.btnNextQuestion.setEnabled(true);
                 }
@@ -534,16 +529,13 @@ public final class CuestionarioController extends WindowAdapter implements Actio
                 añoSelc = dfY.format(ac.dcFechaCuestionary.getDate());
                 mesSelect = dfM.format(ac.dcFechaCuestionary.getDate());
                 diaSel = dfD.format(ac.dcFechaCuestionary.getDate());
-            }
-            System.out.println(añoSelc + "-" + mesSelect + "-" + diaSel);
-            System.out.println(añoActual + "-" + mesSelect + "-" + diaSel);
+            }           
             if ((Integer.parseInt(añoSelc) < Integer.parseInt(añoActual)) || (Integer.parseInt(mesSelect) < Integer.parseInt(mesActual))) {
                 JOptionPane.showMessageDialog(null, "La fecha seleccionada no debe ser menor a la actual");
                 ac.dcFechaCuestionary.requestFocus();
                 ac.dcFechaCuestionary.setDate(date);
                 return;
-            }
-            System.out.println("fecha "+fecha);
+            }           
             String rpta = cgruposDao.addGroupToCuestionario(ListCuestioariosGroups, opc, fecha);
             if (rpta != null) {
                 JOptionPane.showMessageDialog(null, rpta);
@@ -625,8 +617,8 @@ public final class CuestionarioController extends WindowAdapter implements Actio
                 if (rptaRegistro != null) {
                     JOptionPane.showMessageDialog(null, rptaRegistro);
                     opc = "C";
-                    idToUpdate = 0;
-                    limpiarForm();
+                   idToUpdate = 0;
+                   limpiarForm();                   
                 } else if (opc.equals("C")) {
                     JOptionPane.showMessageDialog(null, "No se pudo crear el Cuestionario");
                 } else {
@@ -641,14 +633,12 @@ public final class CuestionarioController extends WindowAdapter implements Actio
             pr.progress.setString("Respuesta " + pResponse + " de " + TotalPreguntas);
             pr.progress.setValue(pResponse);
             pr.btnNextQuestion.setEnabled(false);
-            if (pr.btnNextQuestion.getText().equals("Finalizar")) {
-                System.out.println("fin");
+            if (pr.btnNextQuestion.getText().equals("Finalizar")) {                
                 t.stop();
                 h = 0;
                 m = 0;
                 s = 0;
                 cs = 0;
-                System.out.println(pr.lblTiempo.getText());
                 guardarCuestionarioAlumno(false);
             } else {
                 pregunt++;
@@ -669,8 +659,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         if (e.getSource() == pr.btnPreviousQuestion) {
             pregunt--;
             int temp = TotalPreguntas - 1;
-            showPreguntasCuestionario(pregunt);
-            System.out.println("temp = " + temp + " pregunt = " + pregunt);
+            showPreguntasCuestionario(pregunt);            
             if (pregunt > 0) {
                 pr.btnPreviousQuestion.setEnabled(true);
             } else {
@@ -684,7 +673,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
             if (asignatura.equals("-- Seleccione --")) {
                 clearComponent();
                 return;
-            } else if (cuestionariodao.getCuestionario(asignatura, idGrupo).size() > 1) {
+            } else if (cuestionariodao.getCuestionario(asignatura, idGrupo).size() > 1) {                
                 pr.txtObjetivoCuestionario.setText("");
                 Iterator<Cuestionario> cuestionarios = cuestionariodao.getCuestionario(asignatura, idGrupo).iterator();
                 pr.tCuestionario.removeAllItems();
@@ -696,7 +685,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
                     }
                 }
                 pr.tCuestionario.setEnabled(true);
-            } else {
+            } else {                
                 Iterator<Cuestionario> nombreIterator = cuestionariodao.getCuestionario(asignatura, idGrupo).iterator();
                 if (nombreIterator.hasNext()) {
                     Cuestionario c = nombreIterator.next();
@@ -711,8 +700,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
                         }
 
                     } else {
-                        pr.btnIniciarPrueba.setEnabled(true);
-                        System.out.println("pase por que estoy activo");
+                        pr.btnIniciarPrueba.setEnabled(true);                  
                         if (cantCuestionario > 1) {
                             llenarRespuestasAlumno();
                         }
@@ -722,8 +710,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
                         //pr.tCuestionario.setSelectedItem(c.getDescripcion());
                         pr.txtObjetivoCuestionario.setText(c.getObjetivo());
                         duracionCuestionario = c.getDuracion();
-                        if (cantCuestionario > 1) {
-                            System.out.println("id cuestionario = " + idCuest);
+                        if (cantCuestionario > 1) {                           
                             if (TotalPreguntas > 0) {
                                 cargarPreguntasCuestionario(idCuest);
                                 showPreguntasCuestionario(0);
@@ -751,6 +738,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
             ListRespuestasTemp.clear();
             cargarRespuestasInTable(pr.tbRespuestasQ);
             pr.cboPreguntas.setEnabled(false);
+            
         }
 
         if (e.getSource() == pr.tCuestionario) {
@@ -818,7 +806,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
             String pregunta = (String) pr.cboPreguntas.getSelectedItem();
             String literal = (String) pr.cboLiteral.getSelectedItem();
             String resp = pr.txtRespuestaQ.getText();
-             if (pregunta.equals("-- Seleccione --")) {
+            if (pregunta.equals("-- Seleccione --")) {
                 JOptionPane.showMessageDialog(null, "Debe Seleccionar una pregunta");
                 pr.cboPreguntas.requestFocus();
                 return;
@@ -852,10 +840,9 @@ public final class CuestionarioController extends WindowAdapter implements Actio
             ListRespuestasTemp.add(rc);
             cargarRespuestasInTable(pr.tbRespuestasQ);
             pr.txtRespuestaQ.setText("");
-            pr.cboLiteral.removeItem(literal);
-            System.out.println(pr.cboLiteral.getItemCount());
+            pr.cboLiteral.removeItem(literal);            
             if (pr.cboLiteral.getItemCount() == 1) {
-                System.out.println("aqui");                
+                System.out.println("aqui");
                 if (ListPreguntasTemp.size() > 1) {
                     Iterator<PreguntasCuestionario> lpt = ListPreguntasTemp.iterator();
                     while (lpt.hasNext()) {
@@ -1009,7 +996,10 @@ public final class CuestionarioController extends WindowAdapter implements Actio
     }
 
     private void limpiarForm() {
+        pr.btnRegistrarCuestionary.setText("Continuar");
         tempCantPreguntas = 0;
+        contPregunta = 0;
+        deleteSpinner = 0;
         pr.txtDescCuestionary.setText("");
         pr.cboAsignature.setSelectedItem("-- Seleccione --");
         pr.txtDescripPregunta.setText("");
@@ -1025,7 +1015,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         cargarPreguntasInTable(pr.tbPreguntasQ);
         cargarRespuestasInTable(pr.tbRespuestasQ);
         pr.cboPreguntas.setSelectedItem("-- Seleccione --");
-        pr.cboLiteral.addItem("-- Seleccione --");
+        //pr.cboLiteral.addItem("-- Seleccione --");
         pr.txtRespuestaQ.setText("");
         enabledAnswer(false);
         pr.rdoTrue.setSelected(true);

@@ -30,7 +30,7 @@ public class PreguntasCuestionarioDAO {
     public ArrayList<PreguntasCuestionario> getPreguntasCuestionario(int idCuestionario) {
         ArrayList ListPreguntas = new ArrayList();
         try {
-            sql = "SELECT * FROM preguntas_cuestionario WHERE id_cuestionario = " + idCuestionario + "";
+            sql = "SELECT * FROM test_preguntas_cuestionario WHERE id_cuestionario = " + idCuestionario + "";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             while (rs.next()) {
@@ -51,7 +51,7 @@ public class PreguntasCuestionarioDAO {
     public int nexIdPreguntaCuestionario() {
         int id = 0;
         try {
-            sql = "select max(id) as maxid from preguntas_cuestionario";
+            sql = "select max(id) as maxid from test_preguntas_cuestionario";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             if (rs.next()) {

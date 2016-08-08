@@ -80,10 +80,7 @@ public final class LoginController implements ActionListener, KeyListener {
                 int idGrupo = admDao.getExistAdmin(user, pass).get(0).getIdGrupo();
                 System.out.println("rol " + rol);
                 ocultarCapas(rol);
-                administradorController = new UsersController(pr, admDao, rol, idUserLog, idGrupo);
-                administradorController.cargarAdmin(pr.tbAdmin, "", 0);
-                administradorController.cargarCboGrupo();
-                administradorController.cargarRol();
+                administradorController = new UsersController(pr, admDao, rol, idUserLog, idGrupo);               
                 CuestionarioController cc = new CuestionarioController(pr, idGrupo, idUserLog, rol);
                 ac = new AsignaturaController(pr, idUserLog);
                 ac.cargarCboAsignaturas();

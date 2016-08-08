@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Evaluacion" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="30da9c0e-3f6d-4d0b-a780-7f287a417f0b">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="13"/>
-	<property name="ireport.y" value="26"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
 	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -24,17 +24,17 @@
        r.estado,
        ca.id_c_alumno,
        COALESCE(ra.id_respuesta, ra.id_respuesta, 0)  as id_respuesta2,
-      (select rc.respuesta from respuestas_alumno r INNER JOIN respuestas_cuestionario rc
+      (select rc.respuesta from test_respuestas_alumno r INNER JOIN test_respuestas_cuestionario rc
        ON r.id_respuesta = rc.id_respuesta WHERE r.id_pregunta = p.id_pregunta and r.id_c_alumno = ca.id_c_alumno ) as r_respuesta_alumno,
-      (select id_respuesta from respuestas_alumno WHERE  id_pregunta = p.id_pregunta and id_c_alumno = ca.id_c_alumno ) as parametro,
-      (select CASE WHEN (estado = 1) THEN 'Correcto' ELSE 'Incorrecto' END as cal from respuestas_cuestionario WHERE  id_respuesta = parametro) as calificacion
-FROM c_cuestionario c
-INNER JOIN  preguntas_cuestionario p on c.id_cuestionario = p.id_cuestionario
-INNER JOIN respuestas_cuestionario r ON r.id_fk = p.id
-INNER JOIN c_cuestionario_alumno ca ON ca.id_cuestionario = c.id_cuestionario AND ca.id_user=$P{alumno}
-LEFT JOIN respuestas_alumno ra ON  ra.id_c_alumno = ca.id_c_alumno and ra.id_respuesta = r.id_respuesta
-LEFT JOIN usuarios u  ON u.id_user = ca.id_user
-INNER JOIN grupo g ON g.id_grupo = u.id_grupo
+      (select id_respuesta from test_respuestas_alumno WHERE  id_pregunta = p.id_pregunta and id_c_alumno = ca.id_c_alumno ) as parametro,
+      (select CASE WHEN (estado = 1) THEN 'Correcto' ELSE 'Incorrecto' END as cal from test_respuestas_cuestionario WHERE  id_respuesta = parametro) as calificacion
+FROM test_c_cuestionario c
+INNER JOIN  test_preguntas_cuestionario p on c.id_cuestionario = p.id_cuestionario
+INNER JOIN test_respuestas_cuestionario r ON r.id_fk = p.id
+INNER JOIN test_c_cuestionario_alumno ca ON ca.id_cuestionario = c.id_cuestionario AND ca.id_user=$P{alumno}
+LEFT JOIN test_respuestas_alumno ra ON  ra.id_c_alumno = ca.id_c_alumno and ra.id_respuesta = r.id_respuesta
+LEFT JOIN test_usuarios u  ON u.id_user = ca.id_user
+INNER JOIN test_grupo g ON g.id_grupo = u.id_grupo
 WHERE c.id_cuestionario = $P{idCuestionario}
 ORDER BY  p.pregunta, r.id_respuesta]]>
 	</queryString>
@@ -72,18 +72,7 @@ ORDER BY  p.pregunta, r.id_respuesta]]>
 	<group name="descripcion">
 		<groupExpression><![CDATA[$F{descripcion}]]></groupExpression>
 		<groupHeader>
-			<band height="41">
-				<textField>
-					<reportElement uuid="cb87c704-da4c-4ed8-a403-74aa00a16573" style="SubTitle" x="39" y="9" width="514" height="24" forecolor="#CC0000"/>
-					<textElement verticalAlignment="Middle">
-						<font size="15" isBold="true"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
-				</textField>
-				<rectangle>
-					<reportElement uuid="363e4fee-3f04-4f24-94d4-c862ae531aac" mode="Opaque" x="0" y="9" width="36" height="24" forecolor="#CCCCCC" backcolor="#CCCCCC"/>
-				</rectangle>
-			</band>
+			<band/>
 		</groupHeader>
 		<groupFooter>
 			<band height="11"/>
@@ -137,23 +126,20 @@ ORDER BY  p.pregunta, r.id_respuesta]]>
 				<reportElement uuid="69efb880-1d70-4993-8adc-141414de4a9c" x="472" y="0" width="81" height="81"/>
 				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
 			</image>
-			<staticText>
-				<reportElement uuid="b4f2dbe3-f67c-4cf4-9d8c-93818acf1cb9" style="Title" x="0" y="13" width="263" height="33"/>
-				<textElement verticalAlignment="Middle"/>
-				<text><![CDATA[Leaf Red Title]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="94328a46-ef76-4217-86f4-d8294db75e66" style="SubTitle" x="117" y="46" width="157" height="22"/>
-				<textElement/>
-				<text><![CDATA[Leaf Red SubTitle]]></text>
-			</staticText>
+			<textField>
+				<reportElement uuid="cb87c704-da4c-4ed8-a403-74aa00a16573" style="SubTitle" x="0" y="18" width="472" height="24" forecolor="#CC0000"/>
+				<textElement verticalAlignment="Middle">
+					<font size="15" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="56" splitType="Stretch">
+		<band height="57" splitType="Stretch">
 			<line>
 				<reportElement uuid="8ab5c709-8933-404b-a611-3bc390d51431" positionType="FixRelativeToBottom" x="0" y="53" width="555" height="1"/>
 				<graphicElement>

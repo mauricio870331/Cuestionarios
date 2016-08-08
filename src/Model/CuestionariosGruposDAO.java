@@ -37,23 +37,23 @@ public class CuestionariosGruposDAO {
                 while (cg.hasNext()) {
                     CuestionariosGrupos obj = cg.next();
                     idc = obj.getIdCuestionario();
-                    sql = "SELECT  * FROM cuestionarios_grupos WHERE id_cuestionario = " + obj.getIdCuestionario() + " AND id_grupo =" + obj.getIdGrupo();
+                    sql = "SELECT  * FROM test_cuestionarios_grupos WHERE id_cuestionario = " + obj.getIdCuestionario() + " AND id_grupo =" + obj.getIdGrupo();
                     pstm = cn.prepareStatement(sql);
                     rs = pstm.executeQuery();
                     if (rs.next()) {
-                        sql = "UPDATE cuestionarios_grupos SET id_cuestionario = ?, id_grupo = ? WHERE id_cuestionario = " + obj.getIdCuestionario() + " AND id_grupo =" + obj.getIdGrupo();
+                        sql = "UPDATE test_cuestionarios_grupos SET id_cuestionario = ?, id_grupo = ? WHERE id_cuestionario = " + obj.getIdCuestionario() + " AND id_grupo =" + obj.getIdGrupo();
                         pstm = cn.prepareStatement(sql);
                         pstm.setInt(1, obj.getIdCuestionario());
                         pstm.setInt(2, obj.getIdGrupo());
                         pstm.executeUpdate();
                     } else {
-                        sql = "INSERT INTO cuestionarios_grupos (id_cuestionario, id_grupo) VALUES (?,?)";
+                        sql = "INSERT INTO test_cuestionarios_grupos (id_cuestionario, id_grupo) VALUES (?,?)";
                         pstm = cn.prepareStatement(sql);
                         pstm.setInt(1, obj.getIdCuestionario());
                         pstm.setInt(2, obj.getIdGrupo());
                         pstm.executeUpdate();
                     }
-                    sql = "UPDATE c_cuestionario SET vigencia = ? WHERE id_cuestionario = ?";
+                    sql = "UPDATE test_c_cuestionario SET vigencia = ? WHERE id_cuestionario = ?";
                     pstm = cn.prepareStatement(sql);
                     pstm.setString(1, fecha);
                     pstm.setInt(2, obj.getIdCuestionario());
