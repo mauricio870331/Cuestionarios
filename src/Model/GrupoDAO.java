@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 public class GrupoDAO {
 
-    Conexion conexion;
     Connection cn;
     PreparedStatement pstm;
     String sql;
@@ -18,15 +17,12 @@ public class GrupoDAO {
     Grupo grupo;
 
     public GrupoDAO() {
-        conexion = new Conexion();
-        cn = conexion.getConexion();
+        cn = Conexion.getConexion();
         grupo = new Grupo();
     }
-    
-    
-    
-     public ArrayList<Grupo> getListGrupos() {
-        ArrayList ListaGrupo = new ArrayList();        
+
+    public ArrayList<Grupo> getListGrupos() {
+        ArrayList ListaGrupo = new ArrayList();
         try {
             sql = "SELECT * FROM test_grupo ORDER BY id_grupo";
             pstm = cn.prepareStatement(sql);
@@ -34,8 +30,8 @@ public class GrupoDAO {
             while (rs.next()) {
                 grupo = new Grupo();
                 grupo.setIdGrupo(rs.getInt("id_grupo"));
-                grupo.setGrupo(rs.getString("grupo"));  
-                grupo.setCant(rs.getString("cant_alumnos")); 
+                grupo.setGrupo(rs.getString("grupo"));
+                grupo.setCant(rs.getString("cant_alumnos"));
                 ListaGrupo.add(grupo);
             }
         } catch (Exception e) {
@@ -45,12 +41,11 @@ public class GrupoDAO {
 
     }
 
-
     public ArrayList<Grupo> getListGrupoById(int idGrupo) {
         ArrayList ListaGrupo = new ArrayList();
         try {
             if (idGrupo != 0) {
-                sql = "SELECT * FROM test_grupo WHERE id_grupo = "+idGrupo+"";
+                sql = "SELECT * FROM test_grupo WHERE id_grupo = " + idGrupo + "";
             } else {
                 sql = "SELECT * FROM test_grupo";
             }
@@ -60,13 +55,13 @@ public class GrupoDAO {
                 grupo = new Grupo();
                 grupo.setIdGrupo(rs.getInt("id_grupo"));
                 grupo.setGrupo(rs.getString("grupo"));
-                grupo.setCant(rs.getString("cant_alumnos"));                
+                grupo.setCant(rs.getString("cant_alumnos"));
                 ListaGrupo.add(grupo);
             }
         } catch (Exception e) {
             System.out.println("error" + e);
         }
-        return ListaGrupo; 
+        return ListaGrupo;
     }
 
 //    public ArrayList<Gym> getListGym(int pagina, String dato) {
@@ -116,37 +111,30 @@ public class GrupoDAO {
 //        }
 //        return gym.getIdGym();
 //    }
-    
-    
-    public ArrayList<Grupo> getListGrupoToString(int idgrupo) {
-        ArrayList ListaGrupo = new ArrayList();
-        Grupo grupo;
+    public String getListGrupoToString(int idgrupo) {
+        String grupo = null;
         try {
-            sql = "SELECT * FROM test_grupo WHERE id_grupo = "+idgrupo+"";
+            sql = "SELECT grupo FROM test_grupo WHERE id_grupo = " + idgrupo + "";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             if (rs.next()) {
-                grupo = new Grupo();
-                grupo.setIdGrupo(rs.getInt("id_grupo"));
-                grupo.setGrupo(rs.getString("grupo"));  
-                grupo.setCant(rs.getString("cant_alumnos")); 
-                ListaGrupo.add(grupo);
+                grupo = rs.getString("grupo");
             }
         } catch (Exception e) {
             System.out.println("error" + e);
         }
-        return ListaGrupo;
+        return grupo;
 
     }
-    
-      public int getIdGrupoByName(String grupo) {
+
+    public int getIdGrupoByName(String grupo) {
         int idGrupo = 0;
         try {
-            sql = "SELECT id_grupo FROM test_grupo WHERE grupo = '"+grupo+"'";
+            sql = "SELECT id_grupo FROM test_grupo WHERE grupo = '" + grupo + "'";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             if (rs.next()) {
-                idGrupo = rs.getInt("id_grupo");                
+                idGrupo = rs.getInt("id_grupo");
             }
         } catch (Exception e) {
             System.out.println("error" + e);
@@ -154,10 +142,7 @@ public class GrupoDAO {
         return idGrupo;
 
     }
-    
-    
-    
-    
+
 //
 //    public String createGym(Grupo gym, String opc) {
 //        String responseCreate = null;

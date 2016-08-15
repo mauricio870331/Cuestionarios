@@ -203,8 +203,9 @@ public final class UsersController implements ActionListener, KeyListener {
                 idToUpdate = admDao.getIdToUpdate(documento).get(0).getIdUser();
                 int idRol = admDao.getIdToUpdate(documento).get(0).getIdRol();
                 int idGrupo = admDao.getIdToUpdate(documento).get(0).getIdGrupo();
+                //cambiar todos los combos de crear usuario
                 pr.cboIdRol.setSelectedItem(Integer.toString(rolDao.getListRolToString(idRol).get(0).getIdRol()) + " - " + rolDao.getListRolToString(idRol).get(0).getRol());
-                pr.cboGrupo.setSelectedItem(Integer.toString(gymDao.getListGrupoToString(idGrupo).get(0).getIdGrupo()) + " - " + gymDao.getListGrupoToString(idGrupo).get(0).getGrupo());
+               // pr.cboGrupo.setSelectedItem(Integer.toString(gymDao.getListGrupoToString(idGrupo).get(0).getIdGrupo()) + " - " + gymDao.getListGrupoToString(idGrupo).get(0).getGrupo());
                 pr.txtNombres.setText(pr.tbAdmin.getValueAt(fila, 2).toString());
                 pr.txtApellidos.setText(pr.tbAdmin.getValueAt(fila, 3).toString());
 

@@ -13,7 +13,6 @@ import java.sql.*;
  */
 public class ResultadosDAO {
 
-    Conexion conexion;
     Connection cn;
     PreparedStatement pstm;
     String sql;
@@ -21,17 +20,16 @@ public class ResultadosDAO {
     //Resultados resultado;
 
     public ResultadosDAO() {
-        conexion = new Conexion();
-        cn = conexion.getConexion();
-       // resultado = new Resultados(0, 0, 0, 0, 0, "", false, "");
+        cn = Conexion.getConexion();
+        // resultado = new Resultados(0, 0, 0, 0, 0, "", false, "");
     }
-    
-     public boolean create(Resultados resultado, String opc) {
+
+    public boolean create(Resultados resultado, String opc) {
         boolean responseCreate = false;
         try {
             if (opc.equals("C")) {
                 sql = "INSERT INTO test_c_resultados (id_cuestionario, id_grupo, id_user, nota,  tiempo, aprobo, fecha_presentacion) "
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                        + "VALUES (?, ?, ?, ?, ?, ?, ?)";
             }
             if (opc.equals("U")) {
                 sql = "UPDATE test_asignaturas SET nombre_asig = ? WHERE id_asignatura = ?";
@@ -43,13 +41,13 @@ public class ResultadosDAO {
             pstm.setDouble(4, resultado.getNota());
             pstm.setString(5, resultado.getTiempo());
             pstm.setBoolean(6, resultado.isAprobo());
-            pstm.setString(7, resultado.getFecha_presentacion());            
+            pstm.setString(7, resultado.getFecha_presentacion());
             if (opc.equals("U")) {
                 //pstm.setInt(2, a.getAsignatura());
             }
             int rowAfected = pstm.executeUpdate();
             if (rowAfected > 0) {
-              responseCreate = true;
+                responseCreate = true;
             }
         } catch (Exception e) {
             System.out.println("error: " + e + " " + e.getClass());

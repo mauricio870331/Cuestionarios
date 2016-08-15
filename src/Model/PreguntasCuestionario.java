@@ -12,11 +12,13 @@ import java.io.InputStream;
  * @author Mauricio Herrera
  */
 public class PreguntasCuestionario {
+
     private int id;
     private int idPregunta;
     private String pregunta;
     private int idCuestionario;
     private InputStream imagen;
+    private String largo;
 
     public PreguntasCuestionario() {
         this.id = 0;
@@ -24,6 +26,7 @@ public class PreguntasCuestionario {
         this.pregunta = "";
         this.idCuestionario = 0;
         this.imagen = null;
+        this.largo = "";
     }
 
     public int getIdPregunta() {
@@ -65,6 +68,13 @@ public class PreguntasCuestionario {
     public void setId(int id) {
         this.id = id;
     }
-    
-    
+
+    public String getLargo() {
+        return largo;
+    }
+
+    public void setLargo(String largo) {
+        this.largo = largo;
+    }
+
 }

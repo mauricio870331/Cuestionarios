@@ -18,15 +18,13 @@ import java.util.Iterator;
  */
 public class RespuestasAlumnoDAO {
 
-    Conexion conexion;
     Connection cn;
     PreparedStatement pstm;
     String sql;
     ResultSet rs;
 
     public RespuestasAlumnoDAO() {
-        conexion = new Conexion();
-        cn = conexion.getConexion();
+        cn = Conexion.getConexion();
     }
 
     public boolean Create(ArrayList<RespuestasAlumno> objRespuestasAlumno, int idca, String opc, boolean auto, String horafin) {

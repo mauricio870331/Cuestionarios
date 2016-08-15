@@ -5,13 +5,21 @@ import javax.swing.JOptionPane;
 
 public class Conexion {
 
-    public Connection getConexion() {
-        Connection con = null;
+    private static Connection con = null;
+
+    public static Connection getConexion() {
         try {
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
-            con = DriverManager.getConnection("jdbc:mysql://localhost/codigo_proyectos", "codigo_proyectos", "P}3LdHI^+WMV");
-//           con = DriverManager.getConnection("jdbc:mysql://190.8.176.243:3306/codigo_proyectos", "codigo_proyectos", "P}3LdHI^+WMV");
-        } catch (ClassNotFoundException | SQLException | InstantiationException | IllegalAccessException e) {
+            if (con == null) {
+                String driver = "com.mysql.jdbc.Driver"; //el driver varia segun la DB que usemos
+                String url = "jdbc:mysql://190.8.176.243:3306/codigo_proyectos?autoReconnect=true";
+                String pwd = "P}3LdHI^+WMV";
+                String usr = "codigo_proyectos";
+                Class.forName(driver);
+                //con = DriverManager.getConnection("jdbc:mysql://localhost/codigo_proyectos", "codigo_proyectos", "P}3LdHI^+WMV");
+                con = DriverManager.getConnection(url, usr, pwd);
+                System.out.println("Conectionesfull");
+            }
+        } catch (ClassNotFoundException | SQLException e) {
             JOptionPane.showMessageDialog(null, e);
         }
         return con;

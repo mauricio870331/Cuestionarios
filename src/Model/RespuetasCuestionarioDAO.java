@@ -8,6 +8,7 @@ package Model;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -16,15 +17,14 @@ import java.util.ArrayList;
  */
 public class RespuetasCuestionarioDAO {
 
-    Conexion conexion;
-    Connection cn;
+     Connection cn;
+    
     PreparedStatement pstm;
     String sql;
     ResultSet rs;
 
-    public RespuetasCuestionarioDAO() {
-        conexion = new Conexion();
-        cn = conexion.getConexion();
+    public RespuetasCuestionarioDAO()  {
+       cn = Conexion.getConexion();
     }
 
     public ArrayList<RespuestasCuestionario> getRespuestasCuestionario(int idpregunta, int idCuestionario) {

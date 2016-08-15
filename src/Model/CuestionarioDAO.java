@@ -5,6 +5,10 @@
  */
 package Model;
 
+import Utils.ExportExcel;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,8 +19,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -32,7 +34,6 @@ import net.sf.jasperreports.view.JasperViewer;
  */
 public class CuestionarioDAO {
 
-    Conexion conexion;
     Connection cn;
     PreparedStatement pstm;
     String sql;
@@ -42,8 +43,7 @@ public class CuestionarioDAO {
     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
     public CuestionarioDAO() {
-        conexion = new Conexion();
-        cn = conexion.getConexion();
+        cn = Conexion.getConexion();
     }
 
     public ArrayList<Cuestionario> getCuestionario(String asignatura, int grupo) {
@@ -123,6 +123,25 @@ public class CuestionarioDAO {
         return listaCuestionario;
     }
 
+    public ArrayList<Cuestionario> getCuestionarioByGrupoAndProfesor(int profesor) {
+        ArrayList listaCuestionario = new ArrayList();
+        Cuestionario cuestionario;
+        try {
+            sql = "SELECT descripcion FROM test_c_cuestionario WHERE id_user = " + profesor;
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            while (rs.next()) {
+                cuestionario = new Cuestionario();
+                cuestionario.setDescripcion(rs.getString("descripcion"));
+                listaCuestionario.add(cuestionario);
+            }
+
+        } catch (Exception e) {
+            System.out.println("error aqui" + e);
+        }
+        return listaCuestionario;
+    }
+
     public int getPreguntasCuestionario(int id_cuestionario) {
         int total = 0;
         try {
@@ -159,6 +178,9 @@ public class CuestionarioDAO {
 
     public String createCuestionary(String opc, Cuestionario c, ArrayList<PreguntasCuestionario> ListPreguntas, ArrayList<RespuestasCuestionario> ListRespuestas) {
         String rpta = null;
+        FileInputStream fis = null;
+        File img = null;
+        String strimg = "";
         int id_cues = nexIdCuestionario();
         try {
             if (opc.equals("C")) {
@@ -182,9 +204,15 @@ public class CuestionarioDAO {
                             pstm.setInt(1, pc.getIdPregunta());
                             pstm.setString(2, pc.getPregunta());
                             pstm.setInt(3, id_cues);
-                            pstm.setBinaryStream(4, null);
+                            if (!pc.getLargo().equals("")) {
+                                img = new File(pc.getLargo());
+                                fis = new FileInputStream(img);
+                                pstm.setBinaryStream(4, fis, (int) img.length());
+                            } else {
+                                pstm.setBinaryStream(4, null);
+                            }
                             int rowAfectedP = pstm.executeUpdate();
-                        } catch (Exception e) {
+                        } catch (SQLException | FileNotFoundException e) {
                             System.err.println("CuestionarioDao AddQuest : " + e);
                         }
 
@@ -311,7 +339,7 @@ public class CuestionarioDAO {
             sql = "SELECT * FROM test_c_cuestionario WHERE descripcion = '" + descuestionario + "'";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
-            while (rs.next()) {
+            if (rs.next()) {
                 cuestionario = new Cuestionario();
                 cuestionario.setIdCuestionario(rs.getInt("id_cuestionario"));
                 cuestionario.setIdUser(rs.getInt("id_user"));
@@ -378,24 +406,36 @@ public class CuestionarioDAO {
         }
     }
 
-    public void reporteGeneralResultados(String grupo, String cuestionario) {
+    public ArrayList<String> reporteGeneralResultados(String grupo, String cuestionario) {
+        ArrayList resultGeneral = new ArrayList();
         try {
-            JasperDesign jd = JRXmlLoader.load("src/Reports/ReporteEvaluacionGeneral.jrxml");
-            //parametros de entrada
-            Map parametros = new HashMap();
-            //  parametros.clear();
-            parametros.put("logo", this.getClass().getResourceAsStream(logo));
-            parametros.put("grupo", grupo);
-            parametros.put("cuestionario", cuestionario);
-            //fin parametros de entrada
-            JasperReport jasperRep = JasperCompileManager.compileReport(jd);
-            JasperPrint JasPrint = JasperFillManager.fillReport(jasperRep, parametros, cn);
-            JasperViewer jv = new JasperViewer(JasPrint, false);
-            jv.setVisible(true);
-            jv.setTitle("Evaluación General");
-        } catch (JRException ex) {
-            System.out.println("Error jasper: " + ex);
+            sql = "SELECT u.documento, "
+                    + "u.nombres, "
+                    + "u.apellidos, "
+                    + "c.descripcion, "
+                    + "c.objetivo, "
+                    + "g.grupo, "
+                    + "r.nota, "
+                    + " r.tiempo, "
+                    + "r.fecha_presentacion, "
+                    + "CASE WHEN (r.aprobo = 1) THEN 'Aprobo' ELSE 'No Aprobo' END as calificacion "
+                    + "FROM test_c_resultados r "
+                    + "INNER JOIN test_c_cuestionario c ON r.id_cuestionario = c.id_cuestionario "
+                    + "INNER JOIN test_grupo g ON g.id_grupo = r.id_grupo "
+                    + "INNER JOIN test_usuarios u ON u.id_user = r.id_user "
+                    + "WHERE c.descripcion = '" + cuestionario + "' AND g.grupo = '" + grupo + "'";
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            while (rs.next()) {
+                String Obj = rs.getString(1) + "," + rs.getString(2) + "," + rs.getString(3) + "," + rs.getString(4) + "," + rs.getString(5) + ","
+                        + rs.getString(6) + "," + rs.getDouble(7) + "," + rs.getString(8) + "," + rs.getString(9) + "," + rs.getString(10);
+                resultGeneral.add(Obj);
+            }
+
+        } catch (Exception e) {
+            System.out.println("error aqui" + e);
         }
+        return resultGeneral;
     }
 
     public void activeCuestionarios() {

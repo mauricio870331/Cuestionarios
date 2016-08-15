@@ -4,10 +4,13 @@ import App.Login;
 import App.Principal;
 import Model.UsersDAO;
 import Model.GrupoDAO;
+import Model.Users;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.Iterator;
 import javax.swing.JOptionPane;
 
 public final class LoginController implements ActionListener, KeyListener {
@@ -19,6 +22,13 @@ public final class LoginController implements ActionListener, KeyListener {
     GrupoDAO gymdao = new GrupoDAO();
     UsersController administradorController;
     AsignaturaController ac;
+    ArrayList<Users> userArray = new ArrayList<>();
+    boolean existe = false;
+    int idUserLog;
+    int rol;
+    int idGrupo;
+    String Nombre;
+    String Apellido;
 
     public LoginController(Login lg, UsersDAO admDao, Principal pr) {
         this.lg = lg;
@@ -38,8 +48,9 @@ public final class LoginController implements ActionListener, KeyListener {
         if (rol == 1) {
             pr.pnCreateAdmin.setVisible(false);
             pr.pnCuestionario.setVisible(false);
-            pr.pnCreateCuestionary.setVisible(true);
             pr.createUsers.setVisible(false);
+            pr.pnEditCuestionary.setVisible(false);
+            pr.pnCreateCuestionary.setVisible(true);            
         }
         if (rol == 2) {
             pr.mnuAdministrar.setText("Menú");
@@ -53,8 +64,8 @@ public final class LoginController implements ActionListener, KeyListener {
             pr.pnPregunta.setVisible(false);
             pr.pnfinishCuestionario.setVisible(false);
         }
-        
-         if (rol == 3) {
+
+        if (rol == 3) {
             pr.pnCreateAdmin.setVisible(true);
             pr.pnCuestionario.setVisible(false);
             pr.pnCreateCuestionary.setVisible(false);
@@ -71,22 +82,31 @@ public final class LoginController implements ActionListener, KeyListener {
         if (e.getSource() == lg.btnIngresar) {
             String user = lg.txtUser.getText();
             String pass = new String(lg.txtPass.getPassword());
-            if (admDao.getExistAdmin(user, pass).size() >= 1) {
+            userArray = admDao.getExistAdmin(user, pass);
+            Iterator<Users> u = userArray.iterator();
+            while (u.hasNext()) {
+                Users us = u.next();
+                rol = us.getIdRol();
+                idUserLog = us.getIdUser();
+                idGrupo = us.getIdGrupo();
+                Nombre = us.getNombres();
+                Apellido = us.getApellidos();
+                existe = true;
+            }
+            if (existe) {
                 lg.dispose();
                 lg.txtUser.setText("");
                 lg.txtPass.setText("");
-                int rol = admDao.getExistAdmin(user, pass).get(0).getIdRol();
-                int idUserLog = admDao.getExistAdmin(user, pass).get(0).getIdUser();
-                int idGrupo = admDao.getExistAdmin(user, pass).get(0).getIdGrupo();
                 System.out.println("rol " + rol);
                 ocultarCapas(rol);
-                administradorController = new UsersController(pr, admDao, rol, idUserLog, idGrupo);               
+                //administradorController = new UsersController(pr, admDao, rol, idUserLog, idGrupo);
                 CuestionarioController cc = new CuestionarioController(pr, idGrupo, idUserLog, rol);
-                ac = new AsignaturaController(pr, idUserLog);
-                ac.cargarCboAsignaturas();
-//                    cc.cargarCuestionarioByGrupo(idGrupo);
+                ac = new AsignaturaController(pr, idUserLog); 
+                ac.cargarCboAsignaturas(); 
                 enabledBtnPaginator();
-                pr.txtAlumnoName.setText(admDao.getExistAdmin(user, pass).get(0).getNombres() + " " + admDao.getExistAdmin(user, pass).get(0).getApellidos());
+                if (rol == 2) {
+                    pr.txtAlumnoName.setText(Nombre + " " + Apellido);
+                }
                 pr.setLocationRelativeTo(null);
                 pr.setVisible(true);
 

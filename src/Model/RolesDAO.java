@@ -8,6 +8,7 @@ package Model;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -15,15 +16,14 @@ import java.util.ArrayList;
  * @author Mauricio Herrera
  */
 public class RolesDAO {
-    Conexion conexion;
+
     Connection cn;
     PreparedStatement pstm;
     String sql;
     ResultSet rs;
 
     public RolesDAO() {
-        conexion = new Conexion();
-        cn = conexion.getConexion();
+        cn = Conexion.getConexion();
     }
 
     public ArrayList<Roles> getListRol() {
@@ -37,7 +37,7 @@ public class RolesDAO {
                 roles = new Roles();
                 roles.setIdRol(rs.getInt("id_rol"));
                 roles.setRol(rs.getString("rol"));
-                             
+
                 ListaRoles.add(roles);
             }
         } catch (Exception e) {
@@ -46,18 +46,18 @@ public class RolesDAO {
         return ListaRoles;
 
     }
-    
+
     public ArrayList<Roles> getListRolToString(int id_rol) {
         ArrayList ListaRoles = new ArrayList();
         Roles roles;
         try {
-            sql = "SELECT * FROM test_roles WHERE id_rol = "+id_rol+"";
+            sql = "SELECT * FROM test_roles WHERE id_rol = " + id_rol + "";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             if (rs.next()) {
                 roles = new Roles();
                 roles.setIdRol(rs.getInt("id_rol"));
-                roles.setRol(rs.getString("rol"));                             
+                roles.setRol(rs.getString("rol"));
                 ListaRoles.add(roles);
             }
         } catch (Exception e) {
@@ -66,9 +66,9 @@ public class RolesDAO {
         return ListaRoles;
 
     }
-    
+
     public int getIdRolByNombre(String rol) {
-        int idRol = 0;       
+        int idRol = 0;
         try {
             sql = "SELECT id_rol FROM test_roles where rol = ?";
             pstm = cn.prepareStatement(sql);

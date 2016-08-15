@@ -8,6 +8,7 @@ package Model;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -17,15 +18,14 @@ import java.util.Iterator;
  */
 public class CuestionariosGruposDAO {
 
-    Conexion conexion;
     Connection cn;
+
     PreparedStatement pstm;
     String sql;
     ResultSet rs;
 
     public CuestionariosGruposDAO() {
-        conexion = new Conexion();
-        cn = conexion.getConexion();
+        cn = Conexion.getConexion();
     }
 
     public String addGroupToCuestionario(ArrayList<CuestionariosGrupos> list, String opc, String fecha) {
@@ -65,7 +65,7 @@ public class CuestionariosGruposDAO {
                     rpta = "Grupos actualizada con éxito";
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.err.println("CuestionarioGrupoDao AddQuest : " + e);
         }
         return rpta;
