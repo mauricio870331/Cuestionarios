@@ -24,4 +24,9 @@ public class Conexion {
         }
         return con;
     }
+
+    public static Connection closeConexion() {
+        con = null;
+        return con;
+    }
 }

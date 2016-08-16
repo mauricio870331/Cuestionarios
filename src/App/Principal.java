@@ -145,37 +145,23 @@ public class Principal extends javax.swing.JFrame {
         jPanel11 = new javax.swing.JPanel();
         jLabel23 = new javax.swing.JLabel();
         jLabel25 = new javax.swing.JLabel();
-        cboAsignature1 = new javax.swing.JComboBox();
+        cboAsignatureEdit = new javax.swing.JComboBox();
         btnRegistrarCuestionary1 = new javax.swing.JButton();
         btnCancelarCuestionary1 = new javax.swing.JButton();
-        btnAddAsignatura1 = new javax.swing.JButton();
+        btnAddAsignaturaEdit = new javax.swing.JButton();
         jLabel26 = new javax.swing.JLabel();
         txtObjetivoEdit = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
-        txtDuracion1 = new javax.swing.JTextField();
+        txtDuracionEdit = new javax.swing.JTextField();
         jLabel27 = new javax.swing.JLabel();
-        txtCantPreguntas1 = new javax.swing.JTextField();
+        txtCantPreguntasEdit = new javax.swing.JTextField();
         cboCuestionaryEdit = new javax.swing.JComboBox<>();
-        jPanel15 = new javax.swing.JPanel();
-        pnTbPreguntas1 = new javax.swing.JScrollPane();
-        tbRespuestasQ1 = new javax.swing.JTable();
-        btnAddRespuesta1 = new javax.swing.JButton();
-        jLabel28 = new javax.swing.JLabel();
-        cboPreguntas1 = new javax.swing.JComboBox<>();
-        jLabel29 = new javax.swing.JLabel();
-        cboLiteral1 = new javax.swing.JComboBox<>();
-        jLabel30 = new javax.swing.JLabel();
-        txtRespuestaQ1 = new javax.swing.JTextField();
-        rdoTrue1 = new javax.swing.JRadioButton();
-        rdoFalse1 = new javax.swing.JRadioButton();
+        btnChangeName = new javax.swing.JButton();
         jPanel18 = new javax.swing.JPanel();
-        pnTbPreguntas3 = new javax.swing.JScrollPane();
-        tbPreguntasQ1 = new javax.swing.JTable();
-        btnAddPregunta1 = new javax.swing.JButton();
+        pnTbRespuestasEdit = new javax.swing.JScrollPane();
+        tbRespuestasEdit = new javax.swing.JTable();
         jLabel31 = new javax.swing.JLabel();
-        txtDescripPregunta1 = new javax.swing.JTextField();
-        btnAddImagen1 = new javax.swing.JButton();
-        lblEnunciado1 = new javax.swing.JLabel();
+        cboListPreguntasToEdit = new javax.swing.JComboBox<>();
         jMenuBar1 = new javax.swing.JMenuBar();
         mnuAdministrar = new javax.swing.JMenu();
         createUsers = new javax.swing.JMenuItem();
@@ -605,7 +591,7 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE))
+                    .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 117, Short.MAX_VALUE))
                 .addGap(21, 21, 21))
         );
 
@@ -996,13 +982,15 @@ public class Principal extends javax.swing.JFrame {
 
         btnCancelarCuestionary1.setText("Cancelar");
 
-        btnAddAsignatura1.setText("+");
+        btnAddAsignaturaEdit.setText("+");
 
         jLabel26.setText("Objetivo:");
 
         jLabel15.setText("Duración en minutos:");
 
         jLabel27.setText("Cantidad De Preguntas:");
+
+        btnChangeName.setText("Cambiar Nombre");
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
@@ -1017,25 +1005,24 @@ public class Principal extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel11Layout.createSequentialGroup()
-                        .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel11Layout.createSequentialGroup()
-                                .addComponent(cboAsignature1, 0, 307, Short.MAX_VALUE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnAddAsignatura1, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel15)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtDuracion1, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel27)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtCantPreguntas1, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE))
-                            .addComponent(txtObjetivoEdit))
+                        .addComponent(cboAsignatureEdit, 0, 304, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnAddAsignaturaEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel15)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnCancelarCuestionary1, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
-                            .addComponent(btnRegistrarCuestionary1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(cboCuestionaryEdit, 0, 958, Short.MAX_VALUE))
+                        .addComponent(txtDuracionEdit, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel27)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtCantPreguntasEdit, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE))
+                    .addComponent(txtObjetivoEdit)
+                    .addComponent(cboCuestionaryEdit, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnChangeName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnRegistrarCuestionary1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnCancelarCuestionary1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel11Layout.setVerticalGroup(
@@ -1044,7 +1031,9 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel23)
-                    .addComponent(cboCuestionaryEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(cboCuestionaryEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnChangeName)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel11Layout.createSequentialGroup()
@@ -1056,104 +1045,21 @@ public class Principal extends javax.swing.JFrame {
                         .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel27)
-                                .addComponent(txtCantPreguntas1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(txtCantPreguntasEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(btnCancelarCuestionary1)
                                 .addComponent(jLabel15)
-                                .addComponent(txtDuracion1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(txtDuracionEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                         .addComponent(jLabel25)
-                        .addComponent(cboAsignature1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnAddAsignatura1)))
+                        .addComponent(cboAsignatureEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnAddAsignaturaEdit)))
                 .addContainerGap(14, Short.MAX_VALUE))
-        );
-
-        jPanel15.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(null, "Respuestas", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION)));
-
-        tbRespuestasQ1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-
-            }
-        ));
-        pnTbPreguntas1.setViewportView(tbRespuestasQ1);
-
-        btnAddRespuesta1.setText("+");
-
-        jLabel28.setText("Pregunta:");
-
-        jLabel29.setText("Literal:");
-
-        cboLiteral1.setMaximumRowCount(6);
-        cboLiteral1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-- Seleccione --", "A", "B", "C", "D" }));
-
-        jLabel30.setText("Respuesta:");
-
-        GrupoRespuestas.add(rdoTrue1);
-        rdoTrue1.setText("Verdadera");
-
-        GrupoRespuestas.add(rdoFalse1);
-        rdoFalse1.setText("Falsa");
-
-        javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
-        jPanel15.setLayout(jPanel15Layout);
-        jPanel15Layout.setHorizontalGroup(
-            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel15Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel15Layout.createSequentialGroup()
-                        .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel28)
-                            .addComponent(jLabel30))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtRespuestaQ1)
-                            .addComponent(cboPreguntas1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel15Layout.createSequentialGroup()
-                                .addComponent(jLabel29)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(cboLiteral1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(53, 53, 53)
-                                .addComponent(btnAddRespuesta1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel15Layout.createSequentialGroup()
-                                .addComponent(rdoTrue1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(rdoFalse1)
-                                .addGap(41, 41, 41))))
-                    .addComponent(pnTbPreguntas1))
-                .addContainerGap())
-        );
-        jPanel15Layout.setVerticalGroup(
-            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel15Layout.createSequentialGroup()
-                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel15Layout.createSequentialGroup()
-                        .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel28)
-                            .addComponent(cboPreguntas1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel30)
-                            .addComponent(txtRespuestaQ1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(rdoTrue1)
-                            .addComponent(rdoFalse1)))
-                    .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel29)
-                        .addComponent(cboLiteral1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnAddRespuesta1)))
-                .addGap(15, 15, 15)
-                .addComponent(pnTbPreguntas1, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
-                .addContainerGap())
         );
 
         jPanel18.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(null, "Preguntas", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION)));
 
-        tbPreguntasQ1.setModel(new javax.swing.table.DefaultTableModel(
+        tbRespuestasEdit.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -1161,15 +1067,9 @@ public class Principal extends javax.swing.JFrame {
 
             }
         ));
-        pnTbPreguntas3.setViewportView(tbPreguntasQ1);
-
-        btnAddPregunta1.setText("+");
+        pnTbRespuestasEdit.setViewportView(tbRespuestasEdit);
 
         jLabel31.setText("Pregunta:");
-
-        btnAddImagen1.setText("Examinar");
-
-        lblEnunciado1.setText("Nombre imagen");
 
         javax.swing.GroupLayout jPanel18Layout = new javax.swing.GroupLayout(jPanel18);
         jPanel18.setLayout(jPanel18Layout);
@@ -1179,31 +1079,22 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel18Layout.createSequentialGroup()
+                        .addGap(13, 13, 13)
                         .addComponent(jLabel31)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtDescripPregunta1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnAddImagen1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblEnunciado1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnAddPregunta1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(pnTbPreguntas3))
+                        .addGap(18, 18, 18)
+                        .addComponent(cboListPreguntasToEdit, 0, 961, Short.MAX_VALUE))
+                    .addComponent(pnTbRespuestasEdit, javax.swing.GroupLayout.DEFAULT_SIZE, 1040, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel18Layout.setVerticalGroup(
             jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel18Layout.createSequentialGroup()
-                .addGroup(jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addGroup(jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel31)
-                    .addComponent(txtDescripPregunta1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblEnunciado1)
-                        .addComponent(btnAddImagen1)
-                        .addComponent(btnAddPregunta1)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(pnTbPreguntas3, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
-                .addContainerGap())
+                    .addComponent(cboListPreguntasToEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(26, 26, 26)
+                .addComponent(pnTbRespuestasEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(95, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout pnEditCuestionaryLayout = new javax.swing.GroupLayout(pnEditCuestionary);
@@ -1213,7 +1104,6 @@ public class Principal extends javax.swing.JFrame {
             .addGroup(pnEditCuestionaryLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnEditCuestionaryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel15, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel18, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -1224,10 +1114,8 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jPanel18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(162, Short.MAX_VALUE))
         );
 
         container.setLayer(pnCreateAdmin, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -1374,18 +1262,16 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JPopupMenu PopupRutinasUsers;
     public javax.swing.JMenuItem asignCuestionaryToGroup;
     public javax.swing.JButton btnAddAsignatura;
-    public javax.swing.JButton btnAddAsignatura1;
+    public javax.swing.JButton btnAddAsignaturaEdit;
     public javax.swing.JButton btnAddImagen;
-    public javax.swing.JButton btnAddImagen1;
     public javax.swing.JButton btnAddPregunta;
-    public javax.swing.JButton btnAddPregunta1;
     public javax.swing.JButton btnAddRespuesta;
-    public javax.swing.JButton btnAddRespuesta1;
     public javax.swing.JButton btnAdelante;
     public javax.swing.JButton btnAtras;
     public javax.swing.JButton btnCancelar;
     public javax.swing.JButton btnCancelarCuestionary;
     public javax.swing.JButton btnCancelarCuestionary1;
+    public javax.swing.JButton btnChangeName;
     public javax.swing.JButton btnIniciarPrueba;
     public javax.swing.JMenuItem btnLogout;
     public javax.swing.JButton btnNextQuestion;
@@ -1397,14 +1283,13 @@ public class Principal extends javax.swing.JFrame {
     public javax.swing.JButton btnUltimo;
     public javax.swing.JComboBox<String> cboAsignatura;
     public javax.swing.JComboBox cboAsignature;
-    public javax.swing.JComboBox cboAsignature1;
+    public javax.swing.JComboBox cboAsignatureEdit;
     public javax.swing.JComboBox<String> cboCuestionaryEdit;
     public javax.swing.JComboBox cboGrupo;
     public javax.swing.JComboBox cboIdRol;
+    public javax.swing.JComboBox<String> cboListPreguntasToEdit;
     public javax.swing.JComboBox<String> cboLiteral;
-    public javax.swing.JComboBox<String> cboLiteral1;
     public javax.swing.JComboBox<String> cboPreguntas;
-    public javax.swing.JComboBox<String> cboPreguntas1;
     public javax.swing.JComboBox cboTipoDocAdmin;
     public javax.swing.JLayeredPane container;
     public javax.swing.JMenuItem createUsers;
@@ -1430,10 +1315,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
-    private javax.swing.JLabel jLabel28;
-    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1447,9 +1329,8 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel14;
-    private javax.swing.JPanel jPanel15;
     private javax.swing.JPanel jPanel17;
-    private javax.swing.JPanel jPanel18;
+    public javax.swing.JPanel jPanel18;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -1461,7 +1342,6 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JScrollPane jpnTadmin;
     public javax.swing.JLabel lblEnunciado;
-    public javax.swing.JLabel lblEnunciado1;
     public javax.swing.JLabel lblTiempo;
     public javax.swing.JLabel lblVerUsers;
     public javax.swing.JLabel lbltotalp;
@@ -1481,37 +1361,32 @@ public class Principal extends javax.swing.JFrame {
     public javax.swing.JPanel pnPregunta;
     public javax.swing.JPanel pnRespuestas;
     private javax.swing.JScrollPane pnTbPreguntas;
-    private javax.swing.JScrollPane pnTbPreguntas1;
     private javax.swing.JScrollPane pnTbPreguntas2;
-    private javax.swing.JScrollPane pnTbPreguntas3;
+    private javax.swing.JScrollPane pnTbRespuestasEdit;
     public javax.swing.JPanel pnfinishCuestionario;
     public javax.swing.JProgressBar progress;
     public javax.swing.JRadioButton rdoAdmin;
     public javax.swing.JRadioButton rdoClientes;
     public javax.swing.JRadioButton rdoFalse;
-    public javax.swing.JRadioButton rdoFalse1;
     public javax.swing.JRadioButton rdoTodos;
     public javax.swing.JRadioButton rdoTrue;
-    public javax.swing.JRadioButton rdoTrue1;
     public javax.swing.JMenuItem reporteResultados;
     public javax.swing.JComboBox<String> tCuestionario;
     public javax.swing.JTextField tGrado;
     public javax.swing.JTable tbAdmin;
     public javax.swing.JTable tbPreguntasQ;
-    public javax.swing.JTable tbPreguntasQ1;
+    public javax.swing.JTable tbRespuestasEdit;
     public javax.swing.JTable tbRespuestasQ;
-    public javax.swing.JTable tbRespuestasQ1;
     public javax.swing.JTextField txtAlumnoName;
     public javax.swing.JTextField txtApellidos;
     public javax.swing.JTextField txtBuscarAdmin;
     public javax.swing.JTextField txtCantPreguntas;
-    public javax.swing.JTextField txtCantPreguntas1;
+    public javax.swing.JTextField txtCantPreguntasEdit;
     public javax.swing.JTextField txtDescCuestionary;
     public javax.swing.JTextField txtDescripPregunta;
-    public javax.swing.JTextField txtDescripPregunta1;
     public javax.swing.JTextField txtDoc;
     public javax.swing.JTextField txtDuracion;
-    public javax.swing.JTextField txtDuracion1;
+    public javax.swing.JTextField txtDuracionEdit;
     public javax.swing.JTextField txtNombres;
     public javax.swing.JTextField txtObjetivo;
     public javax.swing.JLabel txtObjetivoCuestionario;
@@ -1519,6 +1394,5 @@ public class Principal extends javax.swing.JFrame {
     public javax.swing.JPasswordField txtPass;
     public javax.swing.JTextField txtPreguntas;
     public javax.swing.JTextField txtRespuestaQ;
-    public javax.swing.JTextField txtRespuestaQ1;
     // End of variables declaration//GEN-END:variables
 }

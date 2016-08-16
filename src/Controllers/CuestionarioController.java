@@ -12,6 +12,7 @@ import Model.Asignaturas;
 import Model.AsignaturasDAO;
 import Model.CCuestionarioAlumno;
 import Model.CCuestionarioAlumnoDAO;
+import Model.Conexion;
 import Model.Cuestionario;
 import Model.CuestionarioDAO;
 import Model.CuestionariosGrupos;
@@ -149,6 +150,11 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         this.pr = pr;
         this.idGrupo = idGrupo;
         this.idUserLog = idUserLog;
+        cargarAll();
+
+    }
+
+    private void cargarAll() {
         this.pr.cboAsignatura.addActionListener(this);
         this.pr.cboPreguntas.addActionListener(this);
         this.pr.btnNextQuestion.addActionListener(this);
@@ -179,6 +185,8 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         this.pr.tbPreguntasQ.addMouseListener(this);
         this.pr.editCustionario.addActionListener(this);
         this.pr.cboCuestionaryEdit.addActionListener(this);
+        this.pr.btnChangeName.addActionListener(this);
+        this.pr.cboListPreguntasToEdit.addActionListener(this);
         if (rol == 2) {
             activarCuestionarios();
             this.pr.tGrado.setText(grupdao.getListGrupoToString(idGrupo));
@@ -213,7 +221,6 @@ public final class CuestionarioController extends WindowAdapter implements Actio
             this.pr.btnAddImagen.setEnabled(false);
 //        this.pr.jButton5.setEnabled(false);
         }
-
     }
 
     public ActionListener acciones = new ActionListener() {
@@ -429,6 +436,35 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         tbRespuestas.getColumnModel().getColumn(1).setMaxWidth(80);
         tbRespuestas.getColumnModel().getColumn(1).setMinWidth(80);
         tbRespuestas.getColumnModel().getColumn(1).setPreferredWidth(80);
+        tbRespuestas.setModel(modelo);
+    }
+
+    public void cargarRespuestasInTableToEdit(JTable tbRespuestas, ArrayList<RespuestasCuestionario> respo) {
+        String Titulos[] = {"id", "Respuesta", "Estado"};
+        modelo = new DefaultTableModel(null, Titulos) {
+            @Override
+            public boolean isCellEditable(int row, int column) {//para evitar que las celdas sean editables
+                return false;
+            }
+        };
+        Object[] columna = new Object[3];
+        Iterator<RespuestasCuestionario> respuestas = respo.iterator();
+        while (respuestas.hasNext()) {
+            RespuestasCuestionario rc = respuestas.next();
+            columna[0] = rc.getIdRespuesta();
+            columna[1] = rc.getRespuesta();
+            columna[2] = (rc.isEstado()) ? "Verdadero" : "Falso";
+            modelo.addRow(columna);
+        }
+        tbRespuestas.setModel(modelo);
+        TableRowSorter<TableModel> ordenar = new TableRowSorter<>(modelo);
+        tbRespuestas.setRowSorter(ordenar);
+        tbRespuestas.getColumnModel().getColumn(0).setMaxWidth(0);
+        tbRespuestas.getColumnModel().getColumn(0).setMinWidth(0);
+        tbRespuestas.getColumnModel().getColumn(0).setPreferredWidth(0);
+        tbRespuestas.getColumnModel().getColumn(2).setMaxWidth(80);
+        tbRespuestas.getColumnModel().getColumn(2).setMinWidth(80);
+        tbRespuestas.getColumnModel().getColumn(2).setPreferredWidth(80);
         tbRespuestas.setModel(modelo);
     }
 
@@ -1016,13 +1052,61 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         if (e.getSource() == pr.cboCuestionaryEdit) {
             String cuestion = (String) pr.cboCuestionaryEdit.getSelectedItem();
             if (cuestion.equals("-- Seleccione --")) {
-                pr.txtObjetivoEdit.setText(""); 
+                pr.txtObjetivoEdit.setText("");
+                pr.cboAsignatureEdit.setSelectedItem("-- Seleccione --");
+                pr.cboListPreguntasToEdit.removeAllItems();
+                pr.cboListPreguntasToEdit.addItem("-- Seleccione --");
+                pr.txtDuracionEdit.setText("");
+                pr.txtCantPreguntasEdit.setText("");
                 return;
             }
             Iterator<Cuestionario> cuest = cuestionariodao.getCuestionariosByNameList(cuestion).iterator();
             if (cuest.hasNext()) {
                 Cuestionario c = cuest.next();
-                pr.txtObjetivoEdit.setText(c.getObjetivo());               
+                pr.txtObjetivoEdit.setText(c.getObjetivo());
+                pr.cboAsignatureEdit.setSelectedItem(asdao.getAsignaturaById(c.getIdAsignatura()));
+                pr.txtDuracionEdit.setText(Integer.toString(c.getDuracion()));
+                pr.txtCantPreguntasEdit.setText(Integer.toString(cuestionariodao.getPreguntasCuestionario(c.getIdCuestionario())));
+                ArrayList<PreguntasCuestionario> temp = preguntasdao.getPreguntasCuestionario(c.getIdCuestionario());
+                Iterator<PreguntasCuestionario> nombreIterator = temp.iterator();
+                pr.cboListPreguntasToEdit.removeAllItems();
+                pr.cboListPreguntasToEdit.addItem("-- Seleccione --");
+                while (nombreIterator.hasNext()) {
+                    PreguntasCuestionario pc = nombreIterator.next();
+                    pr.cboListPreguntasToEdit.addItem(pc.getPregunta());
+                }
+            }
+
+        }
+
+        if (e.getSource() == pr.cboListPreguntasToEdit) {
+            String pregunta = (String) pr.cboListPreguntasToEdit.getSelectedItem();
+            ArrayList<RespuestasCuestionario> rcuestionarioEdit = respuestasdao.getRespuestasCuestionarioEdit(preguntasdao.getIdPreguntaByName(pregunta));
+            cargarRespuestasInTableToEdit(pr.tbRespuestasEdit, rcuestionarioEdit);
+        }
+
+        if (e.getSource() == pr.btnChangeName) {
+            String cnameTemp = (String) pr.cboCuestionaryEdit.getSelectedItem();
+            if (!cnameTemp.equals("-- Seleccione --")) {
+                String nombre = JOptionPane.showInputDialog(null,
+                        "Digite el nuevo nombre",
+                        "Cambiar nombre cuestionario",
+                        JOptionPane.INFORMATION_MESSAGE);
+                if (nombre != null) {
+                    int response = JOptionPane.showConfirmDialog(null, "<html>Está seguro de cambiar el nombre del cuestionario ?</html>", "Aviso..!",
+                            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    if (response == JOptionPane.YES_OPTION) {
+                        if (cuestionariodao.updateName(nombre, cnameTemp)) {
+                            pr.cboCuestionaryEdit.removeItem(cnameTemp);
+                            pr.cboCuestionaryEdit.addItem(nombre);
+                            pr.cboCuestionaryEdit.setSelectedItem(nombre);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "No se pudo cambiar el nombre", "Aviso..!", JOptionPane.WARNING_MESSAGE);
+                        }
+                    }
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Seleccione un cuestionario..!");
             }
 
         }
@@ -1090,9 +1174,6 @@ public final class CuestionarioController extends WindowAdapter implements Actio
             }
         }
 
-        if (e.getSource() == pr.cboCuestionaryEdit) {
-
-        }
     }
 
     @Override
@@ -1210,6 +1291,9 @@ public final class CuestionarioController extends WindowAdapter implements Actio
     public void windowClosed(WindowEvent e) {
         if (e.getSource() == ac) {
             ListCuestioariosGroups.clear();
+        }
+        if (e.getSource() == pr) {
+            Conexion.closeConexion();
         }
     }
 

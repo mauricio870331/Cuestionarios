@@ -23,33 +23,41 @@ public class AsignaturasDAO {
     ResultSet rs;
 
     public AsignaturasDAO() {
-       cn = Conexion.getConexion();
+        cn = Conexion.getConexion();
     }
 
-    public String create(Asignaturas a, String opc) {
+    public String create(Asignaturas a, String opc, int Profesor) {
         String responseCreate = null;
         try {
-            
+
+            if (opc.equals("C")) {
+                sql = "INSERT INTO test_asignaturas (nombre_asig) VALUES (?)";
+            }
+            if (opc.equals("U")) {
+                sql = "UPDATE test_asignaturas SET nombre_asig = ? WHERE id_asignatura = ?";
+            }
+            pstm = cn.prepareStatement(sql);
+            pstm.setString(1, a.getNombreAsignatura());
+            if (opc.equals("U")) {
+                pstm.setInt(2, a.getAsignatura());
+            }
+            int rowAfected = pstm.executeUpdate();
+            if (rowAfected > 0) {
                 if (opc.equals("C")) {
-                    sql = "INSERT INTO test_asignaturas (nombre_asig) VALUES (?)";
-                }
-                if (opc.equals("U")) {
-                    sql = "UPDATE test_asignaturas SET nombre_asig = ? WHERE id_asignatura = ?";
-                }
-                pstm = cn.prepareStatement(sql);
-                pstm.setString(1, a.getNombreAsignatura());
-                if (opc.equals("U")) {
-                    pstm.setInt(2, a.getAsignatura());
-                }
-                int rowAfected = pstm.executeUpdate();
-                if (rowAfected > 0) {
-                    if (opc.equals("C")) {
-                        responseCreate = "Asignatura creada con éxito";
-                    } else {
-                        responseCreate = "Asignatura actualizada con éxito";
+                    if (Profesor > 0) {
+                        int asi = getLastInsert().get(0).getAsignatura();
+                        sql = "INSERT INTO test_asignaturas_profesor (id_user, id_asignatura) VALUES (?, ?)";
+                        pstm = cn.prepareStatement(sql);
+                        pstm.setInt(1, Profesor);
+                        pstm.setInt(2, asi);
+                        pstm.executeUpdate();
                     }
+                    responseCreate = "Asignatura creada con éxito";
+                } else {
+                    responseCreate = "Asignatura actualizada con éxito";
                 }
-            
+            }
+
         } catch (Exception e) {
             System.out.println("error cerdo: " + e + " " + e.getClass());
         }
@@ -59,19 +67,19 @@ public class AsignaturasDAO {
 
     public ArrayList<Asignaturas> getListCboAsignaturas(int profesor) {
         ArrayList ListAsignatura = new ArrayList();
-        try {          
-                sql = "SELECT * FROM test_asignaturas a "
-                        + "INNER JOIN test_asignaturas_profesor ap ON a.id_asignatura = ap.id_asignatura "
-                        + "WHERE ap.id_user = " + profesor + "";
-                pstm = cn.prepareStatement(sql);
-                rs = pstm.executeQuery();
-                while (rs.next()) {
-                    Asignaturas as = new Asignaturas();
-                    as.setAsignatura(rs.getInt("id_asignatura"));
-                    as.setNombreAsignatura(rs.getString("nombre_asig"));
-                    ListAsignatura.add(as);
-                }
-            
+        try {
+            sql = "SELECT * FROM test_asignaturas a "
+                    + "INNER JOIN test_asignaturas_profesor ap ON a.id_asignatura = ap.id_asignatura "
+                    + "WHERE ap.id_user = " + profesor + "";
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            while (rs.next()) {
+                Asignaturas as = new Asignaturas();
+                as.setAsignatura(rs.getInt("id_asignatura"));
+                as.setNombreAsignatura(rs.getString("nombre_asig"));
+                ListAsignatura.add(as);
+            }
+
         } catch (Exception e) {
             System.out.println("error m" + e);
         }
@@ -81,21 +89,21 @@ public class AsignaturasDAO {
     public ArrayList<Asignaturas> getListAsignaturas(String dato) {
         ArrayList ListAsignatura = new ArrayList();
         try {
-            
-                if (dato.equals("")) {
-                    sql = "SELECT * FROM test_asignaturas";
-                } else {
-                    sql = "SELECT * FROM test_asignaturas where nombre_asig LIKE '" + dato + "%'";
-                }
-                pstm = cn.prepareStatement(sql);
-                rs = pstm.executeQuery();
-                while (rs.next()) {
-                    Asignaturas as = new Asignaturas();
-                    as.setAsignatura(rs.getInt("id_asignatura"));
-                    as.setNombreAsignatura(rs.getString("nombre_asig"));
-                    ListAsignatura.add(as);
-                }
-            
+
+            if (dato.equals("")) {
+                sql = "SELECT * FROM test_asignaturas";
+            } else {
+                sql = "SELECT * FROM test_asignaturas where nombre_asig LIKE '" + dato + "%'";
+            }
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            while (rs.next()) {
+                Asignaturas as = new Asignaturas();
+                as.setAsignatura(rs.getInt("id_asignatura"));
+                as.setNombreAsignatura(rs.getString("nombre_asig"));
+                ListAsignatura.add(as);
+            }
+
         } catch (Exception e) {
             System.out.println("error gato" + e);
         }
@@ -105,54 +113,54 @@ public class AsignaturasDAO {
     public ArrayList<Asignaturas> getAsignaturasByCuestionario(int grupo) {
         ArrayList ListAsignatura = new ArrayList();
         try {
-            
-                sql = "SELECT DISTINCT a.id_asignatura as id_asignatura, a.nombre_asig as nombre_asig "
-                        + "FROM test_asignaturas a INNER JOIN test_c_cuestionario c ON a.id_asignatura = c.id_asignatura "
-                        + "INNER JOIN test_cuestionarios_grupos cg ON cg.id_cuestionario = c.id_cuestionario "
-                        + "WHERE cg.id_grupo = " + grupo + "";
-                pstm = cn.prepareStatement(sql);
-                rs = pstm.executeQuery();
-                while (rs.next()) {
-                    Asignaturas as = new Asignaturas();
-                    as.setAsignatura(rs.getInt("id_asignatura"));
-                    as.setNombreAsignatura(rs.getString("nombre_asig"));
-                    ListAsignatura.add(as);
-                }
-           
+
+            sql = "SELECT DISTINCT a.id_asignatura as id_asignatura, a.nombre_asig as nombre_asig "
+                    + "FROM test_asignaturas a INNER JOIN test_c_cuestionario c ON a.id_asignatura = c.id_asignatura "
+                    + "INNER JOIN test_cuestionarios_grupos cg ON cg.id_cuestionario = c.id_cuestionario "
+                    + "WHERE cg.id_grupo = " + grupo + "";
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            while (rs.next()) {
+                Asignaturas as = new Asignaturas();
+                as.setAsignatura(rs.getInt("id_asignatura"));
+                as.setNombreAsignatura(rs.getString("nombre_asig"));
+                ListAsignatura.add(as);
+            }
+
         } catch (Exception e) {
             System.out.println("error " + e);
-        } 
+        }
         return ListAsignatura;
     }
 
     public int getAsignaturaByName(String Asignatura) {
         int id_asignatura = 0;
         try {
-            
-                sql = "SELECT id_asignatura FROM test_asignaturas where nombre_asig = '" + Asignatura + "'";
-                pstm = cn.prepareStatement(sql);
-                rs = pstm.executeQuery();
-                if (rs.next()) {
-                    id_asignatura = rs.getInt("id_asignatura");
-                }
-            
+
+            sql = "SELECT id_asignatura FROM test_asignaturas where nombre_asig = '" + Asignatura + "'";
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            if (rs.next()) {
+                id_asignatura = rs.getInt("id_asignatura");
+            }
+
         } catch (Exception e) {
             System.out.println("error pio" + e);
-        } 
+        }
         return id_asignatura;
     }
 
     public boolean existAsignatura(String asignatura) {
         boolean existe = false;
         try {
-            
-                sql = "SELECT * FROM test_asignaturas WHERE nombre_asig = '" + asignatura + "' OR nombre_asig LIKE '%" + asignatura + "%'";
-                pstm = cn.prepareStatement(sql);
-                rs = pstm.executeQuery();
-                if (rs.next()) {
-                    existe = true;
-                }
-           
+
+            sql = "SELECT * FROM test_asignaturas WHERE nombre_asig = '" + asignatura + "' OR nombre_asig LIKE '%" + asignatura + "%'";
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            if (rs.next()) {
+                existe = true;
+            }
+
         } catch (Exception e) {
             System.out.println("error mulk" + e);
         }
@@ -162,31 +170,31 @@ public class AsignaturasDAO {
     public String deleteAsignatura(int idAsignatura) {
         String responseDelete = null;
         try {
-            
-                String sqlL = "SELECT * FROM test_c_cuestionario WHERE id_asignatura = " + idAsignatura + "";
-                pstm = cn.prepareStatement(sqlL);
-                rs = pstm.executeQuery();
-                if (rs.next()) {
-                    responseDelete = "La Asignatura ya tiene cuestionarios asociados\nNo se puede eliminar..";
-                } else {
-                    String sqlA = "DELETE FROM test_asignaturas_profesor WHERE id_asignatura = ?";
-                    pstm = cn.prepareStatement(sqlA);
-                    pstm.setInt(1, idAsignatura);
-                    pstm.executeUpdate();
 
-                    sql = "DELETE FROM test_asignaturas WHERE id_asignatura = ?";
-                    pstm = cn.prepareStatement(sql);
-                    pstm.setInt(1, idAsignatura);
-                    int rowDelete = pstm.executeUpdate();
-                    if (rowDelete > 0) {
-                        responseDelete = "registro eliminado con exito..!";
-                    }
+            String sqlL = "SELECT * FROM test_c_cuestionario WHERE id_asignatura = " + idAsignatura + "";
+            pstm = cn.prepareStatement(sqlL);
+            rs = pstm.executeQuery();
+            if (rs.next()) {
+                responseDelete = "La Asignatura ya tiene cuestionarios asociados\nNo se puede eliminar..";
+            } else {
+                String sqlA = "DELETE FROM test_asignaturas_profesor WHERE id_asignatura = ?";
+                pstm = cn.prepareStatement(sqlA);
+                pstm.setInt(1, idAsignatura);
+                pstm.executeUpdate();
 
+                sql = "DELETE FROM test_asignaturas WHERE id_asignatura = ?";
+                pstm = cn.prepareStatement(sql);
+                pstm.setInt(1, idAsignatura);
+                int rowDelete = pstm.executeUpdate();
+                if (rowDelete > 0) {
+                    responseDelete = "registro eliminado con exito..!";
                 }
-            
+
+            }
+
         } catch (SQLException e) {
             System.out.println("error addao " + e);
-        } 
+        }
         return responseDelete;
     }
 
@@ -194,22 +202,39 @@ public class AsignaturasDAO {
         ArrayList listaAsignaturas = new ArrayList();
         Asignaturas asignatura;
         try {
-           
-                sql = "SELECT * FROM test_asignaturas ORDER BY id_asignatura DESC limit 1";
-                pstm = cn.prepareStatement(sql);
-                rs = pstm.executeQuery();
-                if (rs.next()) {
-                    asignatura = new Asignaturas();
-                    asignatura.setAsignatura(rs.getInt("id_asignatura"));
-                    asignatura.setNombreAsignatura(rs.getString("nombre_asig"));
-                    listaAsignaturas.add(asignatura);
-                }
-            
+
+            sql = "SELECT * FROM test_asignaturas ORDER BY id_asignatura DESC limit 1";
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            if (rs.next()) {
+                asignatura = new Asignaturas();
+                asignatura.setAsignatura(rs.getInt("id_asignatura"));
+                asignatura.setNombreAsignatura(rs.getString("nombre_asig"));
+                listaAsignaturas.add(asignatura);
+            }
+
         } catch (Exception e) {
             System.out.println("error mula" + e);
         }
         return listaAsignaturas;
 
+    }
+
+    public String getAsignaturaById(int idasignatura) {
+        String asignaruta = "";
+        try {
+
+            sql = "SELECT nombre_asig FROM test_asignaturas WHERE id_asignatura = " + idasignatura + "";
+
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            if (rs.next()) {
+                asignaruta = rs.getString("nombre_asig");
+            }
+        } catch (Exception e) {
+            System.out.println("error" + e);
+        }
+        return asignaruta;
     }
 
 }

@@ -50,13 +50,14 @@ public final class LoginController implements ActionListener, KeyListener {
             pr.pnCuestionario.setVisible(false);
             pr.createUsers.setVisible(false);
             pr.pnEditCuestionary.setVisible(false);
-            pr.pnCreateCuestionary.setVisible(true);            
+            pr.pnCreateCuestionary.setVisible(true);
         }
         if (rol == 2) {
             pr.mnuAdministrar.setText("Menú");
             pr.pnCuestionario.setVisible(true);
             pr.pnCreateAdmin.setVisible(false);
             pr.pnCreateCuestionary.setVisible(false);
+            pr.pnEditCuestionary.setVisible(false);
             pr.mnuAdministrar.setVisible(true);
             pr.createUsers.setVisible(false);
             pr.MnuCuestionarios.setVisible(false);
@@ -69,6 +70,7 @@ public final class LoginController implements ActionListener, KeyListener {
             pr.pnCreateAdmin.setVisible(true);
             pr.pnCuestionario.setVisible(false);
             pr.pnCreateCuestionary.setVisible(false);
+            pr.pnEditCuestionary.setVisible(false);
             pr.MnuCuestionarios.setVisible(false);
             pr.asignCuestionaryToGroup.setVisible(false);
         }
@@ -99,10 +101,15 @@ public final class LoginController implements ActionListener, KeyListener {
                 lg.txtPass.setText("");
                 System.out.println("rol " + rol);
                 ocultarCapas(rol);
-                //administradorController = new UsersController(pr, admDao, rol, idUserLog, idGrupo);
-                CuestionarioController cc = new CuestionarioController(pr, idGrupo, idUserLog, rol);
-                ac = new AsignaturaController(pr, idUserLog); 
-                ac.cargarCboAsignaturas(); 
+                if (rol == 3) {
+                    administradorController = new UsersController(pr, admDao, rol, idUserLog, idGrupo);
+                } else {
+                    CuestionarioController cc = new CuestionarioController(pr, idGrupo, idUserLog, rol);
+                }
+                if (rol == 1) {
+                    ac = new AsignaturaController(pr, idUserLog);
+                    ac.cargarCboAsignaturas();
+                }
                 enabledBtnPaginator();
                 if (rol == 2) {
                     pr.txtAlumnoName.setText(Nombre + " " + Apellido);

@@ -68,5 +68,31 @@ public class RespuetasCuestionarioDAO {
         }
         return idRpta;
     }
+    
+    
+    public ArrayList<RespuestasCuestionario> getRespuestasCuestionarioEdit(int idpregunta) {
+        ArrayList ListRespuestas = new ArrayList();
+        try {
+            sql = "SELECT r.id_pregunta as id_pregunta,"
+                       + "r.id_respuesta as id_respuesta,"
+                       + "r.respuesta as respuesta,"
+                       + "r.estado as estado"
+                + " FROM test_respuestas_cuestionario r INNER JOIN test_preguntas_cuestionario p ON p.id = r.id_fk"
+                + " WHERE p.id = " + idpregunta + "";
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            while (rs.next()) {
+                RespuestasCuestionario rc = new RespuestasCuestionario();
+                rc.setIdPregunta(rs.getInt("id_pregunta"));
+                rc.setIdRespuesta(rs.getInt("id_respuesta"));
+                rc.setRespuesta(rs.getString("respuesta"));
+                rc.setEstado(rs.getBoolean("estado"));
+                ListRespuestas.add(rc);
+            }
+        } catch (Exception e) {
+            System.out.println("error" + e);
+        }
+        return ListRespuestas;
+    }
 
 }

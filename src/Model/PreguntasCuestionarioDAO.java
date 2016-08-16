@@ -64,5 +64,21 @@ public class PreguntasCuestionarioDAO {
         return id;
 
     }
+    
+     public int getIdPreguntaByName(String pregunta) {
+        int id = 0;
+        try {
+            sql = "select id from test_preguntas_cuestionario where pregunta = '"+pregunta+"'";
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            if (rs.next()) {
+                id = rs.getInt("id");                
+            }
+        } catch (Exception e) {
+            System.out.println("error" + e);
+        }
+        return id;
+
+    }
 
 }

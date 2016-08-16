@@ -44,6 +44,7 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
         this.pr = pr;
         this.profesor = profesor;
         this.pr.btnAddAsignatura.addActionListener(this);
+        this.pr.btnAddAsignaturaEdit.addActionListener(this);
         aa.btnCreateAsignatura.addActionListener(this);
         aa.mnuUpdateAsignatura.addActionListener(this);
         aa.mnuDeleteAsignatura.addActionListener(this);
@@ -80,15 +81,18 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
     public void cargarCboAsignaturas() {
         pr.cboAsignature.removeAllItems();
         pr.cboAsignature.addItem("-- Seleccione --");
+        pr.cboAsignatureEdit.removeAllItems();
+        pr.cboAsignatureEdit.addItem("-- Seleccione --");
         Iterator<Asignaturas> nombreIterator = asignaturadao.getListCboAsignaturas(profesor).iterator();
         while (nombreIterator.hasNext()) {
             Asignaturas elemento = nombreIterator.next();
             pr.cboAsignature.addItem(elemento.getNombreAsignatura());
+            pr.cboAsignatureEdit.addItem(elemento.getNombreAsignatura());
         }
     }
 
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == pr.btnAddAsignatura) {
+        if (e.getSource() == pr.btnAddAsignatura || e.getSource() == pr.btnAddAsignaturaEdit) {
             cargarAsignaturas(aa.tbAsignatura, dato);
             aa.setTitle("Asignaturas");
             aa.setLocationRelativeTo(null);
@@ -115,7 +119,7 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
             Asignaturas a = new Asignaturas();
             a.setNombreAsignatura(asignatura);
             a.setAsignatura(idArea);
-            String rptaRegistro = asignaturadao.create(a, opc);
+            String rptaRegistro = asignaturadao.create(a, opc, profesor);
             if (rptaRegistro != null) {
                 JOptionPane.showMessageDialog(null, rptaRegistro);
                 cargarCboAsignaturas();
@@ -204,9 +208,12 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
         if (ar.hasNext()) {
             Asignaturas elemento = ar.next();
             pr.cboAsignature.setSelectedItem(elemento.getNombreAsignatura());
+            pr.cboAsignatureEdit.setSelectedItem(elemento.getNombreAsignatura());
         }
 
     }
+    
+    
 
     public void mouseClicked(MouseEvent e) {
         if (e.getClickCount() == 2) {

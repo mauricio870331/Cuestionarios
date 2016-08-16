@@ -176,6 +176,23 @@ public class CuestionarioDAO {
 
     }
 
+    public boolean updateName(String Newname, String Oldname) {
+        boolean rsponse =false ;
+        try {
+            sql = "UPDATE  test_c_cuestionario SET descripcion = '" + Newname + "' where descripcion = '" + Oldname + "'";
+            pstm = cn.prepareStatement(sql);
+            int rowAfectedR = pstm.executeUpdate();
+            if (rowAfectedR > 0) {
+                rsponse = true;
+            }
+
+        } catch (Exception e) {
+            System.out.println("error" + e);
+        }
+        return rsponse;
+
+    }
+
     public String createCuestionary(String opc, Cuestionario c, ArrayList<PreguntasCuestionario> ListPreguntas, ArrayList<RespuestasCuestionario> ListRespuestas) {
         String rpta = null;
         FileInputStream fis = null;
