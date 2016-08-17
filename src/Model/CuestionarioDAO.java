@@ -177,7 +177,7 @@ public class CuestionarioDAO {
     }
 
     public boolean updateName(String Newname, String Oldname) {
-        boolean rsponse =false ;
+        boolean rsponse = false;
         try {
             sql = "UPDATE  test_c_cuestionario SET descripcion = '" + Newname + "' where descripcion = '" + Oldname + "'";
             pstm = cn.prepareStatement(sql);
@@ -193,13 +193,14 @@ public class CuestionarioDAO {
 
     }
 
-    public String createCuestionary(String opc, Cuestionario c, ArrayList<PreguntasCuestionario> ListPreguntas, ArrayList<RespuestasCuestionario> ListRespuestas) {
+    public String createCuestionary(String opc, Cuestionario c, ArrayList<PreguntasCuestionario> ListPreguntas, ArrayList<RespuestasCuestionario> ListRespuestas) throws SQLException {
         String rpta = null;
         FileInputStream fis = null;
         File img = null;
         String strimg = "";
         int id_cues = nexIdCuestionario();
         try {
+            cn.setAutoCommit(false);
             if (opc.equals("C")) {
                 sql = "INSERT INTO test_c_cuestionario (id_user, descripcion, objetivo, fecha, id_asignatura, estado, duracion) VALUES (?,?,?,?,?,?,?)";
                 pstm = cn.prepareStatement(sql);
@@ -269,6 +270,9 @@ public class CuestionarioDAO {
             }
         } catch (Exception e) {
             System.out.println("error CuestionarioDao : " + e);
+        } finally {
+            cn.commit();
+            cn.setAutoCommit(true);
         }
         return rpta;
     }
