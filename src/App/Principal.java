@@ -162,6 +162,8 @@ public class Principal extends javax.swing.JFrame {
         tbRespuestasEdit = new javax.swing.JTable();
         jLabel31 = new javax.swing.JLabel();
         cboListPreguntasToEdit = new javax.swing.JComboBox<>();
+        btnChangePregunta = new javax.swing.JButton();
+        lblEditImgPregunta = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         mnuAdministrar = new javax.swing.JMenu();
         createUsers = new javax.swing.JMenuItem();
@@ -1071,6 +1073,12 @@ public class Principal extends javax.swing.JFrame {
 
         jLabel31.setText("Pregunta:");
 
+        btnChangePregunta.setText("Cambiar Pregunta");
+
+        lblEditImgPregunta.setBackground(new java.awt.Color(255, 255, 255));
+        lblEditImgPregunta.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblEditImgPregunta.setOpaque(true);
+
         javax.swing.GroupLayout jPanel18Layout = new javax.swing.GroupLayout(jPanel18);
         jPanel18.setLayout(jPanel18Layout);
         jPanel18Layout.setHorizontalGroup(
@@ -1079,22 +1087,29 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel18Layout.createSequentialGroup()
-                        .addGap(13, 13, 13)
                         .addComponent(jLabel31)
-                        .addGap(18, 18, 18)
-                        .addComponent(cboListPreguntasToEdit, 0, 961, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cboListPreguntasToEdit, 0, 660, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblEditImgPregunta, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnChangePregunta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(1, 1, 1))
                     .addComponent(pnTbRespuestasEdit, javax.swing.GroupLayout.DEFAULT_SIZE, 1040, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel18Layout.setVerticalGroup(
             jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel18Layout.createSequentialGroup()
-                .addGroup(jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel31)
-                    .addComponent(cboListPreguntasToEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26)
-                .addComponent(pnTbRespuestasEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(95, Short.MAX_VALUE))
+                .addGroup(jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel31)
+                        .addComponent(cboListPreguntasToEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnChangePregunta))
+                    .addComponent(lblEditImgPregunta, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(pnTbRespuestasEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(70, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout pnEditCuestionaryLayout = new javax.swing.GroupLayout(pnEditCuestionary);
@@ -1272,6 +1287,7 @@ public class Principal extends javax.swing.JFrame {
     public javax.swing.JButton btnCancelarCuestionary;
     public javax.swing.JButton btnCancelarCuestionary1;
     public javax.swing.JButton btnChangeName;
+    public javax.swing.JButton btnChangePregunta;
     public javax.swing.JButton btnIniciarPrueba;
     public javax.swing.JMenuItem btnLogout;
     public javax.swing.JButton btnNextQuestion;
@@ -1341,6 +1357,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel9;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JScrollPane jpnTadmin;
+    public javax.swing.JLabel lblEditImgPregunta;
     public javax.swing.JLabel lblEnunciado;
     public javax.swing.JLabel lblTiempo;
     public javax.swing.JLabel lblVerUsers;

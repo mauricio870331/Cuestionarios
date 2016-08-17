@@ -41,8 +41,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,6 +53,7 @@ import java.util.Iterator;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
@@ -186,7 +189,9 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         this.pr.editCustionario.addActionListener(this);
         this.pr.cboCuestionaryEdit.addActionListener(this);
         this.pr.btnChangeName.addActionListener(this);
+        this.pr.btnChangePregunta.addActionListener(this);
         this.pr.cboListPreguntasToEdit.addActionListener(this);
+        this.pr.lblEditImgPregunta.addMouseListener(this);
         if (rol == 2) {
             activarCuestionarios();
             this.pr.tGrado.setText(grupdao.getListGrupoToString(idGrupo));
@@ -1081,6 +1086,21 @@ public final class CuestionarioController extends WindowAdapter implements Actio
 
         if (e.getSource() == pr.cboListPreguntasToEdit) {
             String pregunta = (String) pr.cboListPreguntasToEdit.getSelectedItem();
+            InputStream img = preguntasdao.getImgPreguntaByName(pregunta);
+            if (img != null) {
+                try {
+                    BufferedImage bi = ImageIO.read(img);
+                    ii = new ImageIcon(bi);
+                    Image conver = ii.getImage();
+                    Image tam = conver.getScaledInstance(pr.lblEditImgPregunta.getWidth(), pr.lblEditImgPregunta.getHeight(), Image.SCALE_SMOOTH);
+                    iin = new ImageIcon(tam);
+                    pr.lblEditImgPregunta.setIcon(iin);
+                } catch (IOException ex) {
+                    System.out.println("error img " + ex);
+                }
+            } else {
+                pr.lblEditImgPregunta.setIcon(null);
+            }
             ArrayList<RespuestasCuestionario> rcuestionarioEdit = respuestasdao.getRespuestasCuestionarioEdit(preguntasdao.getIdPreguntaByName(pregunta));
             cargarRespuestasInTableToEdit(pr.tbRespuestasEdit, rcuestionarioEdit);
         }
@@ -1107,6 +1127,39 @@ public final class CuestionarioController extends WindowAdapter implements Actio
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Seleccione un cuestionario..!");
+            }
+
+        }
+
+        if (e.getSource() == pr.btnChangePregunta) {
+            String pnameTemp = (String) pr.cboListPreguntasToEdit.getSelectedItem();
+            if (!pnameTemp.equals("-- Seleccione --")) {
+                String nombre = JOptionPane.showInputDialog(null,
+                        "Digite el nuevo nombre",
+                        "Cambiar nombre pregunta",
+                        JOptionPane.INFORMATION_MESSAGE);
+                if (nombre != null) {
+                    int response = JOptionPane.showConfirmDialog(null, "<html>Está seguro de cambiar la pregunta ?</html>", "Aviso..!",
+                            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    if (response == JOptionPane.YES_OPTION) {
+                        String rre = preguntasdao.updateNamePregunta(nombre, pnameTemp);
+                        switch (rre) {
+                            case "existe":
+                                JOptionPane.showMessageDialog(null, "El nombre de pregunta ya existe, ingrese otro");
+                                break;
+                            case "ok":
+                                pr.cboListPreguntasToEdit.removeItem(pnameTemp);
+                                pr.cboListPreguntasToEdit.addItem(nombre);
+                                pr.cboListPreguntasToEdit.setSelectedItem(nombre);
+                                break;
+                            default:
+                                JOptionPane.showMessageDialog(null, "No se pudo cambiar el nombre", "Aviso..!", JOptionPane.WARNING_MESSAGE);
+                                break;
+                        }
+                    }
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Seleccione uns pregunta..!");
             }
 
         }
@@ -1458,18 +1511,12 @@ public final class CuestionarioController extends WindowAdapter implements Actio
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        int fila = pr.tbPreguntasQ.rowAtPoint(e.getPoint());
-        int columna = pr.tbPreguntasQ.columnAtPoint(e.getPoint());
-        if (columna == 2) {
-            Ptemp = pr.tbPreguntasQ.getValueAt(fila, columna).toString();
-        }
-        if (columna == 3) {
-            if (ListRespuestas.size() > 0) {
-                int response = JOptionPane.showConfirmDialog(null, "El sistema ha detectado que hay respuestas asignadas a preguntas.\n Está seguro de editar el enunciado..? Al confirmar deberá volver a Ingresar las respuestas a las preguntas..", "Aviso..!",
+        if (e.getSource() == pr.lblEditImgPregunta) {
+            String pregunta = (String) pr.cboListPreguntasToEdit.getSelectedItem();
+            if (!pregunta.equals("-- Seleccione --")) {
+                int response = JOptionPane.showConfirmDialog(null, "Está seguro de editar la imagen..?", "Aviso..!",
                         JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                 if (response == JOptionPane.YES_OPTION) {
-                    ListRespuestas.clear();
-                    ListRespuestasTemp.clear();
                     countAction++;
                     if (countAction == 1) {
                         addFilterImg();
@@ -1485,32 +1532,89 @@ public final class CuestionarioController extends WindowAdapter implements Actio
                             foto = String.valueOf(archivo);
                             String NombreArchivo = FileChooser.getName(archivo);
                             JOptionPane.showMessageDialog(null, "Archivo Seleccionado: " + String.valueOf(NombreArchivo));
-
-                            Iterator<PreguntasCuestionario> lp = ListPreguntas.iterator();
-                            while (lp.hasNext()) {
-                                PreguntasCuestionario update = lp.next();
-                                if (update.getId() == Integer.parseInt(pr.tbPreguntasQ.getValueAt(fila, 0).toString())) {
-                                    update.setLargo(foto);
-                                }
+                            String im = preguntasdao.updateImagen(foto, pregunta);
+                            if (!im.equals("")) {
+                                ImageIcon icon = new ImageIcon(im);
+                                Image conver = icon.getImage();
+                                Image tam = conver.getScaledInstance(pr.lblEditImgPregunta.getWidth(), pr.lblEditImgPregunta.getHeight(), Image.SCALE_SMOOTH);
+                                iin = new ImageIcon(tam);
+                                pr.lblEditImgPregunta.setIcon(iin);
+                            } else {
+                                JOptionPane.showConfirmDialog(null, "No se pudo actualizar la imagen..!");
                             }
-                            try {
-                                cargarPreguntasInTable(pr.tbPreguntasQ);
-                                cargarPreguntasToRespuestas(true);
-                                cargarRespuestasInTable(pr.tbRespuestasQ);
-                                cargarCboLiteral();
-                                foto = "";
-                                archivo = null;
-                            } catch (NoSuchFieldException | IOException ex) {
-                                System.out.println("error " + ex);
-                            }
+                            foto = "";
+                            archivo = null;
                         } else {
                             JOptionPane.showMessageDialog(null, "Elija un formato valido");
                         }
                     }
+                } else {
+                    return;
                 }
+            } else {
+                JOptionPane.showMessageDialog(null, "Seleccione una pregunta ..!");
+                pr.cboListPreguntasToEdit.requestFocus();
+                return;
             }
 
         }
+
+        if (e.getSource() == pr.tbPreguntasQ) {
+            int fila = pr.tbPreguntasQ.rowAtPoint(e.getPoint());
+            int columna = pr.tbPreguntasQ.columnAtPoint(e.getPoint());
+            if (columna == 2) {
+                Ptemp = pr.tbPreguntasQ.getValueAt(fila, columna).toString();
+            }
+            if (columna == 3) {
+                if (ListRespuestas.size() > 0) {
+                    int response = JOptionPane.showConfirmDialog(null, "El sistema ha detectado que hay respuestas asignadas a preguntas.\n Está seguro de editar el enunciado..? Al confirmar deberá volver a Ingresar las respuestas a las preguntas..", "Aviso..!",
+                            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    if (response == JOptionPane.YES_OPTION) {
+                        ListRespuestas.clear();
+                        ListRespuestasTemp.clear();
+                        countAction++;
+                        if (countAction == 1) {
+                            addFilterImg();
+                        }
+                        FileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                        if (FileChooser.showDialog(null, "Seleccionar Archivo") == JFileChooser.APPROVE_OPTION) {
+                            archivo = FileChooser.getSelectedFile();
+                            if (archivo.length() > 1000000) {//archivo.length() tamaño en bytes
+                                JOptionPane.showMessageDialog(null, "El tamaño máximo para la imagen es de 1 Mega,\nSeleccione otra.");
+                                return;
+                            }
+                            if (archivo.getName().endsWith("png") || archivo.getName().endsWith("PNG") || archivo.getName().endsWith("jpg")) {
+                                foto = String.valueOf(archivo);
+                                String NombreArchivo = FileChooser.getName(archivo);
+                                JOptionPane.showMessageDialog(null, "Archivo Seleccionado: " + String.valueOf(NombreArchivo));
+
+                                Iterator<PreguntasCuestionario> lp = ListPreguntas.iterator();
+                                while (lp.hasNext()) {
+                                    PreguntasCuestionario update = lp.next();
+                                    if (update.getId() == Integer.parseInt(pr.tbPreguntasQ.getValueAt(fila, 0).toString())) {
+                                        update.setLargo(foto);
+                                    }
+                                }
+                                try {
+                                    cargarPreguntasInTable(pr.tbPreguntasQ);
+                                    cargarPreguntasToRespuestas(true);
+                                    cargarRespuestasInTable(pr.tbRespuestasQ);
+                                    cargarCboLiteral();
+                                    foto = "";
+                                    archivo = null;
+                                } catch (NoSuchFieldException | IOException ex) {
+                                    System.out.println("error " + ex);
+                                }
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Elija un formato valido");
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+
     }
 
     @Override
