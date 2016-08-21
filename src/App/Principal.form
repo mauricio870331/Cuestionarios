@@ -1932,7 +1932,7 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="btnChangeName" alignment="1" max="32767" attributes="0"/>
                                   <Component id="btnChangeObjetive" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="btnCancelarCuestionary1" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="btnCancelarCuestionaryEdit" alignment="0" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
@@ -1959,7 +1959,7 @@
                                       </Group>
                                       <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="btnCancelarCuestionary1" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="btnCancelarCuestionaryEdit" alignment="3" min="-2" max="-2" attributes="0"/>
                                           <Component id="jLabel15" alignment="3" min="-2" max="-2" attributes="0"/>
                                           <Component id="txtDuracionEdit" alignment="3" min="-2" max="-2" attributes="0"/>
                                           <Component id="jLabel27" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -2006,7 +2006,7 @@
                         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
                       </AuxValues>
                     </Component>
-                    <Component class="javax.swing.JButton" name="btnCancelarCuestionary1">
+                    <Component class="javax.swing.JButton" name="btnCancelarCuestionaryEdit">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Cancelar"/>
                       </Properties>

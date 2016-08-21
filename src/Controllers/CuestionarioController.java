@@ -198,6 +198,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         this.pr.tbRespuestasEdit.addKeyListener(this);
         this.pr.tbRespuestasEdit.addMouseListener(this);
         this.pr.btnChangeObjetive.addActionListener(this);
+        this.pr.btnCancelarCuestionaryEdit.addActionListener(this);
         if (rol == 2) {
             activarCuestionarios();
             this.pr.tGrado.setText(grupdao.getListGrupoToString(idGrupo));
@@ -1086,6 +1087,10 @@ public final class CuestionarioController extends WindowAdapter implements Actio
             }
         }
 
+        if (e.getSource() == pr.btnCancelarCuestionaryEdit) {
+            limpiarFormEdit();
+        }
+
         if (e.getSource() == pr.reporteResultados) {
             cargarGrupToRepotrGeneral(rr);
             rr.setLocationRelativeTo(null);
@@ -1166,7 +1171,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
                 if (nombre == null || nombre.equals("")) {
                     JOptionPane.showMessageDialog(null, "El nuevo nombre no debe estar vacio..!");
                     return;
-                    
+
                 } else {
                     int response = JOptionPane.showConfirmDialog(null, "<html>Está seguro de cambiar el nombre del cuestionario ?</html>", "Aviso..!",
                             JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
@@ -1836,6 +1841,14 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         pr.cboLiteral.addItem("B");
         pr.cboLiteral.addItem("C");
         pr.cboLiteral.addItem("D");
+    }
+
+    private void limpiarFormEdit() {
+        String c = (String) pr.cboCuestionaryEdit.getSelectedItem();
+        if (!c.equals("-- Seleccione --")) {
+            pr.cboCuestionaryEdit.setSelectedItem("-- Seleccione --");
+        }
+
     }
 
 }
