@@ -156,6 +156,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         this.pr = pr;
         this.idGrupo = idGrupo;
         this.idUserLog = idUserLog;
+        this.rol = rol;
         cargarAll();
 
     }
@@ -199,7 +200,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         this.pr.tbRespuestasEdit.addMouseListener(this);
         this.pr.btnChangeObjetive.addActionListener(this);
         this.pr.btnCancelarCuestionaryEdit.addActionListener(this);
-        if (rol == 2) {
+        if (rol == 2) {            
             activarCuestionarios();
             this.pr.tGrado.setText(grupdao.getListGrupoToString(idGrupo));
             cargarCuestionarioByGrupo(idGrupo);
@@ -482,6 +483,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
 
     public void cargarCuestionarioByGrupo(int id_grupo) throws SQLException {
         cantCuestionario = cuestionariodao.getCuestionarioByGrupo(id_grupo).size();
+//        System.out.println("cantCuestionario "+cantCuestionario);
 //        cantCuestioRepetir = ccuestionarioalumnodao.getCantCuestionariosActive(idUserLog);
 
         if (cantCuestionario > 1) {
@@ -542,6 +544,20 @@ public final class CuestionarioController extends WindowAdapter implements Actio
     public void showPreguntasCuestionario(int p) {
         int pregunta = p + 1;
         pr.txtPreguntas.setText(pregunta + ") " + preguntasCList.get(p).getPregunta());
+        InputStream img = null;
+        img = preguntasCList.get(p).getImagen();
+        if (img != null) {
+            try {
+                BufferedImage bi = ImageIO.read(img);
+                ii = new ImageIcon(bi);
+                Image conver = ii.getImage();
+                Image tam = conver.getScaledInstance(pr.txtPreguntaImg.getWidth(), pr.txtPreguntaImg.getHeight(), Image.SCALE_SMOOTH);
+                iin = new ImageIcon(tam);
+                pr.txtPreguntaImg.setIcon(iin);
+            } catch (IOException ex) {
+                System.out.println("error img " + ex);
+            }
+        }
         cargarRespuestasCuestionario(p);
     }
 
@@ -623,10 +639,10 @@ public final class CuestionarioController extends WindowAdapter implements Actio
                     objRespuestasAlumno.set(id_pregunta, ra);
                     tempEstados.set(pregunt, rb[i].getName());
                     // Para probar las respuestas
-                    Iterator<RespuestasAlumno> nombreIterator = objRespuestasAlumno.iterator();
-                    while (nombreIterator.hasNext()) {
-                        RespuestasAlumno p = nombreIterator.next();
-                    }
+//                    Iterator<RespuestasAlumno> nombreIterator = objRespuestasAlumno.iterator();
+//                    while (nombreIterator.hasNext()) {
+//                        RespuestasAlumno p = nombreIterator.next();
+//                    }
                     pr.btnNextQuestion.setEnabled(true);
                 }
             }

@@ -104,6 +104,7 @@ public class Principal extends javax.swing.JFrame {
         pnRespuestas = new javax.swing.JPanel();
         btnNextQuestion = new javax.swing.JButton();
         btnPreviousQuestion = new javax.swing.JButton();
+        txtPreguntaImg = new javax.swing.JLabel();
         pnfinishCuestionario = new javax.swing.JPanel();
         jLabel21 = new javax.swing.JLabel();
         pnCreateCuestionary = new javax.swing.JPanel();
@@ -613,7 +614,7 @@ public class Principal extends javax.swing.JFrame {
         );
         pnRespuestasLayout.setVerticalGroup(
             pnRespuestasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 89, Short.MAX_VALUE)
+            .addGap(0, 136, Short.MAX_VALUE)
         );
 
         btnNextQuestion.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -626,24 +627,27 @@ public class Principal extends javax.swing.JFrame {
         pnPregunta.setLayout(pnPreguntaLayout);
         pnPreguntaLayout.setHorizontalGroup(
             pnPreguntaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnPreguntaLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnPreguntaLayout.createSequentialGroup()
                 .addGap(122, 122, 122)
                 .addGroup(pnPreguntaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtPreguntaImg, javax.swing.GroupLayout.DEFAULT_SIZE, 779, Short.MAX_VALUE)
                     .addGroup(pnPreguntaLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnPreviousQuestion)
                         .addGap(638, 638, 638)
                         .addComponent(btnNextQuestion))
-                    .addGroup(pnPreguntaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(pnRespuestas, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txtPreguntas, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 772, Short.MAX_VALUE)))
+                    .addComponent(pnRespuestas, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtPreguntas, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 779, Short.MAX_VALUE))
                 .addGap(155, 155, 155))
         );
         pnPreguntaLayout.setVerticalGroup(
             pnPreguntaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnPreguntaLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(txtPreguntas, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
-                .addGap(9, 9, 9)
+                .addComponent(txtPreguntas, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtPreguntaImg, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(pnRespuestas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(11, 11, 11)
                 .addGroup(pnPreguntaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -674,7 +678,7 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap(123, Short.MAX_VALUE))
         );
 
-        jLayeredPane1.setLayer(pnPregunta, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(pnPregunta, javax.swing.JLayeredPane.PALETTE_LAYER);
         jLayeredPane1.setLayer(pnfinishCuestionario, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
@@ -687,7 +691,9 @@ public class Principal extends javax.swing.JFrame {
         );
         jLayeredPane1Layout.setVerticalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnPregunta, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                .addComponent(pnPregunta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(pnfinishCuestionario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -1135,9 +1141,9 @@ public class Principal extends javax.swing.JFrame {
         );
 
         container.setLayer(pnCreateAdmin, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        container.setLayer(pnCuestionario, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        container.setLayer(pnCuestionario, javax.swing.JLayeredPane.PALETTE_LAYER);
         container.setLayer(pnCreateCuestionary, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        container.setLayer(pnEditCuestionary, javax.swing.JLayeredPane.PALETTE_LAYER);
+        container.setLayer(pnEditCuestionary, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout containerLayout = new javax.swing.GroupLayout(container);
         container.setLayout(containerLayout);
@@ -1155,7 +1161,7 @@ public class Principal extends javax.swing.JFrame {
         );
         containerLayout.setVerticalGroup(
             containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 660, Short.MAX_VALUE)
+            .addGap(0, 739, Short.MAX_VALUE)
             .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(pnCreateAdmin, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1174,7 +1180,7 @@ public class Principal extends javax.swing.JFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(container, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 664, Short.MAX_VALUE)
+            .addComponent(container, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 743, Short.MAX_VALUE)
         );
 
         mnuAdministrar.setText("Administracion");
@@ -1409,6 +1415,7 @@ public class Principal extends javax.swing.JFrame {
     public javax.swing.JLabel txtObjetivoCuestionario;
     public javax.swing.JTextField txtObjetivoEdit;
     public javax.swing.JPasswordField txtPass;
+    public javax.swing.JLabel txtPreguntaImg;
     public javax.swing.JTextField txtPreguntas;
     public javax.swing.JTextField txtRespuestaQ;
     // End of variables declaration//GEN-END:variables

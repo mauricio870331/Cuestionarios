@@ -101,12 +101,12 @@ public final class LoginController implements ActionListener, KeyListener {
                     lg.txtPass.setText("");
                     System.out.println("rol " + rol);
                     ocultarCapas(rol);
-                    if (rol == 1) {
+                    if (rol == 1) {                        
                         CuestionarioController cc = new CuestionarioController(pr, idGrupo, idUserLog, rol);
                         ac = new AsignaturaController(pr, idUserLog);
                         ac.cargarCboAsignaturas();
                     }
-                    if (rol == 2) {
+                    if (rol == 2) {               
                         CuestionarioController cc = new CuestionarioController(pr, idGrupo, idUserLog, rol);
                         pr.txtAlumnoName.setText(Nombre + " " + Apellido);
                     }

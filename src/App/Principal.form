@@ -248,7 +248,7 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="container" alignment="1" pref="664" max="32767" attributes="0"/>
+              <Component id="container" alignment="1" pref="743" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -288,7 +288,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="660" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="739" max="32767" attributes="0"/>
                   <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
                       <Component id="pnCreateAdmin" alignment="1" max="32767" attributes="0"/>
                   </Group>
@@ -817,6 +817,7 @@
                 </Property>
               </Properties>
               <AuxValues>
+                <AuxValue name="JLayeredPane.layer" type="java.lang.Integer" value="100"/>
                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
               </AuxValues>
 
@@ -1165,7 +1166,10 @@
                         </DimensionLayout>
                         <DimensionLayout dim="1">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="pnPregunta" alignment="1" max="32767" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="pnPregunta" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              </Group>
                               <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
                                   <Component id="pnfinishCuestionario" alignment="0" max="32767" attributes="0"/>
                               </Group>
@@ -1182,24 +1186,25 @@
                             </Property>
                           </Properties>
                           <AuxValues>
+                            <AuxValue name="JLayeredPane.layer" type="java.lang.Integer" value="100"/>
                             <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
                           </AuxValues>
 
                           <Layout>
                             <DimensionLayout dim="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" attributes="0">
+                                  <Group type="102" alignment="1" attributes="0">
                                       <EmptySpace min="-2" pref="122" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="1" attributes="0">
+                                          <Component id="txtPreguntaImg" pref="779" max="32767" attributes="0"/>
                                           <Group type="102" attributes="0">
+                                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                               <Component id="btnPreviousQuestion" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace min="-2" pref="638" max="-2" attributes="0"/>
                                               <Component id="btnNextQuestion" min="-2" max="-2" attributes="0"/>
                                           </Group>
-                                          <Group type="103" groupAlignment="1" attributes="0">
-                                              <Component id="pnRespuestas" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="txtPreguntas" alignment="0" pref="772" max="32767" attributes="0"/>
-                                          </Group>
+                                          <Component id="pnRespuestas" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="txtPreguntas" alignment="0" pref="779" max="32767" attributes="0"/>
                                       </Group>
                                       <EmptySpace min="-2" pref="155" max="-2" attributes="0"/>
                                   </Group>
@@ -1209,10 +1214,12 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="txtPreguntas" pref="113" max="32767" attributes="0"/>
-                                      <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
+                                      <Component id="txtPreguntas" min="-2" pref="66" max="-2" attributes="0"/>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="txtPreguntaImg" min="-2" pref="66" max="-2" attributes="0"/>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                       <Component id="pnRespuestas" max="32767" attributes="0"/>
-                                      <EmptySpace min="11" pref="11" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="3" attributes="0">
                                           <Component id="btnNextQuestion" alignment="3" min="-2" max="-2" attributes="0"/>
                                           <Component id="btnPreviousQuestion" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -1258,7 +1265,7 @@
                                 </DimensionLayout>
                                 <DimensionLayout dim="1">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <EmptySpace min="0" pref="89" max="32767" attributes="0"/>
+                                      <EmptySpace min="0" pref="136" max="32767" attributes="0"/>
                                   </Group>
                                 </DimensionLayout>
                               </Layout>
@@ -1281,6 +1288,11 @@
                                 </Property>
                                 <Property name="text" type="java.lang.String" value="&lt;"/>
                               </Properties>
+                              <AuxValues>
+                                <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+                              </AuxValues>
+                            </Component>
+                            <Component class="javax.swing.JLabel" name="txtPreguntaImg">
                               <AuxValues>
                                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
                               </AuxValues>
@@ -1862,7 +1874,6 @@
                 </Property>
               </Properties>
               <AuxValues>
-                <AuxValue name="JLayeredPane.layer" type="java.lang.Integer" value="100"/>
                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
               </AuxValues>
 
