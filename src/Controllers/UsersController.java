@@ -12,10 +12,13 @@ import App.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -231,54 +234,70 @@ public final class UsersController implements ActionListener, KeyListener {
         }
 
         if (e.getSource() == pr.btnAdelante) {
-            pagina = pagina + 1;
-            cargarAdmin(pr.tbAdmin, dato, rol);
-            if (pagina >= admDao.totalPaginas(dato)) {
-                pr.btnAdelante.setEnabled(false);
-                pr.btnUltimo.setEnabled(false);
-            }
-            if (pagina > 1) {
-                pr.btnAtras.setEnabled(true);
-                pr.btnPrimero.setEnabled(true);
-            }
+            try {
+                pagina = pagina + 1;
+                cargarAdmin(pr.tbAdmin, dato, rol);
+                if (pagina >= admDao.totalPaginas(dato)) {
+                    pr.btnAdelante.setEnabled(false);
+                    pr.btnUltimo.setEnabled(false);
+                }
+                if (pagina > 1) {
+                    pr.btnAtras.setEnabled(true);
+                    pr.btnPrimero.setEnabled(true);
+                }
 //            System.out.println("pagina = " + pagina + "------- total paginas = " + admDao.cantidadRegistros());
+            } catch (SQLException ex) {
+                Logger.getLogger(UsersController.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
         }
         if (e.getSource() == pr.btnAtras) {
-            pagina = pagina - 1;
-            cargarAdmin(pr.tbAdmin, dato, rol);
-            if (pagina <= 1) {
-                pr.btnAtras.setEnabled(false);
-                pr.btnPrimero.setEnabled(false);
-            }
-            if (pagina < admDao.totalPaginas(dato)) {
-                pr.btnAdelante.setEnabled(true);
-                pr.btnUltimo.setEnabled(true);
-            }
+            try {
+                pagina = pagina - 1;
+                cargarAdmin(pr.tbAdmin, dato, rol);
+                if (pagina <= 1) {
+                    pr.btnAtras.setEnabled(false);
+                    pr.btnPrimero.setEnabled(false);
+                }
+                if (pagina < admDao.totalPaginas(dato)) {
+                    pr.btnAdelante.setEnabled(true);
+                    pr.btnUltimo.setEnabled(true);
+                }
 //            System.out.println("pagina = " + pagina + "------- total paginas = " + admDao.cantidadRegistros());
+            } catch (SQLException ex) {
+                Logger.getLogger(UsersController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         if (e.getSource() == pr.btnUltimo) {
-            pagina = admDao.totalPaginas(dato);
-            cargarAdmin(pr.tbAdmin, dato, rol);
-            if (pagina >= admDao.totalPaginas(dato)) {
-                pr.btnAdelante.setEnabled(false);
-                pr.btnUltimo.setEnabled(false);
-            }
-            if (pagina > 1) {
-                pr.btnAtras.setEnabled(true);
-                pr.btnPrimero.setEnabled(true);
+            try {
+                pagina = admDao.totalPaginas(dato);
+                cargarAdmin(pr.tbAdmin, dato, rol);
+                if (pagina >= admDao.totalPaginas(dato)) {
+                    pr.btnAdelante.setEnabled(false);
+                    pr.btnUltimo.setEnabled(false);
+                }
+                if (pagina > 1) {
+                    pr.btnAtras.setEnabled(true);
+                    pr.btnPrimero.setEnabled(true);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(UsersController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         if (e.getSource() == pr.btnPrimero) {
-            pagina = 1;
-            cargarAdmin(pr.tbAdmin, dato, rol);
-            if (pagina <= 1) {
-                pr.btnAtras.setEnabled(false);
-                pr.btnPrimero.setEnabled(false);
-            }
-            if (pagina < admDao.totalPaginas(dato)) {
-                pr.btnAdelante.setEnabled(true);
-                pr.btnUltimo.setEnabled(true);
+            try {
+                pagina = 1;
+                cargarAdmin(pr.tbAdmin, dato, rol);
+                if (pagina <= 1) {
+                    pr.btnAtras.setEnabled(false);
+                    pr.btnPrimero.setEnabled(false);
+                }
+                if (pagina < admDao.totalPaginas(dato)) {
+                    pr.btnAdelante.setEnabled(true);
+                    pr.btnUltimo.setEnabled(true);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(UsersController.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }
@@ -359,22 +378,26 @@ public final class UsersController implements ActionListener, KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
         if (e.getSource() == pr.txtBuscarAdmin) {
-            dato = pr.txtBuscarAdmin.getText();
-            if (dato.equals("")) {
-                pagina = 1;
-            }
-            cargarAdmin(pr.tbAdmin, dato, rol);
-
-            if (admDao.totalPaginas(dato) <= 1) {
-                pr.btnAdelante.setEnabled(false);
-                pr.btnUltimo.setEnabled(false);
-                pr.btnAtras.setEnabled(false);
-                pr.btnPrimero.setEnabled(false);
-            }
-            if (admDao.totalPaginas(dato) > 1) {
-                pr.btnAdelante.setEnabled(true);
-                pr.btnUltimo.setEnabled(true);
-                pagina = 1;
+            try {
+                dato = pr.txtBuscarAdmin.getText();
+                if (dato.equals("")) {
+                    pagina = 1;
+                }
+                cargarAdmin(pr.tbAdmin, dato, rol);
+                
+                if (admDao.totalPaginas(dato) <= 1) {
+                    pr.btnAdelante.setEnabled(false);
+                    pr.btnUltimo.setEnabled(false);
+                    pr.btnAtras.setEnabled(false);
+                    pr.btnPrimero.setEnabled(false);
+                }
+                if (admDao.totalPaginas(dato) > 1) {
+                    pr.btnAdelante.setEnabled(true);
+                    pr.btnUltimo.setEnabled(true);
+                    pagina = 1;
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(UsersController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

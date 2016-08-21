@@ -20,13 +20,14 @@ public class ResultadosDAO {
     //Resultados resultado;
 
     public ResultadosDAO() {
-        cn = Conexion.getConexion();
+        cn = Conexion.getConexion("resultadosdao");
         // resultado = new Resultados(0, 0, 0, 0, 0, "", false, "");
     }
 
-    public boolean create(Resultados resultado, String opc) {
+    public boolean create(Resultados resultado, String opc) throws SQLException {
         boolean responseCreate = false;
         try {
+
             if (opc.equals("C")) {
                 sql = "INSERT INTO test_c_resultados (id_cuestionario, id_grupo, id_user, nota,  tiempo, aprobo, fecha_presentacion) "
                         + "VALUES (?, ?, ?, ?, ?, ?, ?)";

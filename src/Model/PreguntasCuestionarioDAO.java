@@ -27,12 +27,13 @@ public class PreguntasCuestionarioDAO {
     ResultSet rs;
 
     public PreguntasCuestionarioDAO() {
-        cn = Conexion.getConexion();
+        cn = Conexion.getConexion("Preguntasdao getPreguntasCuestionario");
     }
 
-    public ArrayList<PreguntasCuestionario> getPreguntasCuestionario(int idCuestionario) {
+    public ArrayList<PreguntasCuestionario> getPreguntasCuestionario(int idCuestionario) throws SQLException {
         ArrayList ListPreguntas = new ArrayList();
         try {
+
             sql = "SELECT * FROM test_preguntas_cuestionario WHERE id_cuestionario = " + idCuestionario + "";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
@@ -46,7 +47,7 @@ public class PreguntasCuestionarioDAO {
                 ListPreguntas.add(prc);
             }
         } catch (Exception e) {
-            System.out.println("error" + e);
+            System.out.println("error z" + e);
         }
         return ListPreguntas;
     }
@@ -61,15 +62,16 @@ public class PreguntasCuestionarioDAO {
                 id = rs.getInt("maxid");
             }
         } catch (Exception e) {
-            System.out.println("error" + e);
+            System.out.println("error x" + e);
         }
         return id;
 
     }
 
-    public int getIdPreguntaByName(String pregunta) {
+    public int getIdPreguntaByName(String pregunta) throws SQLException {
         int id = 0;
         try {
+           
             sql = "select id from test_preguntas_cuestionario where pregunta = '" + pregunta + "'";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
@@ -77,15 +79,16 @@ public class PreguntasCuestionarioDAO {
                 id = rs.getInt("id");
             }
         } catch (Exception e) {
-            System.out.println("error" + e);
+            System.out.println("error bbb" + e);
         }
         return id;
 
     }
 
-    public InputStream getImgPreguntaByName(String pregunta) {
+    public InputStream getImgPreguntaByName(String pregunta) throws SQLException {
         InputStream imagen = null;
         try {
+           
             sql = "select imagen from test_preguntas_cuestionario where pregunta = '" + pregunta + "'";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
@@ -93,8 +96,8 @@ public class PreguntasCuestionarioDAO {
                 imagen = rs.getBinaryStream("imagen");
             }
         } catch (Exception e) {
-            System.out.println("error" + e);
-        }
+            System.out.println("error up" + e);
+        } 
         return imagen;
 
     }
@@ -102,10 +105,10 @@ public class PreguntasCuestionarioDAO {
     public String updateNamePregunta(String Newname, String Oldname) {
         String rsponse = "bad";
         try {
-            sql = "select pregunta from test_preguntas_cuestionario where pregunta = '" + Oldname + "'";
+            sql = "select pregunta from test_preguntas_cuestionario where pregunta = '" + Newname + "'";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
-            if (rs.getRow() > 0) {
+            if (rs.next()) {
                 rsponse = "existe";
             } else {
                 sql = "UPDATE  test_preguntas_cuestionario SET pregunta = '" + Newname + "' where pregunta = '" + Oldname + "'";
@@ -117,7 +120,7 @@ public class PreguntasCuestionarioDAO {
             }
 
         } catch (Exception e) {
-            System.out.println("error" + e);
+            System.out.println("error poi" + e);
         }
         return rsponse;
 
@@ -130,7 +133,7 @@ public class PreguntasCuestionarioDAO {
         try {
             img = new File(imagenupdate);
             fis = new FileInputStream(img);
-            sql = "UPDATE  test_preguntas_cuestionario SET imagen = ? WHERE pregunta = ?";            
+            sql = "UPDATE  test_preguntas_cuestionario SET imagen = ? WHERE pregunta = ?";
             pstm = cn.prepareStatement(sql);
             pstm.setBinaryStream(1, fis, (int) img.length());
             pstm.setString(2, pregunta);
@@ -138,7 +141,7 @@ public class PreguntasCuestionarioDAO {
                 imagen = imagenupdate;
             }
         } catch (FileNotFoundException | SQLException e) {
-            System.out.println("error" + e);
+            System.out.println("error pp--" + e);
         }
         return imagen;
     }

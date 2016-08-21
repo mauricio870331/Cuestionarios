@@ -17,13 +17,13 @@ public class GrupoDAO {
     Grupo grupo;
 
     public GrupoDAO() {
-        cn = Conexion.getConexion();
-        grupo = new Grupo();
+        cn = Conexion.getConexion("grupodao getListGrupos");
     }
 
-    public ArrayList<Grupo> getListGrupos() {
+    public ArrayList<Grupo> getListGrupos() throws SQLException {
         ArrayList ListaGrupo = new ArrayList();
         try {
+
             sql = "SELECT * FROM test_grupo ORDER BY id_grupo";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();

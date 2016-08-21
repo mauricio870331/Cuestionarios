@@ -24,12 +24,13 @@ public class RespuestasAlumnoDAO {
     ResultSet rs;
 
     public RespuestasAlumnoDAO() {
-        cn = Conexion.getConexion();
+        cn = Conexion.getConexion("respuestasalumnodao objRespuestasAlumno");
     }
 
-    public boolean Create(ArrayList<RespuestasAlumno> objRespuestasAlumno, int idca, String opc, boolean auto, String horafin) {
+    public boolean Create(ArrayList<RespuestasAlumno> objRespuestasAlumno, int idca, String opc, boolean auto, String horafin) throws SQLException {
         boolean responseCreate = false;
         try {
+            
             if (opc.equals("C")) {
                 Iterator<RespuestasAlumno> nombreIterator = objRespuestasAlumno.iterator();
                 while (nombreIterator.hasNext()) {

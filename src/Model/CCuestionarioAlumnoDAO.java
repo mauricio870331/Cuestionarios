@@ -23,13 +23,12 @@ public class CCuestionarioAlumnoDAO {
     ResultSet rs;
 
     public CCuestionarioAlumnoDAO(){
-        cn = Conexion.getConexion();
+       cn = Conexion.getConexion("CuestionarioAlumnodao createCuestionarioAlumno");
     }
 
-    public int createCuestionarioAlumno(CCuestionarioAlumno c, String opc) {
+    public int createCuestionarioAlumno(CCuestionarioAlumno c, String opc) throws SQLException {
         int idcAlumno = 0;
-        try {
-            
+        try {             
                 if (opc.equals("C")) {
                     sql = "SELECT id_c_alumno FROM test_c_cuestionario_alumno where id_user = " + c.getIdAlumno() + " AND id_cuestionario = " + c.getIdCuestionario() + "";
                     pstm = cn.prepareStatement(sql);
@@ -57,7 +56,7 @@ public class CCuestionarioAlumnoDAO {
             
         } catch (Exception e) {
             System.err.println("CCuestionarioAlumnoDao AddQuest : " + e);
-        } 
+        }
         return idcAlumno;
     }
 

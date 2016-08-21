@@ -3,12 +3,12 @@ package Controllers;
 import App.Login;
 import App.Principal;
 import Model.UsersDAO;
-import Model.GrupoDAO;
 import Model.Users;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.JOptionPane;
@@ -19,7 +19,6 @@ public final class LoginController implements ActionListener, KeyListener {
     Login lg;
     Principal pr;
     UsersDAO admDao;
-    GrupoDAO gymdao = new GrupoDAO();
     UsersController administradorController;
     AsignaturaController ac;
     ArrayList<Users> userArray = new ArrayList<>();
@@ -82,43 +81,47 @@ public final class LoginController implements ActionListener, KeyListener {
             lg.txtUser.transferFocus();
         }
         if (e.getSource() == lg.btnIngresar) {
-            String user = lg.txtUser.getText();
-            String pass = new String(lg.txtPass.getPassword());
-            userArray = admDao.getExistAdmin(user, pass);
-            Iterator<Users> u = userArray.iterator();
-            while (u.hasNext()) {
-                Users us = u.next();
-                rol = us.getIdRol();
-                idUserLog = us.getIdUser();
-                idGrupo = us.getIdGrupo();
-                Nombre = us.getNombres();
-                Apellido = us.getApellidos();
-                existe = true;
-            }
-            if (existe) {
-                lg.dispose();
-                lg.txtUser.setText("");
-                lg.txtPass.setText("");
-                System.out.println("rol " + rol);
-                ocultarCapas(rol);
-                if (rol == 3) {
-                    administradorController = new UsersController(pr, admDao, rol, idUserLog, idGrupo);
-                } else {
-                    CuestionarioController cc = new CuestionarioController(pr, idGrupo, idUserLog, rol);
+            try {
+                String user = lg.txtUser.getText();
+                String pass = new String(lg.txtPass.getPassword());
+                userArray = admDao.getExistAdmin(user, pass);
+                Iterator<Users> u = userArray.iterator();
+                while (u.hasNext()) {
+                    Users us = u.next();
+                    rol = us.getIdRol();
+                    idUserLog = us.getIdUser();
+                    idGrupo = us.getIdGrupo();
+                    Nombre = us.getNombres();
+                    Apellido = us.getApellidos();
+                    existe = true;
                 }
-                if (rol == 1) {
-                    ac = new AsignaturaController(pr, idUserLog);
-                    ac.cargarCboAsignaturas();
-                }
-                enabledBtnPaginator();
-                if (rol == 2) {
-                    pr.txtAlumnoName.setText(Nombre + " " + Apellido);
-                }
-                pr.setLocationRelativeTo(null);
-                pr.setVisible(true);
+                if (existe) {
+                    lg.dispose();
+                    lg.txtUser.setText("");
+                    lg.txtPass.setText("");
+                    System.out.println("rol " + rol);
+                    ocultarCapas(rol);
+                    if (rol == 1) {
+                        CuestionarioController cc = new CuestionarioController(pr, idGrupo, idUserLog, rol);
+                        ac = new AsignaturaController(pr, idUserLog);
+                        ac.cargarCboAsignaturas();
+                    }
+                    if (rol == 2) {
+                        CuestionarioController cc = new CuestionarioController(pr, idGrupo, idUserLog, rol);
+                        pr.txtAlumnoName.setText(Nombre + " " + Apellido);
+                    }
+                    if (rol == 3) {
+                        administradorController = new UsersController(pr, admDao, rol, idUserLog, idGrupo);
+                        enabledBtnPaginator();
+                    }
+                    pr.setLocationRelativeTo(null);
+                    pr.setVisible(true);
 
-            } else {
-                JOptionPane.showMessageDialog(null, "Usuario incorrecto");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Usuario incorrecto");
+                }
+            } catch (SQLException ex) {
+                System.out.println("error logincontroller " + ex);
             }
         }
         if (e.getSource() == lg.btnSalir) {
@@ -139,7 +142,7 @@ public final class LoginController implements ActionListener, KeyListener {
         }
     }
 
-    private void enabledBtnPaginator() {
+    private void enabledBtnPaginator() throws SQLException {
         if (pagina >= admDao.totalPaginas("")) {
             pr.btnAdelante.setEnabled(false);
             pr.btnUltimo.setEnabled(false);

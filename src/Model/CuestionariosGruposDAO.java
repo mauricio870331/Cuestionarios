@@ -25,10 +25,10 @@ public class CuestionariosGruposDAO {
     ResultSet rs;
 
     public CuestionariosGruposDAO() {
-        cn = Conexion.getConexion();
+        cn = Conexion.getConexion("CuestionariosGruposdao addGroupToCuestionario");
     }
 
-    public String addGroupToCuestionario(ArrayList<CuestionariosGrupos> list, String opc, String fecha) {
+    public String addGroupToCuestionario(ArrayList<CuestionariosGrupos> list, String opc, String fecha) throws SQLException {
         String rpta = null;
         int idc = 0;
         try {
@@ -67,7 +67,7 @@ public class CuestionariosGruposDAO {
             }
         } catch (SQLException e) {
             System.err.println("CuestionarioGrupoDao AddQuest : " + e);
-        }
+        } 
         return rpta;
     }
 }

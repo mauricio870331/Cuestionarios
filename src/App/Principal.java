@@ -146,9 +146,8 @@ public class Principal extends javax.swing.JFrame {
         jLabel23 = new javax.swing.JLabel();
         jLabel25 = new javax.swing.JLabel();
         cboAsignatureEdit = new javax.swing.JComboBox();
-        btnRegistrarCuestionary1 = new javax.swing.JButton();
+        btnChangeObjetive = new javax.swing.JButton();
         btnCancelarCuestionary1 = new javax.swing.JButton();
-        btnAddAsignaturaEdit = new javax.swing.JButton();
         jLabel26 = new javax.swing.JLabel();
         txtObjetivoEdit = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
@@ -980,17 +979,23 @@ public class Principal extends javax.swing.JFrame {
 
         jLabel25.setText("Asignatura");
 
-        btnRegistrarCuestionary1.setText("Guardar");
+        cboAsignatureEdit.setEnabled(false);
+
+        btnChangeObjetive.setText("Cambiar Objetivo");
 
         btnCancelarCuestionary1.setText("Cancelar");
 
-        btnAddAsignaturaEdit.setText("+");
-
         jLabel26.setText("Objetivo:");
+
+        txtObjetivoEdit.setEnabled(false);
 
         jLabel15.setText("Duración en minutos:");
 
+        txtDuracionEdit.setEnabled(false);
+
         jLabel27.setText("Cantidad De Preguntas:");
+
+        txtCantPreguntasEdit.setEnabled(false);
 
         btnChangeName.setText("Cambiar Nombre");
 
@@ -1009,21 +1014,20 @@ public class Principal extends javax.swing.JFrame {
                     .addGroup(jPanel11Layout.createSequentialGroup()
                         .addComponent(cboAsignatureEdit, 0, 304, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
-                        .addComponent(btnAddAsignaturaEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel15)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(txtDuracionEdit, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel27)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtCantPreguntasEdit, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtCantPreguntasEdit, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
+                        .addGap(54, 54, 54))
                     .addComponent(txtObjetivoEdit)
                     .addComponent(cboCuestionaryEdit, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnChangeName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnRegistrarCuestionary1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnChangeObjetive, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnCancelarCuestionary1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -1040,22 +1044,19 @@ public class Principal extends javax.swing.JFrame {
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel11Layout.createSequentialGroup()
                         .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnRegistrarCuestionary1)
+                            .addComponent(btnChangeObjetive)
                             .addComponent(txtObjetivoEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel26))
                         .addGap(5, 5, 5)
-                        .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel27)
-                                .addComponent(txtCantPreguntasEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(btnCancelarCuestionary1)
-                                .addComponent(jLabel15)
-                                .addComponent(txtDuracionEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnCancelarCuestionary1)
+                            .addComponent(jLabel15)
+                            .addComponent(txtDuracionEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel27)
+                            .addComponent(txtCantPreguntasEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                         .addComponent(jLabel25)
-                        .addComponent(cboAsignatureEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnAddAsignaturaEdit)))
+                        .addComponent(cboAsignatureEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(14, Short.MAX_VALUE))
         );
 
@@ -1277,7 +1278,6 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JPopupMenu PopupRutinasUsers;
     public javax.swing.JMenuItem asignCuestionaryToGroup;
     public javax.swing.JButton btnAddAsignatura;
-    public javax.swing.JButton btnAddAsignaturaEdit;
     public javax.swing.JButton btnAddImagen;
     public javax.swing.JButton btnAddPregunta;
     public javax.swing.JButton btnAddRespuesta;
@@ -1287,6 +1287,7 @@ public class Principal extends javax.swing.JFrame {
     public javax.swing.JButton btnCancelarCuestionary;
     public javax.swing.JButton btnCancelarCuestionary1;
     public javax.swing.JButton btnChangeName;
+    public javax.swing.JButton btnChangeObjetive;
     public javax.swing.JButton btnChangePregunta;
     public javax.swing.JButton btnIniciarPrueba;
     public javax.swing.JMenuItem btnLogout;
@@ -1295,7 +1296,6 @@ public class Principal extends javax.swing.JFrame {
     public javax.swing.JButton btnPrimero;
     public javax.swing.JButton btnRegistrar;
     public javax.swing.JButton btnRegistrarCuestionary;
-    public javax.swing.JButton btnRegistrarCuestionary1;
     public javax.swing.JButton btnUltimo;
     public javax.swing.JComboBox<String> cboAsignatura;
     public javax.swing.JComboBox cboAsignature;

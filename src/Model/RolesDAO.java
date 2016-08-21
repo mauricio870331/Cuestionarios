@@ -23,7 +23,7 @@ public class RolesDAO {
     ResultSet rs;
 
     public RolesDAO() {
-        cn = Conexion.getConexion();
+        cn = Conexion.getConexion("rolesdao");
     }
 
     public ArrayList<Roles> getListRol() {

@@ -23,13 +23,12 @@ public class AsignaturasDAO {
     ResultSet rs;
 
     public AsignaturasDAO() {
-        cn = Conexion.getConexion();
+       cn = Conexion.getConexion("Asignaturasdao");
     }
 
-    public String create(Asignaturas a, String opc, int Profesor) {
+    public String create(Asignaturas a, String opc, int Profesor) throws SQLException {
         String responseCreate = null;
-        try {
-
+        try {          
             if (opc.equals("C")) {
                 sql = "INSERT INTO test_asignaturas (nombre_asig) VALUES (?)";
             }
@@ -61,13 +60,12 @@ public class AsignaturasDAO {
         } catch (Exception e) {
             System.out.println("error cerdo: " + e + " " + e.getClass());
         }
-
         return responseCreate;
     }
 
-    public ArrayList<Asignaturas> getListCboAsignaturas(int profesor) {
+    public ArrayList<Asignaturas> getListCboAsignaturas(int profesor) throws SQLException {
         ArrayList ListAsignatura = new ArrayList();
-        try {
+        try {            
             sql = "SELECT * FROM test_asignaturas a "
                     + "INNER JOIN test_asignaturas_profesor ap ON a.id_asignatura = ap.id_asignatura "
                     + "WHERE ap.id_user = " + profesor + "";
@@ -86,10 +84,9 @@ public class AsignaturasDAO {
         return ListAsignatura;
     }
 
-    public ArrayList<Asignaturas> getListAsignaturas(String dato) {
+    public ArrayList<Asignaturas> getListAsignaturas(String dato) throws SQLException {
         ArrayList ListAsignatura = new ArrayList();
         try {
-
             if (dato.equals("")) {
                 sql = "SELECT * FROM test_asignaturas";
             } else {
@@ -113,7 +110,6 @@ public class AsignaturasDAO {
     public ArrayList<Asignaturas> getAsignaturasByCuestionario(int grupo) {
         ArrayList ListAsignatura = new ArrayList();
         try {
-
             sql = "SELECT DISTINCT a.id_asignatura as id_asignatura, a.nombre_asig as nombre_asig "
                     + "FROM test_asignaturas a INNER JOIN test_c_cuestionario c ON a.id_asignatura = c.id_asignatura "
                     + "INNER JOIN test_cuestionarios_grupos cg ON cg.id_cuestionario = c.id_cuestionario "
@@ -126,7 +122,6 @@ public class AsignaturasDAO {
                 as.setNombreAsignatura(rs.getString("nombre_asig"));
                 ListAsignatura.add(as);
             }
-
         } catch (Exception e) {
             System.out.println("error " + e);
         }
@@ -136,7 +131,6 @@ public class AsignaturasDAO {
     public int getAsignaturaByName(String Asignatura) {
         int id_asignatura = 0;
         try {
-
             sql = "SELECT id_asignatura FROM test_asignaturas where nombre_asig = '" + Asignatura + "'";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
@@ -153,7 +147,6 @@ public class AsignaturasDAO {
     public boolean existAsignatura(String asignatura) {
         boolean existe = false;
         try {
-
             sql = "SELECT * FROM test_asignaturas WHERE nombre_asig = '" + asignatura + "' OR nombre_asig LIKE '%" + asignatura + "%'";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
@@ -170,7 +163,6 @@ public class AsignaturasDAO {
     public String deleteAsignatura(int idAsignatura) {
         String responseDelete = null;
         try {
-
             String sqlL = "SELECT * FROM test_c_cuestionario WHERE id_asignatura = " + idAsignatura + "";
             pstm = cn.prepareStatement(sqlL);
             rs = pstm.executeQuery();
@@ -223,16 +215,14 @@ public class AsignaturasDAO {
     public String getAsignaturaById(int idasignatura) {
         String asignaruta = "";
         try {
-
             sql = "SELECT nombre_asig FROM test_asignaturas WHERE id_asignatura = " + idasignatura + "";
-
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             if (rs.next()) {
                 asignaruta = rs.getString("nombre_asig");
             }
         } catch (Exception e) {
-            System.out.println("error" + e);
+            System.out.println("error peste" + e);
         }
         return asignaruta;
     }

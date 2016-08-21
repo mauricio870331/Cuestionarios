@@ -13,6 +13,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -44,7 +45,6 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
         this.pr = pr;
         this.profesor = profesor;
         this.pr.btnAddAsignatura.addActionListener(this);
-        this.pr.btnAddAsignaturaEdit.addActionListener(this);
         aa.btnCreateAsignatura.addActionListener(this);
         aa.mnuUpdateAsignatura.addActionListener(this);
         aa.mnuDeleteAsignatura.addActionListener(this);
@@ -53,7 +53,7 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
         aa.tbAsignatura.addMouseListener(this);
     }
 
-    public void cargarAsignaturas(JTable tbArea, String dato) {
+    public void cargarAsignaturas(JTable tbArea, String dato) throws SQLException {
         String Titulos[] = {"Id", "Nombre"};
         modelo = new DefaultTableModel(null, Titulos) {
             @Override
@@ -78,7 +78,7 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
         tbArea.setModel(modelo);
     }
 
-    public void cargarCboAsignaturas() {
+    public void cargarCboAsignaturas() throws SQLException {
         pr.cboAsignature.removeAllItems();
         pr.cboAsignature.addItem("-- Seleccione --");
         pr.cboAsignatureEdit.removeAllItems();
@@ -92,11 +92,15 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
     }
 
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == pr.btnAddAsignatura || e.getSource() == pr.btnAddAsignaturaEdit) {
-            cargarAsignaturas(aa.tbAsignatura, dato);
-            aa.setTitle("Asignaturas");
-            aa.setLocationRelativeTo(null);
-            aa.setVisible(true);
+        if (e.getSource() == pr.btnAddAsignatura) {
+            try {
+                cargarAsignaturas(aa.tbAsignatura, dato);
+                aa.setTitle("Asignaturas");
+                aa.setLocationRelativeTo(null);
+                aa.setVisible(true);
+            } catch (SQLException ex) {
+                System.out.println("eror "+ex);
+            }
         }
 
         if (e.getSource() == aa.btnCancelaAsignatura) {
@@ -104,42 +108,50 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
         }
 
         if (e.getSource() == aa.btnCreateAsignatura) {
-            String asignatura = aa.txtNomAsignatura.getText();
-            if (asignatura.equals("")) {
-                JOptionPane.showMessageDialog(null, "Ingrese el nombre del Autor..!");
-                aa.txtNomAsignatura.requestFocus();
-                return;
-            }
-            if (asignaturadao.existAsignatura(asignatura)) {
-                JOptionPane.showMessageDialog(null, "La Asignatura: " + asignatura + " coincide con una existente\nNo es necesario crearla otra vez.\nSi lo desea puede actualizarla..!");
-                aa.txtNomAsignatura.setText("");
-                aa.txtNomAsignatura.requestFocus();
-                return;
-            }
-            Asignaturas a = new Asignaturas();
-            a.setNombreAsignatura(asignatura);
-            a.setAsignatura(idArea);
-            String rptaRegistro = asignaturadao.create(a, opc, profesor);
-            if (rptaRegistro != null) {
-                JOptionPane.showMessageDialog(null, rptaRegistro);
-                cargarCboAsignaturas();
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(AsignaturaController.class.getName()).log(Level.SEVERE, null, ex);
+            try {
+                String asignatura = aa.txtNomAsignatura.getText();
+                if (asignatura.equals("")) {
+                    JOptionPane.showMessageDialog(null, "Ingrese el nombre del Autor..!");
+                    aa.txtNomAsignatura.requestFocus();
+                    return;
                 }
-                if (opc.equals("C")) {
-                    setArea();
-                    aa.dispose();
+                if (asignaturadao.existAsignatura(asignatura)) {
+                    JOptionPane.showMessageDialog(null, "La Asignatura: " + asignatura + " coincide con una existente\nNo es necesario crearla otra vez.\nSi lo desea puede actualizarla..!");
+                    aa.txtNomAsignatura.setText("");
+                    aa.txtNomAsignatura.requestFocus();
+                    return;
+                }
+                Asignaturas a = new Asignaturas();
+                a.setNombreAsignatura(asignatura);
+                a.setAsignatura(idArea);
+                String rptaRegistro = asignaturadao.create(a, opc, profesor);
+                if (rptaRegistro != null) {
+                    JOptionPane.showMessageDialog(null, rptaRegistro);
+                    cargarCboAsignaturas();
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(AsignaturaController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    if (opc.equals("C")) {
+                        setArea();
+                        aa.dispose();
+                    } else {
+                        try {
+                            cargarAsignaturas(aa.tbAsignatura, dato);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(AsignaturaController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    opc = "C";
+                    limpiarForm();
+                } else if (opc.equals("C")) {
+                    JOptionPane.showMessageDialog(null, "No se pudo crear el Registro");
                 } else {
-                    cargarAsignaturas(aa.tbAsignatura, dato);
+                    JOptionPane.showMessageDialog(null, "No se pudo actualizar el Registro");
                 }
-                opc = "C";
-                limpiarForm();
-            } else if (opc.equals("C")) {
-                JOptionPane.showMessageDialog(null, "No se pudo crear el Registro");
-            } else {
-                JOptionPane.showMessageDialog(null, "No se pudo actualizar el Registro");
+            } catch (SQLException ex) {
+                Logger.getLogger(AsignaturaController.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }
@@ -168,9 +180,13 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
                 if (response == JOptionPane.YES_OPTION) {
                     String rptaDelete = asignaturadao.deleteAsignatura(Integer.parseInt(aa.tbAsignatura.getValueAt(fila, 0).toString()));
                     if (rptaDelete != null) {
-                        JOptionPane.showMessageDialog(null, rptaDelete);
-                        cargarAsignaturas(aa.tbAsignatura, "");
-                        cargarCboAsignaturas();
+                        try {
+                            JOptionPane.showMessageDialog(null, rptaDelete);
+                            cargarAsignaturas(aa.tbAsignatura, "");
+                            cargarCboAsignaturas();
+                        } catch (SQLException ex) {
+                            Logger.getLogger(AsignaturaController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                 }
             } else {
@@ -183,8 +199,12 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
     @Override
     public void keyReleased(KeyEvent e) {
         if (e.getSource() == aa.txtFindAsignatura) {
-            dato = aa.txtFindAsignatura.getText();
-            cargarAsignaturas(aa.tbAsignatura, dato);
+            try {
+                dato = aa.txtFindAsignatura.getText();
+                cargarAsignaturas(aa.tbAsignatura, dato);
+            } catch (SQLException ex) {
+                Logger.getLogger(AsignaturaController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
@@ -207,8 +227,7 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
         Iterator<Asignaturas> ar = asignaturadao.getLastInsert().iterator();
         if (ar.hasNext()) {
             Asignaturas elemento = ar.next();
-            pr.cboAsignature.setSelectedItem(elemento.getNombreAsignatura());
-            pr.cboAsignatureEdit.setSelectedItem(elemento.getNombreAsignatura());
+            pr.cboAsignature.setSelectedItem(elemento.getNombreAsignatura());            
         }
 
     }
