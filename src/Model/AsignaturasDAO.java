@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *
@@ -21,14 +22,14 @@ public class AsignaturasDAO {
     PreparedStatement pstm;
     String sql;
     ResultSet rs;
-
+    
     public AsignaturasDAO() {
-       cn = Conexion.getConexion("Asignaturasdao");
+        cn = Conexion.getConexion("Asignaturasdao");
     }
 
     public String create(Asignaturas a, String opc, int Profesor) throws SQLException {
         String responseCreate = null;
-        try {          
+        try {
             if (opc.equals("C")) {
                 sql = "INSERT INTO test_asignaturas (nombre_asig) VALUES (?)";
             }
@@ -65,7 +66,7 @@ public class AsignaturasDAO {
 
     public ArrayList<Asignaturas> getListCboAsignaturas(int profesor) throws SQLException {
         ArrayList ListAsignatura = new ArrayList();
-        try {            
+        try {
             sql = "SELECT * FROM test_asignaturas a "
                     + "INNER JOIN test_asignaturas_profesor ap ON a.id_asignatura = ap.id_asignatura "
                     + "WHERE ap.id_user = " + profesor + "";
@@ -225,6 +226,31 @@ public class AsignaturasDAO {
             System.out.println("error peste" + e);
         }
         return asignaruta;
+    }
+
+    public String addAsignaturaToTeacher(ArrayList<Asignaturas> asignaturas, int id_user) throws SQLException {
+        String responseCreate = "bad";
+        try {
+
+            sql = "INSERT INTO test_asignaturas_profesor (id_user, id_asignatura) VALUES (?, ?)";
+
+//            if (opc.equals("U")) {
+//                sql = "UPDATE test_asignaturas SET nombre_asig = ? WHERE id_asignatura = ?";
+//            }
+            Iterator<Asignaturas> ItrA = asignaturas.iterator();
+            while (ItrA.hasNext()) {
+                Asignaturas a = ItrA.next();
+                pstm = cn.prepareStatement(sql);
+                pstm.setInt(1, id_user);
+                pstm.setInt(2, a.getAsignatura());
+                if (pstm.executeUpdate() > 0) {
+                    responseCreate = "ok";
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("error cerdo: " + e + " " + e.getClass());
+        }
+        return responseCreate;
     }
 
 }

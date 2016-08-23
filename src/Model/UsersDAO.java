@@ -5,12 +5,14 @@
  */
 package Model;
 
+import com.mysql.jdbc.SQLError;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  *
@@ -28,12 +30,10 @@ public class UsersDAO {
     }
 
     public String Create(String documento, String tipo_doc, String nombres, String apellidos, int idGrupo, int idRol, String password, String foto, String opc, int idToUpdate) {
-
         String responseCreate = null;
         FileInputStream fis = null;
         File file = null;
         try {
-
             String ruta = "src/ImagenPerfilTmp/" + documento + ".png";
             String f = "";
             if (!foto.equals("")) {
@@ -41,7 +41,6 @@ public class UsersDAO {
                 fis = new FileInputStream(file);
                 f = ", foto = ?";
             }
-
             if (opc.equals("C")) {
                 sql = "INSERT INTO test_usuarios (tipo_doc, documento, nombres, apellidos, id_grupo, id_rol, password, foto)"
                         + " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -95,9 +94,10 @@ public class UsersDAO {
                     responseCreate = "Registro actualizado con exito";
                 }
             }
-
         } catch (SQLException | IOException e) {
-            System.out.println("error = " + e);
+            String error = e.getMessage();
+            responseCreate = error.substring(0, 15);
+            System.out.println(error);
         }
         return responseCreate;
     }
@@ -183,7 +183,7 @@ public class UsersDAO {
         } else {
             sql = "SELECT COUNT(*) AS con FROM test_usuarios WHERE documento LIKE '" + dato + "%' OR nombres LIKE '" + dato + "%' OR apellidos LIKE '" + dato + "%'";
         }
-        try {           
+        try {
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             if (rs.next()) {
@@ -192,7 +192,7 @@ public class UsersDAO {
 
         } catch (Exception e) {
             System.out.println("error 2 mao " + e);
-        } 
+        }
 
         paginas = (creg / regitrosXpagina);
         return paginas;
@@ -202,7 +202,6 @@ public class UsersDAO {
         ArrayList listaAdmin = new ArrayList();
         Users admin;
         try {
-
             sql = "SELECT * FROM test_usuarios where documento = ?";
             pstm = cn.prepareStatement(sql);
             pstm.setString(1, documento);
@@ -258,4 +257,32 @@ public class UsersDAO {
         return esiste;
     }
 
+    public boolean deleteUser(String documento) {
+        boolean R = false;
+        try {
+            sql = "DELETE FROM test_usuarios where documento = ?";
+            pstm = cn.prepareStatement(sql);
+            pstm.setString(1, documento);
+            pstm.executeUpdate();
+            R = true;
+        } catch (Exception e) {
+            System.out.println("error 5" + e);
+        }
+        return R;
+    }
+
+    public int getLastInsert() {
+        int R = 0;
+        try {
+            sql = "SELECT id_user FROM test_usuarios ORDER BY id_user DESC LIMIT 1";
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            if (rs.next()) {
+                R = rs.getInt("id_user");
+            }
+        } catch (Exception e) {
+            System.out.println("error 5" + e);
+        }
+        return R;
+    }
 }

@@ -9,11 +9,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import Model.*;
 import App.*;
+import static Controllers.CuestionarioController.isNumeric;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -75,6 +77,7 @@ public final class UsersController implements ActionListener, KeyListener {
         this.pr.rdoAdmin.addActionListener(this);
         this.pr.rdoTodos.addActionListener(this);
         this.pr.rdoTodos.setSelected(true);
+        this.pr.txtDoc.addKeyListener(this);
         cargarAdmin(pr.tbAdmin, "", 0);
         cargarCboGrupo();
         cargarRol();
@@ -153,12 +156,19 @@ public final class UsersController implements ActionListener, KeyListener {
             String pass = new String(pr.txtPass.getPassword());
             String tipo_doc = (String) pr.cboTipoDocAdmin.getSelectedItem();
             String Grupo = (String) pr.cboGrupo.getSelectedItem();
+            if (tipo_doc.equals("-- Seleccione --")) {
+                JOptionPane.showMessageDialog(null, "debe seleccionar un tipo de documento");
+                return;
+            }
             if (admDao.getDoc(documento)) {
                 JOptionPane.showMessageDialog(null, "El documento " + documento + " ya existe");
                 return;
             }
-            //String Fechacompleta = FchaHoy + " " + hora + ":" + minutos + ":" + segundos;
-//            String Horacomp = hora + ":" + minutos + ":" + segundos;
+            if (pr.txtDoc.getText().equals("")) {
+                JOptionPane.showMessageDialog(null, "El campo documento no debe estar vacio");
+                pr.txtDoc.requestFocus();
+                return;
+            }
             int grupo = 0;
             if (!Grupo.equals("-- Seleccione --")) {
                 grupo = gymDao.getIdGrupoByName(Grupo);
@@ -168,17 +178,33 @@ public final class UsersController implements ActionListener, KeyListener {
             if (!idRol.equals("-- Seleccione --")) {
                 rolU = rolDao.getIdRolByNombre(idRol);
             }
-            if (tipo_doc.equals("-- Seleccione --")) {
-                JOptionPane.showMessageDialog(null, "debe seleccionar un tipo de documento");
+
+            String rptaRegistro = admDao.Create(documento, tipo_doc, nombres, apellidos, grupo, rolU, pass, foto, opc, idToUpdate);
+            if (rptaRegistro.equals("Duplicate entry")) {
+                JOptionPane.showMessageDialog(null, "No se pudo crear el registro por que el numero de documento ya existe");
+                opc = "C";
+                idToUpdate = 0;
+                limpiarForm();
                 return;
             }
-            String rptaRegistro = admDao.Create(documento, tipo_doc, nombres, apellidos, grupo, rolU, pass, foto, opc, idToUpdate);
             if (rptaRegistro != null) {
                 JOptionPane.showMessageDialog(null, rptaRegistro);
                 cargarAdmin(pr.tbAdmin, dato, 0);
-//                if (opc.equals("C")) {
-//                    this.pr.pnCreateAdmin.setVisible(false);
-//                }
+                if (opc.equals("U")) {
+                    pr.btnRegistrar.setText("Guardar");
+                }
+                if (rolU == 1) {
+                    try {
+                        AddAsignaturaToTeacher att = new AddAsignaturaToTeacher(null, true);
+                        AsignaturaController ac = new AsignaturaController(att, rolU);
+                        ac.cargarCboAsignaturasToteacher();
+                        att.setLocationRelativeTo(null);
+                        att.setVisible(true);
+
+                    } catch (SQLException ex) {
+                        System.out.println("error " + ex);
+                    }
+                }
                 opc = "C";
                 idToUpdate = 0;
                 limpiarForm();
@@ -196,41 +222,47 @@ public final class UsersController implements ActionListener, KeyListener {
             opc = "U";
             int fila = pr.tbAdmin.getSelectedRow();
             if (fila >= 0) {
+                pr.btnRegistrar.setText("Actualizar");
                 String tipoDoc = pr.tbAdmin.getValueAt(fila, 0).toString();
                 pr.cboTipoDocAdmin.setSelectedItem(tipoDoc);
                 String documento = pr.tbAdmin.getValueAt(fila, 1).toString();
                 pr.txtDoc.setText(documento);
-                if (admDao.getIdToUpdate(documento).size() > 0) {
-                    pr.txtPass.setText(admDao.getIdToUpdate(documento).get(0).getPassword());
+                int idRolU = 0;
+                int idGrupoU = 0;
+                ArrayList<Users> User = admDao.getIdToUpdate(documento);
+                if (User.size() > 0) {
+                    pr.txtPass.setText(User.get(0).getPassword());
+                    idToUpdate = User.get(0).getIdUser();
+                    idRolU = User.get(0).getIdRol();
+                    idGrupoU = User.get(0).getIdGrupo();
                 }
-                idToUpdate = admDao.getIdToUpdate(documento).get(0).getIdUser();
-                int idRol = admDao.getIdToUpdate(documento).get(0).getIdRol();
-                int idGrupo = admDao.getIdToUpdate(documento).get(0).getIdGrupo();
                 //cambiar todos los combos de crear usuario
-                pr.cboIdRol.setSelectedItem(Integer.toString(rolDao.getListRolToString(idRol).get(0).getIdRol()) + " - " + rolDao.getListRolToString(idRol).get(0).getRol());
-               // pr.cboGrupo.setSelectedItem(Integer.toString(gymDao.getListGrupoToString(idGrupo).get(0).getIdGrupo()) + " - " + gymDao.getListGrupoToString(idGrupo).get(0).getGrupo());
+                pr.cboIdRol.setSelectedItem(rolDao.getListRol_ToString(idRolU));
+                pr.cboGrupo.setSelectedItem(gymDao.getListGrupoToString(idGrupoU));
                 pr.txtNombres.setText(pr.tbAdmin.getValueAt(fila, 2).toString());
                 pr.txtApellidos.setText(pr.tbAdmin.getValueAt(fila, 3).toString());
-
             } else {
                 JOptionPane.showMessageDialog(null, "No has seleccionado un registro..!");
+                pr.btnRegistrar.setText("Guardar");
             }
         }
         if (e.getSource() == pr.mnuDeleteAdmin) {
-//            int fila = pr.tbAdmin.getSelectedRow();
-//            if (fila >= 0) {
-//                int response = JOptionPane.showConfirmDialog(null, "Esta seguro de eliminar el registro ?", "Aviso..!",
-//                        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-//                if (response == JOptionPane.YES_OPTION) {
-//                    String rptaDelete = admDao.deleteAdmin(admDao.getIdToUpdate(pr.tbAdmin.getValueAt(fila, 1).toString()).get(0).getId());
-//                    if (rptaDelete != null) {
-//                        JOptionPane.showMessageDialog(null, rptaDelete);
-//                        cargarAdmin(pr.tbAdmin, dato, rol);
-//                    }
-//                }
-//            } else {
-//                JOptionPane.showMessageDialog(null, "No has seleccionado un registro..!");
-//            }
+            int fila = pr.tbAdmin.getSelectedRow();
+            if (fila >= 0) {
+                int response = JOptionPane.showConfirmDialog(null, "Esta seguro de eliminar el registro ?", "Aviso..!",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                if (response == JOptionPane.YES_OPTION) {
+                    boolean rptaDelete = admDao.deleteUser(pr.tbAdmin.getValueAt(fila, 1).toString());
+                    if (rptaDelete) {
+                        JOptionPane.showMessageDialog(null, "Registro eliminado con éxito");
+                        cargarAdmin(pr.tbAdmin, dato, rol);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "No se pudo eliminar el registro..");
+                    }
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "No has seleccionado un registro..!");
+            }
         }
 
         if (e.getSource() == pr.btnAdelante) {
@@ -377,6 +409,13 @@ public final class UsersController implements ActionListener, KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
+
+        if (e.getSource() == pr.txtDoc) {
+            if (!isNumeric(pr.txtDoc.getText())) {
+                pr.txtDoc.setText("");
+            }
+        }
+
         if (e.getSource() == pr.txtBuscarAdmin) {
             try {
                 dato = pr.txtBuscarAdmin.getText();
@@ -384,7 +423,7 @@ public final class UsersController implements ActionListener, KeyListener {
                     pagina = 1;
                 }
                 cargarAdmin(pr.tbAdmin, dato, rol);
-                
+
                 if (admDao.totalPaginas(dato) <= 1) {
                     pr.btnAdelante.setEnabled(false);
                     pr.btnUltimo.setEnabled(false);
@@ -404,7 +443,11 @@ public final class UsersController implements ActionListener, KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
-
+        if (e.getSource() == pr.txtDoc) {
+            if (pr.txtDoc.getText().length() == 10) {
+                e.consume();
+            }
+        }
     }
 
     @Override
@@ -425,7 +468,17 @@ public final class UsersController implements ActionListener, KeyListener {
         pr.txtNombres.setText("");
         pr.txtApellidos.setText("");
         pr.txtPass.setText("");
+        pr.btnRegistrar.setText("Guardar");
 
+    }
+
+    public static boolean isNumeric(String cadena) {
+        try {
+            Integer.parseInt(cadena);
+            return true;
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
     }
 
 }
