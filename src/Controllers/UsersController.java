@@ -200,7 +200,6 @@ public final class UsersController implements ActionListener, KeyListener {
                         ac.cargarCboAsignaturasToteacher();
                         att.setLocationRelativeTo(null);
                         att.setVisible(true);
-
                     } catch (SQLException ex) {
                         System.out.println("error " + ex);
                     }

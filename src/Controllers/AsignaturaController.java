@@ -40,7 +40,7 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
     Date m = new Date();//para capturar la fecha actual
     String opc = "C";
     int idArea = 0;
-    AddAsignatura aa;
+    AddAsignatura aa = null;
     AddAsignaturaToTeacher att;
     int profesor;
     ArrayList<Asignaturas> asig = null;
@@ -63,6 +63,8 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
         this.profesor = profesor;
         this.att.btnAdsignaturaTeacher.addActionListener(this);
         this.att.btnSaveAsignaturasToTeacher.addActionListener(this);
+        this.att.btnCreateAsignatura.addActionListener(this);
+        this.att.btnCancelaAsignatura.addActionListener(this);
         asig = new ArrayList<>();
     }
 
@@ -153,7 +155,6 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
                 }
             }
             if (e.getSource() == pr.btnCancelar) {
-
                 limpiarForm();
             }
         }
@@ -180,12 +181,12 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
                 try {
                     if (asig.size() > 0) {
                         userdao = new UsersDAO();
-                        System.out.println(userdao.getLastInsert()); 
-                       String r = asignaturadao.addAsignaturaToTeacher(asig, userdao.getLastInsert());
-                        
+                        System.out.println(userdao.getLastInsert());
+                        String r = asignaturadao.addAsignaturaToTeacher(asig, userdao.getLastInsert());
+
                         if (r.equals("ok")) {
                             JOptionPane.showMessageDialog(null, "Asignaturas agregadas a docente..!");
-                            userdao = null;                            
+                            userdao = null;
                         } else {
                             JOptionPane.showMessageDialog(null, "Ocurrio un error al agregar asignaturas a docente..!");
                             userdao = null;
@@ -196,6 +197,39 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
                     }
                 } catch (SQLException ex) {
                     System.out.println("error ascontroller " + ex);
+                }
+            }
+
+            if (e.getSource() == att.btnCancelaAsignatura) {
+                asig.clear();
+                att.dispose();
+            }
+
+            if (e.getSource() == att.btnCreateAsignatura) {
+                String nombre = JOptionPane.showInputDialog(null,
+                        "Ingrese Asignatura",
+                        "Crear Asignaturas",
+                        JOptionPane.INFORMATION_MESSAGE);
+                if (nombre == null || nombre.equals("")) {
+                    JOptionPane.showMessageDialog(null, "El campo asignatura no debe estar vacio..!");
+                    return;
+                } else if (!asignaturadao.existAsignatura(nombre)) {
+                    try {
+                        Asignaturas a = new Asignaturas();
+                        a.setNombreAsignatura(nombre);
+                        String r = asignaturadao.create(a, "C");
+                        if (r != null) {
+                            JOptionPane.showMessageDialog(null, r);
+                            att.txtNomAsignatura.addItem(nombre);
+                            att.txtNomAsignatura.requestFocus();
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Ocurrio un error al crear la asignatura");
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(AsignaturaController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "La asignatura ya existe..!");
                 }
             }
 

@@ -22,7 +22,7 @@ public class AsignaturasDAO {
     PreparedStatement pstm;
     String sql;
     ResultSet rs;
-    
+
     public AsignaturasDAO() {
         cn = Conexion.getConexion("Asignaturasdao");
     }
@@ -58,6 +58,34 @@ public class AsignaturasDAO {
                 }
             }
 
+        } catch (Exception e) {
+            System.out.println("error cerdo: " + e + " " + e.getClass());
+        }
+        return responseCreate;
+    }
+
+    public String create(Asignaturas a, String opc) throws SQLException {
+        String responseCreate = null;
+        try {
+            if (opc.equals("C")) {
+                sql = "INSERT INTO test_asignaturas (nombre_asig) VALUES (?)";
+            }
+            if (opc.equals("U")) {
+                sql = "UPDATE test_asignaturas SET nombre_asig = ? WHERE id_asignatura = ?";
+            }
+            pstm = cn.prepareStatement(sql);
+            pstm.setString(1, a.getNombreAsignatura());
+            if (opc.equals("U")) {
+                pstm.setInt(2, a.getAsignatura());
+            }
+            int rowAfected = pstm.executeUpdate();
+            if (rowAfected > 0) {
+                if (opc.equals("C")) {
+                    responseCreate = "Asignatura creada con éxito";
+                } else {
+                    responseCreate = "Asignatura actualizada con éxito";
+                }
+            }
         } catch (Exception e) {
             System.out.println("error cerdo: " + e + " " + e.getClass());
         }
