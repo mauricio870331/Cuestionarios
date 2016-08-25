@@ -31,6 +31,8 @@ public class AddAsignaturaToTeacher extends javax.swing.JDialog {
         popupAsignatura = new javax.swing.JPopupMenu();
         mnuUpdateAsignatura = new javax.swing.JMenuItem();
         mnuDeleteAsignatura = new javax.swing.JMenuItem();
+        popupAsignaturaToTeacher = new javax.swing.JPopupMenu();
+        deleteAsignaturaToTeach = new javax.swing.JMenuItem();
         jLabel1 = new javax.swing.JLabel();
         btnCreateAsignatura = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -46,6 +48,9 @@ public class AddAsignaturaToTeacher extends javax.swing.JDialog {
         mnuDeleteAsignatura.setText("Eliminar");
         popupAsignatura.add(mnuDeleteAsignatura);
 
+        deleteAsignaturaToTeach.setText("Quitar Asignatura");
+        popupAsignaturaToTeacher.add(deleteAsignaturaToTeach);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setText("Asignatura");
@@ -60,12 +65,13 @@ public class AddAsignaturaToTeacher extends javax.swing.JDialog {
 
             }
         ));
-        tbAsignatura.setComponentPopupMenu(popupAsignatura);
+        tbAsignatura.setComponentPopupMenu(popupAsignaturaToTeacher);
         jScrollPane1.setViewportView(tbAsignatura);
 
         btnCancelaAsignatura.setText("Cancelar");
 
         btnAdsignaturaTeacher.setText("+");
+        btnAdsignaturaTeacher.setToolTipText("Agregar Asignatura");
 
         btnSaveAsignaturasToTeacher.setText("Guardar");
 
@@ -76,9 +82,7 @@ public class AddAsignaturaToTeacher extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnSaveAsignaturasToTeacher))
+                    .addComponent(btnSaveAsignaturasToTeacher, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
@@ -169,11 +173,13 @@ public class AddAsignaturaToTeacher extends javax.swing.JDialog {
     public javax.swing.JButton btnCancelaAsignatura;
     public javax.swing.JButton btnCreateAsignatura;
     public javax.swing.JButton btnSaveAsignaturasToTeacher;
+    public javax.swing.JMenuItem deleteAsignaturaToTeach;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     public javax.swing.JMenuItem mnuDeleteAsignatura;
     public javax.swing.JMenuItem mnuUpdateAsignatura;
     public javax.swing.JPopupMenu popupAsignatura;
+    public javax.swing.JPopupMenu popupAsignaturaToTeacher;
     public javax.swing.JTable tbAsignatura;
     public javax.swing.JComboBox<String> txtNomAsignatura;
     // End of variables declaration//GEN-END:variables

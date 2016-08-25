@@ -65,6 +65,7 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
         this.att.btnSaveAsignaturasToTeacher.addActionListener(this);
         this.att.btnCreateAsignatura.addActionListener(this);
         this.att.btnCancelaAsignatura.addActionListener(this);
+        this.att.deleteAsignaturaToTeach.addActionListener(this);
         asig = new ArrayList<>();
     }
 
@@ -93,7 +94,7 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
         tbArea.setModel(modelo);
     }
 
-    public void cargarAsignaturasToasign() throws SQLException {
+    public void cargarAsignaturasToasign() {
         String Titulos[] = {"Id", "Nombre"};
         modelo = new DefaultTableModel(null, Titulos) {
             @Override
@@ -160,20 +161,39 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
         }
         if (att != null) {
             if (e.getSource() == att.btnAdsignaturaTeacher) {
-                try {
-                    String asignatura = (String) att.txtNomAsignatura.getSelectedItem();
-                    if (asignatura.equals("-- Seleccione --")) {
-                        JOptionPane.showMessageDialog(null, "Debe seleccionar una asignatura");
-                        return;
+                String asignatura = (String) att.txtNomAsignatura.getSelectedItem();
+                if (asignatura.equals("-- Seleccione --")) {
+                    JOptionPane.showMessageDialog(null, "Debe seleccionar una asignatura");
+                    return;
+                }
+                Asignaturas a = new Asignaturas();
+                a.setAsignatura(asignaturadao.getAsignaturaByName(asignatura));
+                a.setNombreAsignatura(asignatura);
+                asig.add(a);
+                att.txtNomAsignatura.removeItem(asignatura);
+                cargarAsignaturasToasign();
+                System.out.println(asig.size());
+            }
+
+            if (e.getSource() == att.deleteAsignaturaToTeach) {
+                int fila = att.tbAsignatura.getSelectedRow();
+                if (fila >= 0) {
+                    int response = JOptionPane.showConfirmDialog(null, "Esta seguro de quitar la asignatura ?", "Aviso..!",
+                            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    if (response == JOptionPane.YES_OPTION) {
+                        String asignatura = att.tbAsignatura.getValueAt(fila, 1).toString();
+                        Iterator<Asignaturas> lpt = asig.iterator();
+                        while (lpt.hasNext()) {
+                            Asignaturas borrar = lpt.next();
+                            if (borrar.getNombreAsignatura().equals(asignatura)) {
+                                lpt.remove();
+                            }
+                        }
+                        att.txtNomAsignatura.addItem(asignatura);
+                        cargarAsignaturasToasign();
                     }
-                    Asignaturas a = new Asignaturas();
-                    a.setAsignatura(asignaturadao.getAsignaturaByName(asignatura));
-                    a.setNombreAsignatura(asignatura);
-                    asig.add(a);
-                    att.txtNomAsignatura.removeItem(asignatura);
-                    cargarAsignaturasToasign();
-                } catch (SQLException ex) {
-                    System.out.println("error ascontroller " + ex);
+                } else {
+                    JOptionPane.showMessageDialog(null, "No has seleccionado una asignatura..!");
                 }
             }
 

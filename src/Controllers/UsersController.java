@@ -156,37 +156,51 @@ public final class UsersController implements ActionListener, KeyListener {
             String pass = new String(pr.txtPass.getPassword());
             String tipo_doc = (String) pr.cboTipoDocAdmin.getSelectedItem();
             String Grupo = (String) pr.cboGrupo.getSelectedItem();
+            String idRol = (String) pr.cboIdRol.getSelectedItem();
             if (tipo_doc.equals("-- Seleccione --")) {
                 JOptionPane.showMessageDialog(null, "debe seleccionar un tipo de documento");
-                return;
-            }
-            if (admDao.getDoc(documento)) {
-                JOptionPane.showMessageDialog(null, "El documento " + documento + " ya existe");
                 return;
             }
             if (pr.txtDoc.getText().equals("")) {
                 JOptionPane.showMessageDialog(null, "El campo documento no debe estar vacio");
                 pr.txtDoc.requestFocus();
                 return;
+            } else if (admDao.getDoc(documento)) {
+                JOptionPane.showMessageDialog(null, "El documento " + documento + " ya existe");
+                return;
+            }
+            if (pr.txtNombres.getText().equals("")) {
+                JOptionPane.showMessageDialog(null, "El campo Nombres no debe estar vacio");
+                pr.txtNombres.requestFocus();
+                return;
+            }
+            if (pr.txtApellidos.getText().equals("")) {
+                JOptionPane.showMessageDialog(null, "El campo Apellidos no debe estar vacio");
+                pr.txtApellidos.requestFocus();
+                return;
+            }
+            int rolU = 0;
+            if (!idRol.equals("-- Seleccione --")) {
+                rolU = rolDao.getIdRolByNombre(idRol);
+            } else {
+                JOptionPane.showMessageDialog(null, "Debe seleccionar un rol");
+                pr.cboIdRol.requestFocus();
+                return;
+            }
+            if (pass.equals("")) {
+                JOptionPane.showMessageDialog(null, "El campo Contraseña no debe estar vacio");
+                pr.txtPass.requestFocus();
+                return;
             }
             int grupo = 0;
             if (!Grupo.equals("-- Seleccione --")) {
                 grupo = gymDao.getIdGrupoByName(Grupo);
-            }
-            String idRol = (String) pr.cboIdRol.getSelectedItem();
-            int rolU = 0;
-            if (!idRol.equals("-- Seleccione --")) {
-                rolU = rolDao.getIdRolByNombre(idRol);
-            }
-
-            String rptaRegistro = admDao.Create(documento, tipo_doc, nombres, apellidos, grupo, rolU, pass, foto, opc, idToUpdate);
-            if (rptaRegistro.equals("Duplicate entry")) {
-                JOptionPane.showMessageDialog(null, "No se pudo crear el registro por que el numero de documento ya existe");
-                opc = "C";
-                idToUpdate = 0;
-                limpiarForm();
+            } else {
+                JOptionPane.showMessageDialog(null, "Debe seleccionar un grupo");
+                pr.cboGrupo.requestFocus();
                 return;
             }
+            String rptaRegistro = admDao.Create(documento, tipo_doc, nombres, apellidos, grupo, rolU, pass, foto, opc, idToUpdate);
             if (rptaRegistro != null) {
                 JOptionPane.showMessageDialog(null, rptaRegistro);
                 cargarAdmin(pr.tbAdmin, dato, 0);

@@ -96,7 +96,7 @@ public class UsersDAO {
             }
         } catch (SQLException | IOException e) {
             String error = e.getMessage();
-            responseCreate = error.substring(0, 15);
+//            responseCreate = error.substring(0, 15);
             System.out.println(error);
         }
         return responseCreate;
@@ -240,21 +240,21 @@ public class UsersDAO {
     }
 
     public boolean getDoc(String documento) {
-        boolean esiste = false;
+        boolean existe = false;
         try {
 
             sql = "SELECT documento FROM test_usuarios where documento = ?";
             pstm = cn.prepareStatement(sql);
             pstm.setString(1, documento);
             rs = pstm.executeQuery();
-            if (rs.getRow() > 0) {
-                esiste = true;
+            if (rs.next()) {
+                existe = true;
             }
 
         } catch (Exception e) {
             System.out.println("error 5" + e);
         }
-        return esiste;
+        return existe;
     }
 
     public boolean deleteUser(String documento) {
