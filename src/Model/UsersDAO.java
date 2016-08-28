@@ -285,4 +285,36 @@ public class UsersDAO {
         }
         return R;
     }
+
+    public String getUserByDoc(String doc) {
+        String profesor = "";
+        try {
+            sql = "SELECT nombres, apellidos FROM test_usuarios where documento = '" + doc + "'";
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            if (rs.next()) {
+                profesor = rs.getString("nombres") + " " + rs.getString("apellidos");
+            }
+        } catch (Exception e) {
+            System.out.println("error 4" + e);
+            profesor = "";
+        }
+        return profesor;
+    }
+
+    public int getIdUserByDoc(String doc) {
+        int profesor = 0;
+        try {
+            sql = "SELECT id_user FROM test_usuarios where documento = '" + doc + "'";
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            if (rs.next()) {
+                profesor = rs.getInt("id_user");
+            }
+        } catch (Exception e) {
+            System.out.println("error 5" + e);
+            profesor = 0;
+        }
+        return profesor;
+    }
 }

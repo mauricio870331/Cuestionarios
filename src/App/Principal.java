@@ -33,12 +33,6 @@ public class Principal extends javax.swing.JFrame {
         PopupAdmin = new javax.swing.JPopupMenu();
         mnuUpdateAdmin = new javax.swing.JMenuItem();
         mnuDeleteAdmin = new javax.swing.JMenuItem();
-        PopupGym = new javax.swing.JPopupMenu();
-        mnuUpdateGym = new javax.swing.JMenuItem();
-        mnuDeleteGym = new javax.swing.JMenuItem();
-        PopupRutinas = new javax.swing.JPopupMenu();
-        mnuUpdateRutina = new javax.swing.JMenuItem();
-        mnuDeleteRutina = new javax.swing.JMenuItem();
         PopupRutinasUsers = new javax.swing.JPopupMenu();
         mnuUpdateRuUser = new javax.swing.JMenuItem();
         mnuDeleteRuUser = new javax.swing.JMenuItem();
@@ -167,10 +161,12 @@ public class Principal extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         mnuAdministrar = new javax.swing.JMenu();
         createUsers = new javax.swing.JMenuItem();
+        mnuAsigntoTeacher = new javax.swing.JMenuItem();
         MnuCuestionarios = new javax.swing.JMenu();
         reporteResultados = new javax.swing.JMenuItem();
         cuestionario = new javax.swing.JMenuItem();
         editCustionario = new javax.swing.JMenuItem();
+        deleteCuestionary = new javax.swing.JMenuItem();
         asignCuestionaryToGroup = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         btnLogout = new javax.swing.JMenuItem();
@@ -180,18 +176,6 @@ public class Principal extends javax.swing.JFrame {
 
         mnuDeleteAdmin.setText("Eliminar");
         PopupAdmin.add(mnuDeleteAdmin);
-
-        mnuUpdateGym.setText("Actualizar");
-        PopupGym.add(mnuUpdateGym);
-
-        mnuDeleteGym.setText("Eliminar");
-        PopupGym.add(mnuDeleteGym);
-
-        mnuUpdateRutina.setText("Actualizar");
-        PopupRutinas.add(mnuUpdateRutina);
-
-        mnuDeleteRutina.setText("Eliminar");
-        PopupRutinas.add(mnuDeleteRutina);
 
         mnuUpdateRuUser.setText("Cambiar Rutina");
         PopupRutinasUsers.add(mnuUpdateRuUser);
@@ -1140,9 +1124,9 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap(162, Short.MAX_VALUE))
         );
 
-        container.setLayer(pnCreateAdmin, javax.swing.JLayeredPane.PALETTE_LAYER);
+        container.setLayer(pnCreateAdmin, javax.swing.JLayeredPane.DEFAULT_LAYER);
         container.setLayer(pnCuestionario, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        container.setLayer(pnCreateCuestionary, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        container.setLayer(pnCreateCuestionary, javax.swing.JLayeredPane.PALETTE_LAYER);
         container.setLayer(pnEditCuestionary, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout containerLayout = new javax.swing.GroupLayout(container);
@@ -1193,6 +1177,9 @@ public class Principal extends javax.swing.JFrame {
         });
         mnuAdministrar.add(createUsers);
 
+        mnuAsigntoTeacher.setText("Asignaturas a Profresor");
+        mnuAdministrar.add(mnuAsigntoTeacher);
+
         MnuCuestionarios.setText("Cuestionarios");
 
         reporteResultados.setText("Resultados Cuestionarios");
@@ -1203,6 +1190,9 @@ public class Principal extends javax.swing.JFrame {
 
         editCustionario.setText("Editar Cuestionarios");
         MnuCuestionarios.add(editCustionario);
+
+        deleteCuestionary.setText("Eliminar Cuestionarios");
+        MnuCuestionarios.add(deleteCuestionary);
 
         mnuAdministrar.add(MnuCuestionarios);
 
@@ -1279,8 +1269,6 @@ public class Principal extends javax.swing.JFrame {
     public javax.swing.ButtonGroup GrupoRespuestas;
     public javax.swing.JMenu MnuCuestionarios;
     public javax.swing.JPopupMenu PopupAdmin;
-    public javax.swing.JPopupMenu PopupGym;
-    private javax.swing.JPopupMenu PopupRutinas;
     private javax.swing.JPopupMenu PopupRutinasUsers;
     public javax.swing.JMenuItem asignCuestionaryToGroup;
     public javax.swing.JButton btnAddAsignatura;
@@ -1316,6 +1304,7 @@ public class Principal extends javax.swing.JFrame {
     public javax.swing.JLayeredPane container;
     public javax.swing.JMenuItem createUsers;
     public javax.swing.JMenuItem cuestionario;
+    public javax.swing.JMenuItem deleteCuestionary;
     public javax.swing.JMenuItem editCustionario;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1369,14 +1358,11 @@ public class Principal extends javax.swing.JFrame {
     public javax.swing.JLabel lblVerUsers;
     public javax.swing.JLabel lbltotalp;
     public javax.swing.JMenu mnuAdministrar;
+    public javax.swing.JMenuItem mnuAsigntoTeacher;
     public javax.swing.JMenuItem mnuDeleteAdmin;
-    public javax.swing.JMenuItem mnuDeleteGym;
     public javax.swing.JMenuItem mnuDeleteRuUser;
-    public javax.swing.JMenuItem mnuDeleteRutina;
     public javax.swing.JMenuItem mnuUpdateAdmin;
-    public javax.swing.JMenuItem mnuUpdateGym;
     public javax.swing.JMenuItem mnuUpdateRuUser;
-    public javax.swing.JMenuItem mnuUpdateRutina;
     public javax.swing.JPanel pnCreateAdmin;
     public javax.swing.JPanel pnCreateCuestionary;
     public javax.swing.JPanel pnCuestionario;

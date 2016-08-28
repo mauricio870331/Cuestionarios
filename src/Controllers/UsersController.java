@@ -78,6 +78,7 @@ public final class UsersController implements ActionListener, KeyListener {
         this.pr.rdoTodos.addActionListener(this);
         this.pr.rdoTodos.setSelected(true);
         this.pr.txtDoc.addKeyListener(this);
+        this.pr.mnuAsigntoTeacher.addActionListener(this);
         cargarAdmin(pr.tbAdmin, "", 0);
         cargarCboGrupo();
         cargarRol();
@@ -201,6 +202,7 @@ public final class UsersController implements ActionListener, KeyListener {
                 return;
             }
             String rptaRegistro = admDao.Create(documento, tipo_doc, nombres, apellidos, grupo, rolU, pass, foto, opc, idToUpdate);
+            System.out.println("rptaRegistro " + rptaRegistro);
             if (rptaRegistro != null) {
                 JOptionPane.showMessageDialog(null, rptaRegistro);
                 cargarAdmin(pr.tbAdmin, dato, 0);
@@ -268,6 +270,7 @@ public final class UsersController implements ActionListener, KeyListener {
                     boolean rptaDelete = admDao.deleteUser(pr.tbAdmin.getValueAt(fila, 1).toString());
                     if (rptaDelete) {
                         JOptionPane.showMessageDialog(null, "Registro eliminado con éxito");
+                        limpiarForm();
                         cargarAdmin(pr.tbAdmin, dato, rol);
                     } else {
                         JOptionPane.showMessageDialog(null, "No se pudo eliminar el registro..");
@@ -343,6 +346,20 @@ public final class UsersController implements ActionListener, KeyListener {
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(UsersController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+
+        if (e.getSource() == pr.mnuAsigntoTeacher) {
+            try {
+                AddAsignaturaToTeacherAdmin att = new AddAsignaturaToTeacherAdmin(null, true);
+                AsignaturaController ac = new AsignaturaController(att);
+                ac.cargarCboAsignaturasToteacher2();
+                ac.cargarAsignaturasTeacher();
+                att.setLocationRelativeTo(null);
+                att.setVisible(true);
+            } catch (SQLException ex) {
+                System.out.println("error " + ex);
             }
 
         }

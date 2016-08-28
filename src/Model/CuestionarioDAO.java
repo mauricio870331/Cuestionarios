@@ -87,7 +87,7 @@ public class CuestionarioDAO {
     public ArrayList<Cuestionario> getCuestionarioByGrupo(int grupo) throws SQLException {
         ArrayList listaCuestionario = new ArrayList();
         Cuestionario cuestionario;
-        try {            
+        try {
             sql = "SELECT c.id_cuestionario as id_cuestionario, "
                     + "c.id_user as id_user, "
                     + "c.descripcion as descripcion, "
@@ -126,7 +126,6 @@ public class CuestionarioDAO {
         ArrayList listaCuestionario = new ArrayList();
         Cuestionario cuestionario;
         try {
-            cn = Conexion.getConexion("CuestionarioDao getCuestionarioByGrupoAndProfesor");
             sql = "SELECT descripcion FROM test_c_cuestionario WHERE id_user = " + profesor;
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
@@ -144,7 +143,7 @@ public class CuestionarioDAO {
 
     public int getPreguntasCuestionario(int id_cuestionario) throws SQLException {
         int total = 0;
-        try {  
+        try {
             sql = "SELECT count(pregunta) as total FROM test_c_cuestionario c "
                     + "INNER JOIN test_preguntas_cuestionario p ON c.id_cuestionario = p.id_cuestionario "
                     + "WHERE c.id_cuestionario = " + id_cuestionario + "";
@@ -161,7 +160,7 @@ public class CuestionarioDAO {
 
     public int nexIdCuestionario() throws SQLException {
         int id = 0;
-        try {           
+        try {
             sql = "select max(id_cuestionario) as maxid from test_c_cuestionario";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
@@ -171,14 +170,14 @@ public class CuestionarioDAO {
 
         } catch (Exception e) {
             System.out.println("error b" + e);
-        } 
+        }
         return id + 1;
 
     }
 
     public boolean updateName(String Newname, String Oldname) throws SQLException {
         boolean rsponse = false;
-        try {            
+        try {
             sql = "UPDATE  test_c_cuestionario SET descripcion = '" + Newname + "' where descripcion = '" + Oldname + "'";
             pstm = cn.prepareStatement(sql);
             int rowAfectedR = pstm.executeUpdate();
@@ -188,13 +187,13 @@ public class CuestionarioDAO {
 
         } catch (Exception e) {
             System.out.println("error fi" + e);
-        } 
+        }
         return rsponse;
     }
-    
-     public boolean updateObjetive(String Newname, String Oldname) throws SQLException {
+
+    public boolean updateObjetive(String Newname, String Oldname) throws SQLException {
         boolean rsponse = false;
-        try {            
+        try {
             sql = "UPDATE  test_c_cuestionario SET objetivo = '" + Newname + "' where objetivo = '" + Oldname + "'";
             pstm = cn.prepareStatement(sql);
             int rowAfectedR = pstm.executeUpdate();
@@ -204,7 +203,7 @@ public class CuestionarioDAO {
 
         } catch (Exception e) {
             System.out.println("error fi" + e);
-        } 
+        }
         return rsponse;
     }
 
@@ -214,7 +213,7 @@ public class CuestionarioDAO {
         File img = null;
         String strimg = "";
         int id_cues = nexIdCuestionario();
-        try {            
+        try {
             cn.setAutoCommit(false);
             if (opc.equals("C")) {
                 sql = "INSERT INTO test_c_cuestionario (id_user, descripcion, objetivo, fecha, id_asignatura, estado, duracion) VALUES (?,?,?,?,?,?,?)";
@@ -287,7 +286,7 @@ public class CuestionarioDAO {
             System.out.println("error CuestionarioDao : " + e);
         } finally {
             cn.commit();
-            cn.setAutoCommit(true);            
+            cn.setAutoCommit(true);
         }
         return rpta;
     }
@@ -295,7 +294,7 @@ public class CuestionarioDAO {
     public ArrayList<Cuestionario> getCuestionariosByProfesor(int user) throws SQLException {
         ArrayList listaCuestionario = new ArrayList();
         Cuestionario cuestionario;
-        try {           
+        try {
             sql = "SELECT * FROM test_c_cuestionario WHERE id_user = " + user + "";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
@@ -324,7 +323,7 @@ public class CuestionarioDAO {
         ArrayList listaCuestionario = new ArrayList();
         int idGrupo = 0;
         Cuestionario cuestionario;
-        try {            
+        try {
             sql = "SELECT id_grupo FROM test_grupo WHERE grupo ='" + grupo + "'";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
@@ -350,14 +349,14 @@ public class CuestionarioDAO {
             }
         } catch (Exception e) {
             System.out.println("error aqui" + e);
-        } 
+        }
         return listaCuestionario;
     }
 
     public int getCuestionariosByName(String descuestionario) throws SQLException {
         int idCuestionario = 0;
-        try {            
-            sql = "SELECT * FROM test_c_cuestionario WHERE descripcion = '" + descuestionario + "'";
+        try {
+            sql = "SELECT id_cuestionario FROM test_c_cuestionario WHERE descripcion = '" + descuestionario + "'";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             if (rs.next()) {
@@ -365,14 +364,14 @@ public class CuestionarioDAO {
             }
         } catch (Exception e) {
             System.out.println("error aqui" + e);
-        } 
+        }
         return idCuestionario;
     }
 
     public ArrayList<Cuestionario> getCuestionariosByNameList(String descuestionario) throws SQLException {
         ArrayList listaCuestionario = new ArrayList();
         Cuestionario cuestionario;
-        try {            
+        try {
             sql = "SELECT * FROM test_c_cuestionario WHERE descripcion = '" + descuestionario + "'";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
@@ -398,7 +397,7 @@ public class CuestionarioDAO {
 
     public double getCalificacionAlumno(int idCuestionario, int idUser) throws SQLException {
         double calificacion = 0.0;
-        try {            
+        try {
             int cantPreguntas = getPreguntasCuestionario(idCuestionario);
             sql = "select  SUM(CASE WHEN (r.estado = 1 and r.id_respuesta = ra.id_respuesta) THEN ROUND((5.0)/" + cantPreguntas + ", 1) ELSE 0 END) as calificacion "
                     + "from test_c_cuestionario c "
@@ -420,7 +419,7 @@ public class CuestionarioDAO {
 
     public void generateReporte(int idCuestionario, int id_alumno, int idca, int total_preguntas, double nota, String notaString) throws SQLException {
         System.out.println(idCuestionario + " " + id_alumno + " " + idca);
-        try {        
+        try {
             JasperDesign jd = JRXmlLoader.load("src/Reports/Evaluacion.jrxml");
             //parametros de entrada
             Map parametros = new HashMap();
@@ -446,7 +445,6 @@ public class CuestionarioDAO {
     public ArrayList<String> reporteGeneralResultados(String grupo, String cuestionario) throws SQLException {
         ArrayList resultGeneral = new ArrayList();
         try {
-     
             sql = "SELECT u.documento, "
                     + "u.nombres, "
                     + "u.apellidos, "
@@ -478,7 +476,7 @@ public class CuestionarioDAO {
 
     public void activeCuestionarios() throws SQLException {
         try {
-            deactiveCuestionarios();         
+            deactiveCuestionarios();
             sql = "SELECT * FROM test_c_cuestionario WHERE estado = 0 AND vigencia = '" + df.format(date) + "'";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
@@ -496,7 +494,7 @@ public class CuestionarioDAO {
     }
 
     public void deactiveCuestionarios() throws SQLException {
-        try {           
+        try {
             sql = "SELECT * FROM test_c_cuestionario WHERE estado = 1 AND vigencia <> '" + df.format(date) + "'";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
@@ -511,6 +509,51 @@ public class CuestionarioDAO {
         } catch (SQLException ex) {
             System.out.println("error desactivar" + ex);
         }
+    }
+
+    public String deleteCuestionarios(String cuestionario) throws SQLException {
+        String r = "";
+        try {
+            int id_cuestionario = getCuestionariosByName(cuestionario);
+            sql = "SELECT * FROM  test_preguntas_cuestionario WHERE id_cuestionario = " + id_cuestionario;
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            int flag = 0;
+            while (rs.next()) {
+                sql = "DELETE FROM test_respuestas_cuestionario WHERE id_fk = " + rs.getInt("id");
+                pstm = cn.prepareStatement(sql);
+                pstm.executeUpdate();
+                flag++;
+            }
+            if (flag > 0) {
+                sql = "DELETE FROM test_preguntas_cuestionario WHERE id_cuestionario = " + id_cuestionario;
+                pstm = cn.prepareStatement(sql);
+                int delete = pstm.executeUpdate();
+                if (delete > 0) {
+                    sql = "DELETE FROM test_c_cuestionario WHERE id_cuestionario = " + id_cuestionario;
+                    pstm = cn.prepareStatement(sql);
+                    if (pstm.executeUpdate() > 0) {
+                        r = "ok";
+                    }
+                }
+            }
+        } catch (SQLException ex) {
+            System.out.println("error desactivar" + ex);
+        }
+        return r;
+
+    }
+
+    public boolean getCuestionaryToDelete(String cuestionario) throws SQLException {
+        boolean r = false;
+        sql = "SELECT c.id_cuestionario FROM test_c_cuestionario c INNER JOIN test_c_resultados tr ON c.id_cuestionario = tr.id_cuestionario"
+            + " WHERE descripcion = '" + cuestionario + "'";
+        pstm = cn.prepareStatement(sql);
+        rs = pstm.executeQuery();
+        if (rs.next()) {
+            r = true;
+        }
+        return r;
     }
 
 }

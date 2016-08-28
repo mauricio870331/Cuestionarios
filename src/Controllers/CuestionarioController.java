@@ -5,6 +5,7 @@
  */
 package Controllers;
 
+import App.AddAsignaturaToTeacherAdmin;
 import App.AsignCuestionaryToGroup;
 import App.Principal;
 import App.ReportResultados;
@@ -200,7 +201,9 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         this.pr.tbRespuestasEdit.addMouseListener(this);
         this.pr.btnChangeObjetive.addActionListener(this);
         this.pr.btnCancelarCuestionaryEdit.addActionListener(this);
-        if (rol == 2) {            
+        this.pr.deleteCuestionary.addActionListener(this);
+
+        if (rol == 2) {
             activarCuestionarios();
             this.pr.tGrado.setText(grupdao.getListGrupoToString(idGrupo));
             cargarCuestionarioByGrupo(idGrupo);
@@ -1347,6 +1350,50 @@ public final class CuestionarioController extends WindowAdapter implements Actio
             }
         }
 
+        if (e.getSource() == pr.deleteCuestionary) {
+            try {
+                int cant_cuestionarios = cuestionariodao.getCuestionarioByGrupoAndProfesor(idUserLog).size();
+                if (cant_cuestionarios > 0) {
+                    Iterator<Cuestionario> asitr = cuestionariodao.getCuestionarioByGrupoAndProfesor(idUserLog).iterator();
+                    String[] as = new String[cant_cuestionarios];
+                    int cont = 0;
+                    while (asitr.hasNext()) {
+                        Cuestionario next = asitr.next();
+                        as[cont] = next.getDescripcion();
+                        cont++;
+                    }
+                    String resp = (String) JOptionPane.showInputDialog(null, "Seleccione un cuastionario a eliminar", "Eliminar Cuestionarios", JOptionPane.DEFAULT_OPTION, null, as, as[0]);
+                    if (resp == null) {
+                        return;
+                    } else if (!resp.equals("")) {
+                        int response = JOptionPane.showConfirmDialog(null, "Está seguro de eliminar el cuestionario..?", "Aviso..!",
+                                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                        if (response == JOptionPane.YES_OPTION) {
+                            if (!cuestionariodao.getCuestionaryToDelete(resp)) {
+                                String r = cuestionariodao.deleteCuestionarios(resp);
+                                if (!r.equals("")) {
+                                    JOptionPane.showMessageDialog(null, "Cuestionario Eliminado");
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Ocurio un error al eliminar el cuestionario");
+                                }
+                            } else {
+                                JOptionPane.showMessageDialog(null, "El Cuestionario ya esta siendo utilizado, por lo tanto no se puede eliminar");
+                            }
+                        } else {
+                            return;
+                        }
+
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "No tienes cuestionarios");
+                }
+
+            } catch (SQLException ex) {
+                Logger.getLogger(CuestionarioController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+
     }
 
     @Override
@@ -1668,7 +1715,6 @@ public final class CuestionarioController extends WindowAdapter implements Actio
 
                 }
                 if (columna == 2) {
-                    System.out.println(pr.tbRespuestasEdit.getValueAt(fila, 2).toString());
                     String resp = respuestasdao.updateEstadoRespuesta(pr.tbRespuestasEdit.getValueAt(fila, 2).toString(), OldEstateResp,
                             Integer.parseInt(pr.tbRespuestasEdit.getValueAt(fila, 0).toString()));
                     String msn = "";

@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import Model.*;
 import App.*;
+import static Controllers.UsersController.isNumeric;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
@@ -42,8 +43,10 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
     int idArea = 0;
     AddAsignatura aa = null;
     AddAsignaturaToTeacher att;
+    AddAsignaturaToTeacherAdmin att2;
     int profesor;
     ArrayList<Asignaturas> asig = null;
+    ArrayList<Asignaturas> asigtmp = null;
 
     public AsignaturaController(Principal pr, int profesor) {
         aa = new AddAsignatura(null, true);
@@ -67,6 +70,19 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
         this.att.btnCancelaAsignatura.addActionListener(this);
         this.att.deleteAsignaturaToTeach.addActionListener(this);
         asig = new ArrayList<>();
+    }
+
+    public AsignaturaController(AddAsignaturaToTeacherAdmin att) throws SQLException {
+        this.att2 = att;
+        this.att2.btnAdsignaturaTeacher2.addActionListener(this);
+        this.att2.btnSaveAsignaturasToTeacher2.addActionListener(this);
+        this.att2.btnCreateAsignatura2.addActionListener(this);
+        this.att2.btnCancelaAsignatura2.addActionListener(this);
+        this.att2.deleteAsignaturaToTeach2.addActionListener(this);
+        this.att2.btnCargarAsig.addActionListener(this);
+        this.att2.btnClear.addActionListener(this);
+        asig = new ArrayList<>();
+        asigtmp = new ArrayList<>();
     }
 
     public void cargarAsignaturas(JTable tbArea, String dato) throws SQLException {
@@ -119,6 +135,56 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
         att.tbAsignatura.setModel(modelo);
     }
 
+    public void cargarAsignaturasTeacher() {
+        String Titulos[] = {"Id", "Nombre"};
+        modelo = new DefaultTableModel(null, Titulos) {
+            @Override
+            public boolean isCellEditable(int row, int column) {//para evitar que las celdas sean editables
+                return false;
+            }
+        };
+        Object[] columna = new Object[3];
+        Iterator<Asignaturas> nombreIterator = asigtmp.iterator();
+        while (nombreIterator.hasNext()) {
+            Asignaturas a = nombreIterator.next();
+            columna[0] = a.getAsignatura();
+            columna[1] = a.getNombreAsignatura();
+            modelo.addRow(columna);
+        }
+        att2.tbAsignatura3.setModel(modelo);
+        TableRowSorter<TableModel> ordenar = new TableRowSorter<>(modelo);
+        att2.tbAsignatura3.setRowSorter(ordenar);
+        att2.tbAsignatura3.getColumnModel().getColumn(0).setMaxWidth(0);
+        att2.tbAsignatura3.getColumnModel().getColumn(0).setMinWidth(0);
+        att2.tbAsignatura3.getColumnModel().getColumn(0).setPreferredWidth(0);
+        att2.tbAsignatura3.setModel(modelo);
+    }
+
+    public void cargarAsignaturasToasign2() {
+        String Titulos[] = {"Id", "Nombre"};
+        modelo = new DefaultTableModel(null, Titulos) {
+            @Override
+            public boolean isCellEditable(int row, int column) {//para evitar que las celdas sean editables
+                return false;
+            }
+        };
+        Object[] columna = new Object[3];
+        Iterator<Asignaturas> nombreIterator = asig.iterator();
+        while (nombreIterator.hasNext()) {
+            Asignaturas a = nombreIterator.next();
+            columna[0] = a.getAsignatura();
+            columna[1] = a.getNombreAsignatura();
+            modelo.addRow(columna);
+        }
+        att2.tbAsignatura2.setModel(modelo);
+        TableRowSorter<TableModel> ordenar = new TableRowSorter<>(modelo);
+        att2.tbAsignatura2.setRowSorter(ordenar);
+        att2.tbAsignatura2.getColumnModel().getColumn(0).setMaxWidth(0);
+        att2.tbAsignatura2.getColumnModel().getColumn(0).setMinWidth(0);
+        att2.tbAsignatura2.getColumnModel().getColumn(0).setPreferredWidth(0);
+        att2.tbAsignatura2.setModel(modelo);
+    }
+
     public void cargarCboAsignaturas() throws SQLException {
         pr.cboAsignature.removeAllItems();
         pr.cboAsignature.addItem("-- Seleccione --");
@@ -133,13 +199,22 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
     }
 
     public void cargarCboAsignaturasToteacher() throws SQLException {
-        System.out.println("asdfasfa");
         att.txtNomAsignatura.removeAllItems();
         att.txtNomAsignatura.addItem("-- Seleccione --");
         Iterator<Asignaturas> nombreIterator = asignaturadao.getListAsignaturas("").iterator();
         while (nombreIterator.hasNext()) {
             Asignaturas elemento = nombreIterator.next();
             att.txtNomAsignatura.addItem(elemento.getNombreAsignatura());
+        }
+    }
+
+    public void cargarCboAsignaturasToteacher2() throws SQLException {
+        att2.txtNomAsignatura2.removeAllItems();
+        att2.txtNomAsignatura2.addItem("-- Seleccione --");
+        Iterator<Asignaturas> nombreIterator = asignaturadao.getListAsignaturas("").iterator();
+        while (nombreIterator.hasNext()) {
+            Asignaturas elemento = nombreIterator.next();
+            att2.txtNomAsignatura2.addItem(elemento.getNombreAsignatura());
         }
     }
 
@@ -212,7 +287,7 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
                             userdao = null;
                         }
                     } else {
-                        JOptionPane.showMessageDialog(null, "Aun no ha agregado asignaturasa..!");
+                        JOptionPane.showMessageDialog(null, "Aun no ha agregado asignaturas..!");
                         return;
                     }
                 } catch (SQLException ex) {
@@ -230,7 +305,9 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
                         "Ingrese Asignatura",
                         "Crear Asignaturas",
                         JOptionPane.INFORMATION_MESSAGE);
-                if (nombre == null || nombre.equals("")) {
+                if (nombre == null) {
+                    return;
+                } else if (nombre.equals("")) {
                     JOptionPane.showMessageDialog(null, "El campo asignatura no debe estar vacio..!");
                     return;
                 } else if (!asignaturadao.existAsignatura(nombre)) {
@@ -251,6 +328,141 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
                 } else {
                     JOptionPane.showMessageDialog(null, "La asignatura ya existe..!");
                 }
+            }
+
+        }
+
+        if (att2 != null) {
+            if (e.getSource() == att2.btnAdsignaturaTeacher2) {
+                String asignatura = (String) att2.txtNomAsignatura2.getSelectedItem();
+                if (asignatura.equals("-- Seleccione --")) {
+                    JOptionPane.showMessageDialog(null, "Debe seleccionar una asignatura");
+                    return;
+                }
+                Asignaturas a = new Asignaturas();
+                a.setAsignatura(asignaturadao.getAsignaturaByName(asignatura));
+                a.setNombreAsignatura(asignatura);
+                asig.add(a);
+                att2.txtNomAsignatura2.removeItem(asignatura);
+                cargarAsignaturasToasign2();
+            }
+
+            if (e.getSource() == att2.deleteAsignaturaToTeach2) {
+                int fila = att2.tbAsignatura2.getSelectedRow();
+                if (fila >= 0) {
+                    int response = JOptionPane.showConfirmDialog(null, "Esta seguro de quitar la asignatura ?", "Aviso..!",
+                            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    if (response == JOptionPane.YES_OPTION) {
+                        String asignatura = att2.tbAsignatura2.getValueAt(fila, 1).toString();
+                        Iterator<Asignaturas> lpt = asig.iterator();
+                        while (lpt.hasNext()) {
+                            Asignaturas borrar = lpt.next();
+                            if (borrar.getNombreAsignatura().equals(asignatura)) {
+                                lpt.remove();
+                            }
+                        }
+                        att2.txtNomAsignatura2.addItem(asignatura);
+                        cargarAsignaturasToasign2();
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "No has seleccionado una asignatura..!");
+                }
+            }
+
+            if (e.getSource() == att2.btnSaveAsignaturasToTeacher2) {
+                if (att2.txtDocTeacherAsign.getText().equals("")) {
+                    JOptionPane.showMessageDialog(null, "El campo documento no debe estar vacio..!");
+                    return;
+                }
+                try {
+                    if (asig.size() > 0) {
+                        userdao = new UsersDAO();
+                        String r = asignaturadao.addAsignaturaToTeacher(asig, userdao.getIdUserByDoc(att2.txtDocTeacherAsign.getText()));
+                        if (r.equals("ok")) {
+                            JOptionPane.showMessageDialog(null, "Asignaturas agregadas a docente..!");
+                            userdao = null;
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Ocurrio un error al agregar asignaturas a docente..!");
+                            userdao = null;
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Aun no ha agregado asignaturas..!");
+                        return;
+                    }
+                } catch (SQLException ex) {
+                    System.out.println("error ascontroller " + ex);
+                }
+            }
+
+            if (e.getSource() == att2.btnCancelaAsignatura2) {
+                asig.clear();
+                asigtmp.clear();
+                att2.dispose();
+            }
+
+            if (e.getSource() == att2.btnCreateAsignatura2) {
+                String nombre = JOptionPane.showInputDialog(null,
+                        "Ingrese Asignatura",
+                        "Crear Asignaturas",
+                        JOptionPane.INFORMATION_MESSAGE);
+                if (nombre == null) {
+                    return;
+                } else if (nombre.equals("")) {
+                    JOptionPane.showMessageDialog(null, "El campo asignatura no debe estar vacio..!");
+                    return;
+                } else if (!asignaturadao.existAsignatura(nombre)) {
+                    try {
+                        Asignaturas a = new Asignaturas();
+                        a.setNombreAsignatura(nombre);
+                        String r = asignaturadao.create(a, "C");
+                        if (r != null) {
+                            JOptionPane.showMessageDialog(null, r);
+                            att2.txtNomAsignatura2.addItem(nombre);
+                            att2.txtNomAsignatura2.requestFocus();
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Ocurrio un error al crear la asignatura");
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(AsignaturaController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "La asignatura ya existe..!");
+                }
+            }
+
+            if (e.getSource() == att2.btnCargarAsig) {
+                if (!att2.txtDocTeacherAsign.getText().equals("")) {
+                    if (!isNumeric(att2.txtDocTeacherAsign.getText())) {
+                        att2.txtDocTeacherAsign.setText("");
+                        return;
+                    }
+                    String doc = att2.txtDocTeacherAsign.getText();
+                    userdao = new UsersDAO();
+                    String profesorToUpdate = userdao.getUserByDoc(doc);
+                    System.out.println(profesorToUpdate);
+                    if (!profesorToUpdate.equals("")) {
+                        att2.txtTeacherAsign.setText(profesorToUpdate);
+                        asigtmp = asignaturadao.getAsignaturasTeacher(userdao.getIdUserByDoc(doc));
+                        cargarAsignaturasTeacher();
+                        userdao = null;
+                    } else {
+                        att2.txtTeacherAsign.setText("");
+                        asigtmp = asignaturadao.getAsignaturasTeacher(userdao.getIdUserByDoc(doc));
+                        cargarAsignaturasTeacher();
+                        userdao = null;
+                        JOptionPane.showMessageDialog(null, "No se encuentra el docente..");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "El campo documento no debe estar vacio..");
+                }
+            }
+
+            if (e.getSource() == att2.btnClear) {
+                asigtmp.clear();
+                att2.txtDocTeacherAsign.setText("");
+                att2.txtTeacherAsign.setText("");
+                cargarAsignaturasTeacher();
+                userdao = null;
             }
 
         }
@@ -347,19 +559,27 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if (e.getSource() == aa.txtFindAsignatura) {
-            try {
-                dato = aa.txtFindAsignatura.getText();
-                cargarAsignaturas(aa.tbAsignatura, dato);
-            } catch (SQLException ex) {
-                Logger.getLogger(AsignaturaController.class.getName()).log(Level.SEVERE, null, ex);
+        if (aa != null) {
+            if (e.getSource() == aa.txtFindAsignatura) {
+                try {
+                    dato = aa.txtFindAsignatura.getText();
+                    cargarAsignaturas(aa.tbAsignatura, dato);
+                } catch (SQLException ex) {
+                    Logger.getLogger(AsignaturaController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
-
+        if (att2 != null) {
+            if (e.getSource() == att2.txtDocTeacherAsign) {
+                if (att2.txtDocTeacherAsign.getText().length() == 10) {
+                    e.consume();
+                }
+            }
+        }
     }
 
     @Override

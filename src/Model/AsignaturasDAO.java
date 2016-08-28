@@ -259,26 +259,56 @@ public class AsignaturasDAO {
     public String addAsignaturaToTeacher(ArrayList<Asignaturas> asignaturas, int id_user) throws SQLException {
         String responseCreate = "bad";
         try {
-
+            String sqlv = "SELECT * FROM test_asignaturas_profesor WHERE id_user = ? and id_asignatura = ?";
             sql = "INSERT INTO test_asignaturas_profesor (id_user, id_asignatura) VALUES (?, ?)";
-
 //            if (opc.equals("U")) {
 //                sql = "UPDATE test_asignaturas SET nombre_asig = ? WHERE id_asignatura = ?";
 //            }
             Iterator<Asignaturas> ItrA = asignaturas.iterator();
             while (ItrA.hasNext()) {
                 Asignaturas a = ItrA.next();
-                pstm = cn.prepareStatement(sql);
+                pstm = cn.prepareStatement(sqlv);
                 pstm.setInt(1, id_user);
                 pstm.setInt(2, a.getAsignatura());
-                if (pstm.executeUpdate() > 0) {
-                    responseCreate = "ok";
+                rs = pstm.executeQuery();
+                if (!rs.next()) {
+                    pstm = cn.prepareStatement(sql);
+                    pstm.setInt(1, id_user);
+                    pstm.setInt(2, a.getAsignatura());
+                    if (pstm.executeUpdate() > 0) {
+                        responseCreate = "ok";
+                    }
+                } else {
+                    System.out.println("existe");
                 }
             }
         } catch (Exception e) {
             System.out.println("error cerdo: " + e + " " + e.getClass());
         }
         return responseCreate;
+    }
+
+    public ArrayList<Asignaturas> getAsignaturasTeacher(int id_uer) {
+        ArrayList listaAsignaturas = new ArrayList();
+        Asignaturas asignatura;
+        try {
+            sql = "SELECT a.id_asignatura as id_asignatura, a.nombre_asig as nombre_asig "
+                    + "FROM test_asignaturas a INNER JOIN test_asignaturas_profesor ta ON a.id_asignatura = ta.id_asignatura "
+                    + "WHERE id_user = " + id_uer + " ORDER BY nombre_asig";
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            while (rs.next()) {
+                asignatura = new Asignaturas();
+                asignatura.setAsignatura(rs.getInt("id_asignatura"));
+                asignatura.setNombreAsignatura(rs.getString("nombre_asig"));
+                listaAsignaturas.add(asignatura);
+            }
+
+        } catch (Exception e) {
+            System.out.println("error mula" + e);
+        }
+        return listaAsignaturas;
+
     }
 
 }
