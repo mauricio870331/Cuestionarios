@@ -53,7 +53,11 @@ public class UsersDAO {
             pstm.setString(2, documento);
             pstm.setString(3, nombres);
             pstm.setString(4, apellidos);
-            pstm.setInt(5, idGrupo);
+            if (idGrupo != 0) {
+                pstm.setInt(5, idGrupo);
+            } else {
+                pstm.setString(5, null);
+            }
             pstm.setInt(6, idRol);
             pstm.setString(7, password);
             if (opc.equals("U")) {

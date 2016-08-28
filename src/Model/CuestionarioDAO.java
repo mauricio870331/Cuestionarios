@@ -161,11 +161,11 @@ public class CuestionarioDAO {
     public int nexIdCuestionario() throws SQLException {
         int id = 0;
         try {
-            sql = "select max(id_cuestionario) as maxid from test_c_cuestionario";
+            sql = "SELECT id_cuestionario  from test_c_cuestionario ORDER BY id_cuestionario DESC";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             if (rs.next()) {
-                id = rs.getInt("maxid");
+                id = rs.getInt("id_cuestionario");
             }
 
         } catch (Exception e) {

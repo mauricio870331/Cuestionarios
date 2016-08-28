@@ -20,6 +20,23 @@ public class GrupoDAO {
         cn = Conexion.getConexion("grupodao getListGrupos");
     }
 
+    public String create(Grupo g, String opc) {
+        String response = "";
+        try {
+            if (opc.equals("C")) {
+                sql = "INSERT INTO test_grupo (grupo, cant_alumnos) VALUES (?, ?)";
+                pstm = cn.prepareStatement(sql);
+                pstm.setString(1, g.getGrupo());
+                pstm.setString(2, g.getCant());
+                if (pstm.executeUpdate() > 0) {
+                    response = "ok";
+                }
+            }
+        } catch (Exception e) {
+        }
+        return response;
+    }
+
     public ArrayList<Grupo> getListGrupos() throws SQLException {
         ArrayList ListaGrupo = new ArrayList();
         try {

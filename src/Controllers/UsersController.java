@@ -79,6 +79,12 @@ public final class UsersController implements ActionListener, KeyListener {
         this.pr.rdoTodos.setSelected(true);
         this.pr.txtDoc.addKeyListener(this);
         this.pr.mnuAsigntoTeacher.addActionListener(this);
+        this.pr.cboIdRol.addActionListener(this);
+        this.pr.cboGrupo.setVisible(false);
+        this.pr.jLabel12.setVisible(false);
+        this.pr.btnAddGroup.addActionListener(this);
+        this.pr.btnAddGroup.setVisible(false);
+
         cargarAdmin(pr.tbAdmin, "", 0);
         cargarCboGrupo();
         cargarRol();
@@ -166,7 +172,7 @@ public final class UsersController implements ActionListener, KeyListener {
                 JOptionPane.showMessageDialog(null, "El campo documento no debe estar vacio");
                 pr.txtDoc.requestFocus();
                 return;
-            } else if (admDao.getDoc(documento)) {
+            } else if (admDao.getDoc(documento) && opc.equals("C")) {
                 JOptionPane.showMessageDialog(null, "El documento " + documento + " ya existe");
                 return;
             }
@@ -194,12 +200,14 @@ public final class UsersController implements ActionListener, KeyListener {
                 return;
             }
             int grupo = 0;
-            if (!Grupo.equals("-- Seleccione --")) {
-                grupo = gymDao.getIdGrupoByName(Grupo);
-            } else {
-                JOptionPane.showMessageDialog(null, "Debe seleccionar un grupo");
-                pr.cboGrupo.requestFocus();
-                return;
+            if (rolU == 2) {
+                if (!Grupo.equals("-- Seleccione --")) {
+                    grupo = gymDao.getIdGrupoByName(Grupo);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Debe seleccionar un grupo");
+                    pr.cboGrupo.requestFocus();
+                    return;
+                }
             }
             String rptaRegistro = admDao.Create(documento, tipo_doc, nombres, apellidos, grupo, rolU, pass, foto, opc, idToUpdate);
             System.out.println("rptaRegistro " + rptaRegistro);
@@ -362,6 +370,30 @@ public final class UsersController implements ActionListener, KeyListener {
                 System.out.println("error " + ex);
             }
 
+        }
+        if (e.getSource() == pr.cboIdRol) {
+            String rol = (String) pr.cboIdRol.getSelectedItem();
+            if (rol.equals("Estudiante")) {
+                pr.jLabel12.setVisible(true);
+                pr.cboGrupo.setVisible(true);
+                pr.btnAddGroup.setVisible(true);
+            } else {
+                pr.cboGrupo.setVisible(false);
+                pr.jLabel12.setVisible(false);
+                pr.btnAddGroup.setVisible(false);
+            }
+
+        }
+        if (e.getSource() == pr.btnAddGroup) {
+            try {
+                AddGroup att = new AddGroup(null, true);
+                GrupoController ac = new GrupoController(pr, att);
+                ac.cargarGrupos("");
+                att.setLocationRelativeTo(null);
+                att.setVisible(true);
+            } catch (SQLException ex) {
+                System.out.println("error " + ex);
+            }
         }
 
 //        if (e.getSource() == pr.btnFotoAdmin) {

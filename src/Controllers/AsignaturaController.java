@@ -278,13 +278,14 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
                         userdao = new UsersDAO();
                         System.out.println(userdao.getLastInsert());
                         String r = asignaturadao.addAsignaturaToTeacher(asig, userdao.getLastInsert());
-
                         if (r.equals("ok")) {
                             JOptionPane.showMessageDialog(null, "Asignaturas agregadas a docente..!");
                             userdao = null;
+                            att.dispose();
                         } else {
                             JOptionPane.showMessageDialog(null, "Ocurrio un error al agregar asignaturas a docente..!");
                             userdao = null;
+                            att.dispose();
                         }
                     } else {
                         JOptionPane.showMessageDialog(null, "Aun no ha agregado asignaturas..!");

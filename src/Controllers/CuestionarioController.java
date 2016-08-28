@@ -202,6 +202,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         this.pr.btnChangeObjetive.addActionListener(this);
         this.pr.btnCancelarCuestionaryEdit.addActionListener(this);
         this.pr.deleteCuestionary.addActionListener(this);
+        
 
         if (rol == 2) {
             activarCuestionarios();
@@ -323,7 +324,9 @@ public final class CuestionarioController extends WindowAdapter implements Actio
     }
 
     public void llenarRespuestasAlumno() throws SQLException {
+        System.out.println("aqui 1");
         TotalPreguntas = cuestionariodao.getPreguntasCuestionario(idCuest);
+        System.out.println("TotalPreguntas "+TotalPreguntas);
         pr.lbltotalp.setText("Total Preguntas: " + TotalPreguntas);
         pr.progress.setMaximum(TotalPreguntas);
         pr.lbltotalp.setText("Total Preguntas: " + TotalPreguntas);
@@ -545,6 +548,8 @@ public final class CuestionarioController extends WindowAdapter implements Actio
     }
 
     public void showPreguntasCuestionario(int p) {
+        System.out.println("pregunta "+p+" "+preguntasCList.size());
+        
         int pregunta = p + 1;
         pr.txtPreguntas.setText(pregunta + ") " + preguntasCList.get(p).getPregunta());
         InputStream img = null;
