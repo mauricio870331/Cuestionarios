@@ -120,21 +120,12 @@ public final class UsersController implements ActionListener, KeyListener {
     public void cargarCboGrupo() {
         pr.cboGrupo.removeAllItems();
         Iterator<Grupo> nombreIterator = null;
-        if (id_rol != 4 && id_gym != 0) {
-            nombreIterator = gymDao.getListGrupoById(id_gym).iterator();
-            while (nombreIterator.hasNext()) {
-                Grupo elemento = nombreIterator.next();
-                pr.cboGrupo.addItem(elemento.getIdGrupo() + " - " + elemento.getGrupo());
-            }
-        } else {
-            pr.cboGrupo.addItem("-- Seleccione --");
-            nombreIterator = gymDao.getListGrupoById(id_gym).iterator();
-            while (nombreIterator.hasNext()) {
-                Grupo elemento = nombreIterator.next();
-                pr.cboGrupo.addItem(elemento.getGrupo());
-            }
+        pr.cboGrupo.addItem("-- Seleccione --");
+        nombreIterator = gymDao.getListGrupoById(id_gym).iterator();
+        while (nombreIterator.hasNext()) {
+            Grupo elemento = nombreIterator.next();
+            pr.cboGrupo.addItem(elemento.getGrupo());
         }
-
     }
 
     public void cargarRol() {
@@ -388,7 +379,7 @@ public final class UsersController implements ActionListener, KeyListener {
             try {
                 AddGroup att = new AddGroup(null, true);
                 GrupoController ac = new GrupoController(pr, att);
-                ac.cargarGrupos("");
+                ac.cargarGrupos();
                 att.setLocationRelativeTo(null);
                 att.setVisible(true);
             } catch (SQLException ex) {

@@ -25,23 +25,32 @@ public class GrupoDAO {
         try {
             if (opc.equals("C")) {
                 sql = "INSERT INTO test_grupo (grupo, cant_alumnos) VALUES (?, ?)";
-                pstm = cn.prepareStatement(sql);
-                pstm.setString(1, g.getGrupo());
-                pstm.setString(2, g.getCant());
-                if (pstm.executeUpdate() > 0) {
-                    response = "ok";
-                }
+            } else {
+                sql = "UPDATE test_grupo set grupo = ?, cant_alumnos = ? WHERE id_grupo = ?";
+            }
+            pstm = cn.prepareStatement(sql);
+            pstm.setString(1, g.getGrupo());
+            pstm.setString(2, g.getCant());
+            if (opc.equals("U")) {
+                pstm.setInt(3, g.getIdGrupo());
+            }
+            if (pstm.executeUpdate() > 0) {
+                response = "ok";
             }
         } catch (Exception e) {
+            System.out.println("error " + e);
         }
         return response;
     }
 
-    public ArrayList<Grupo> getListGrupos() throws SQLException {
+    public ArrayList<Grupo> getListGrupos(String dato) throws SQLException {
         ArrayList ListaGrupo = new ArrayList();
         try {
-
-            sql = "SELECT * FROM test_grupo ORDER BY id_grupo";
+            if (dato.equals("")) {
+                sql = "SELECT * FROM test_grupo ORDER BY id_grupo";
+            } else {
+                sql = "SELECT * FROM test_grupo WHERE grupo LIKE '" + dato + "%' ORDER BY id_grupo";
+            }
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             while (rs.next()) {
@@ -79,6 +88,21 @@ public class GrupoDAO {
             System.out.println("error" + e);
         }
         return ListaGrupo;
+    }
+
+    public String deleteGrupo(int idGrupo) {
+        String responseDelete = null;
+        try {
+            sql = "DELETE FROM test_grupo WHERE id_grupo = ?";
+            pstm = cn.prepareStatement(sql);
+            pstm.setInt(1, idGrupo);
+            int rowDelete = pstm.executeUpdate();
+            if (rowDelete > 0) {
+                responseDelete = "registro eliminado con éxito..!";
+            }
+        } catch (Exception e) {
+        }
+        return responseDelete;
     }
 
 //    public ArrayList<Gym> getListGym(int pagina, String dato) {

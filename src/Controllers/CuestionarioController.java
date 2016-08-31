@@ -608,12 +608,12 @@ public final class CuestionarioController extends WindowAdapter implements Actio
     }
 
     public void cargarGruposToCuestionary() throws SQLException {
-        int cantGrupos = grupdao.getListGrupos().size();
+        int cantGrupos = grupdao.getListGrupos("").size();
         ac.pnGruposAdd.removeAll();
         ac.pnGruposAdd.setLayout(new java.awt.GridLayout(6, cantGrupos));
         cb = new JCheckBox[cantGrupos];
         int i = 0;
-        Iterator<Grupo> nombreIterator = grupdao.getListGrupos().iterator();
+        Iterator<Grupo> nombreIterator = grupdao.getListGrupos("").iterator();
         while (nombreIterator.hasNext()) {
             Grupo g = nombreIterator.next();
             cb[i] = new JCheckBox();
@@ -1510,7 +1510,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         try {
             rr.cboReportGrupo.removeAllItems();
             rr.cboReportGrupo.addItem("-- Seleccione --");
-            Iterator<Grupo> nombreIterator = grupdao.getListGrupos().iterator();
+            Iterator<Grupo> nombreIterator = grupdao.getListGrupos("").iterator();
             while (nombreIterator.hasNext()) {
                 Grupo elemento = nombreIterator.next();
                 rr.cboReportGrupo.addItem(elemento.getGrupo());

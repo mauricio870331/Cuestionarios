@@ -36,7 +36,7 @@ public class AddGroup extends javax.swing.JDialog {
         btnCreateGrupo = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbGrupos = new javax.swing.JTable();
-        txtFindAsignatura = new javax.swing.JTextField();
+        txtFindGrupo = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         btnCancelarGrupo = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
@@ -68,11 +68,12 @@ public class AddGroup extends javax.swing.JDialog {
 
             }
         ));
+        tbGrupos.setComponentPopupMenu(popupGrupos);
         jScrollPane1.setViewportView(tbGrupos);
 
-        txtFindAsignatura.addActionListener(new java.awt.event.ActionListener() {
+        txtFindGrupo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtFindAsignaturaActionPerformed(evt);
+                txtFindGrupoActionPerformed(evt);
             }
         });
 
@@ -99,7 +100,7 @@ public class AddGroup extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtFindAsignatura))
+                        .addComponent(txtFindGrupo))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
@@ -132,7 +133,7 @@ public class AddGroup extends javax.swing.JDialog {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtFindAsignatura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtFindGrupo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
@@ -144,9 +145,9 @@ public class AddGroup extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNomGrupoActionPerformed
 
-    private void txtFindAsignaturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFindAsignaturaActionPerformed
+    private void txtFindGrupoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFindGrupoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtFindAsignaturaActionPerformed
+    }//GEN-LAST:event_txtFindGrupoActionPerformed
 
     private void txtCcantActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCcantActionPerformed
         // TODO add your handling code here:
@@ -213,7 +214,7 @@ public class AddGroup extends javax.swing.JDialog {
     public javax.swing.JPopupMenu popupGrupos;
     public javax.swing.JTable tbGrupos;
     public javax.swing.JTextField txtCcant;
-    public javax.swing.JTextField txtFindAsignatura;
+    public javax.swing.JTextField txtFindGrupo;
     public javax.swing.JTextField txtNomGrupo;
     // End of variables declaration//GEN-END:variables
 }

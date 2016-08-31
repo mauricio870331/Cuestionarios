@@ -229,7 +229,8 @@ public class Principal extends javax.swing.JFrame {
 
         jLabel12.setText("Grupo:");
 
-        btnAddGroup.setText("Nuevo Grupo");
+        btnAddGroup.setText("+");
+        btnAddGroup.setToolTipText("Nuevo Grupo");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -244,7 +245,7 @@ public class Principal extends javax.swing.JFrame {
                     .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cboTipoDocAdmin, javax.swing.GroupLayout.Alignment.TRAILING, 0, 242, Short.MAX_VALUE)
+                    .addComponent(cboTipoDocAdmin, javax.swing.GroupLayout.Alignment.TRAILING, 0, 244, Short.MAX_VALUE)
                     .addComponent(txtNombres, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(cboIdRol, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(cboGrupo, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -255,12 +256,12 @@ public class Principal extends javax.swing.JFrame {
                     .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtDoc, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
+                    .addComponent(txtDoc, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
                     .addComponent(txtApellidos, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtPass, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(btnAddGroup)
-                        .addGap(0, 297, Short.MAX_VALUE)))
+                        .addComponent(btnAddGroup, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 317, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(

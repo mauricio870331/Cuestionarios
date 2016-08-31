@@ -31,7 +31,7 @@ import javax.swing.table.TableRowSorter;
  * @author Mauricio
  */
 public final class GrupoController extends MouseAdapter implements ActionListener, KeyListener {
-    
+
     String dato = "";
     DefaultTableModel modelo = new DefaultTableModel();
     GrupoDAO grupodao = new GrupoDAO();
@@ -40,17 +40,23 @@ public final class GrupoController extends MouseAdapter implements ActionListene
     int idArea = 0;
     Principal pr;
     AddGroup att;
-    
+    int idGrupo = 0;
+    String oldGrupo = "";
+
     public GrupoController(Principal pr, AddGroup att) throws SQLException {
         this.pr = pr;
         this.att = att;
         this.att.btnCreateGrupo.addActionListener(this);
         this.att.btnCancelarGrupo.addActionListener(this);
-        
+        this.att.tbGrupos.addMouseListener(this);
+        this.att.mnuDeleteGrupo.addActionListener(this);
+        this.att.mnuUpdateGrupo.addActionListener(this);
+        this.att.txtFindGrupo.addKeyListener(this);
+
     }
-    
-    public void cargarGrupos(String dato) throws SQLException {
-        String Titulos[] = {"", "Id", "Nombre"};
+
+    public void cargarGrupos() throws SQLException {
+        String Titulos[] = {"", "Grupo", ""};
         modelo = new DefaultTableModel(null, Titulos) {
             @Override
             public boolean isCellEditable(int row, int column) {//para evitar que las celdas sean editables
@@ -58,7 +64,7 @@ public final class GrupoController extends MouseAdapter implements ActionListene
             }
         };
         Object[] columna = new Object[3];
-        Iterator<Grupo> nombreIterator = grupodao.getListGrupos().iterator();
+        Iterator<Grupo> nombreIterator = grupodao.getListGrupos(dato).iterator();
         while (nombreIterator.hasNext()) {
             Grupo a = nombreIterator.next();
             columna[0] = a.getIdGrupo();
@@ -72,16 +78,20 @@ public final class GrupoController extends MouseAdapter implements ActionListene
         att.tbGrupos.getColumnModel().getColumn(0).setMaxWidth(0);
         att.tbGrupos.getColumnModel().getColumn(0).setMinWidth(0);
         att.tbGrupos.getColumnModel().getColumn(0).setPreferredWidth(0);
+        att.tbGrupos.getColumnModel().getColumn(1).setPreferredWidth(100);
+        att.tbGrupos.getColumnModel().getColumn(2).setMaxWidth(0);
+        att.tbGrupos.getColumnModel().getColumn(2).setMinWidth(0);
+        att.tbGrupos.getColumnModel().getColumn(2).setPreferredWidth(0);
         att.tbGrupos.setModel(modelo);
     }
-    
+
     public void actionPerformed(ActionEvent e) {
         if (att != null) {
             if (e.getSource() == att.btnCreateGrupo) {
                 String grupo = att.txtNomGrupo.getText();
                 String cantidad = att.txtCcant.getText();
                 if (grupo.equals("")) {
-                    JOptionPane.showMessageDialog(null, "El campo ggrupo no debe estar vacio");
+                    JOptionPane.showMessageDialog(null, "El campo Grupo no debe estar vacio");
                     att.txtNomGrupo.requestFocus();
                     return;
                 }
@@ -90,14 +100,21 @@ public final class GrupoController extends MouseAdapter implements ActionListene
                     att.txtCcant.requestFocus();
                     return;
                 }
+                String msn = "Grupo Creado con exito..!";
                 Grupo g = new Grupo();
+                if (opc.equals("U")) {
+                    g.setIdGrupo(idGrupo);
+                    msn = "Grupo Actualizado con exito..!";
+                }
                 g.setGrupo(grupo);
                 g.setCant(cantidad);
                 String r = grupodao.create(g, opc);
                 if (r.equals("ok")) {
                     try {
-                        cargarGrupos("");
+                        cargarGrupos();
+                        JOptionPane.showMessageDialog(null, msn);
                         setGrupo();
+                        idGrupo = 0;
                         att.dispose();
                     } catch (SQLException ex) {
                         Logger.getLogger(GrupoController.class.getName()).log(Level.SEVERE, null, ex);
@@ -105,9 +122,46 @@ public final class GrupoController extends MouseAdapter implements ActionListene
                 } else {
                     JOptionPane.showMessageDialog(null, "Ocurrio un error al ingresar el grupo");
                 }
-                
+
             }
-            
+
+            if (e.getSource() == att.mnuUpdateGrupo) {
+                opc = "U";
+                int fila = att.tbGrupos.getSelectedRow();
+                if (fila >= 0) {
+                    idGrupo = Integer.parseInt(att.tbGrupos.getValueAt(fila, 0).toString());
+                    oldGrupo = att.tbGrupos.getValueAt(fila, 1).toString();
+                    att.txtNomGrupo.setText(att.tbGrupos.getValueAt(fila, 1).toString());
+                    att.txtCcant.setText(att.tbGrupos.getValueAt(fila, 2).toString());
+                } else {
+                    JOptionPane.showMessageDialog(null, "No has seleccionado un registro..!");
+                }
+            }
+
+            if (e.getSource() == att.mnuDeleteGrupo) {
+                int fila = att.tbGrupos.getSelectedRow();
+                if (fila >= 0) {
+                    int response = JOptionPane.showConfirmDialog(null, "Está seguro de eliminar el registro?", "Aviso..!",
+                            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    if (response == JOptionPane.YES_OPTION) {
+                        oldGrupo = att.tbGrupos.getValueAt(fila, 1).toString();
+                        String rptaDelete = grupodao.deleteGrupo(Integer.parseInt(att.tbGrupos.getValueAt(fila, 0).toString()));
+                        if (rptaDelete != null) {
+                            try {
+                                JOptionPane.showMessageDialog(null, rptaDelete);
+                                pr.cboGrupo.removeItem(oldGrupo);
+                                oldGrupo = "";
+                                cargarGrupos();
+                            } catch (SQLException ex) {
+                                System.out.println("error " + ex);
+                            }
+                        }
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "No has seleccionado un registro..!");
+                }
+            }
+
             if (e.getSource() == att.btnCancelarGrupo) {
                 limpiarForm();
                 att.dispose();
@@ -195,23 +249,21 @@ public final class GrupoController extends MouseAdapter implements ActionListene
 //            }
 //
         }
-        
+
     }
-    
+
     @Override
     public void keyReleased(KeyEvent e) {
-//        if (aa != null) {
-//            if (e.getSource() == aa.txtFindAsignatura) {
-//                try {
-//                    dato = aa.txtFindAsignatura.getText();
-//                    cargarAsignaturas(aa.tbAsignatura, dato);
-//                } catch (SQLException ex) {
-//                    Logger.getLogger(GrupoController.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            }
-//        }
+        if (e.getSource() == att.txtFindGrupo) {
+            try {
+                dato = att.txtFindGrupo.getText();
+                cargarGrupos();
+            } catch (SQLException ex) {
+                System.out.println("error " + ex);
+            }
+        }
     }
-    
+
     @Override
     public void keyTyped(KeyEvent e) {
 //        if (att2 != null) {
@@ -222,26 +274,28 @@ public final class GrupoController extends MouseAdapter implements ActionListene
 //            }
 //        }
     }
-    
+
     @Override
     public void keyPressed(KeyEvent e) {
-        
+
     }
-    
+
     private void limpiarForm() {
         att.txtNomGrupo.setText("");
         att.txtCcant.setText("");
         opc = "C";
     }
-    
+
     public void setGrupo() {
+        pr.cboGrupo.removeItem(oldGrupo);
         pr.cboGrupo.addItem(att.txtNomGrupo.getText());
         pr.cboGrupo.setSelectedItem(att.txtNomGrupo.getText());
         limpiarForm();
+        oldGrupo = "";
     }
-    
+
     public void mouseClicked(MouseEvent e) {
-        
+
     }
-    
+
 }
