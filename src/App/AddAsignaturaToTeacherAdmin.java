@@ -28,16 +28,17 @@ public class AddAsignaturaToTeacherAdmin extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        popupAsignatura = new javax.swing.JPopupMenu();
+        deleteAsignatura = new javax.swing.JMenuItem();
+        updateAsignatura = new javax.swing.JMenuItem();
+        asocAsignToteacher = new javax.swing.JMenuItem();
         popupAsignaturaToTeacher = new javax.swing.JPopupMenu();
-        deleteAsignaturaToTeach2 = new javax.swing.JMenuItem();
+        deleteAsignaturaToTeach = new javax.swing.JMenuItem();
         jLabel1 = new javax.swing.JLabel();
-        btnCreateAsignatura2 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbAsignatura2 = new javax.swing.JTable();
         btnCancelaAsignatura2 = new javax.swing.JButton();
-        txtNomAsignatura2 = new javax.swing.JComboBox<>();
-        btnAdsignaturaTeacher2 = new javax.swing.JButton();
-        btnSaveAsignaturasToTeacher2 = new javax.swing.JButton();
+        btnCreateAsignatura2 = new javax.swing.JButton();
         txtDocTeacherAsign = new javax.swing.JTextField();
         txtTeacherAsign = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -46,17 +47,26 @@ public class AddAsignaturaToTeacherAdmin extends javax.swing.JDialog {
         btnCargarAsig = new javax.swing.JButton();
         btnClear = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
+        txtNomAsignatura2 = new javax.swing.JTextField();
 
-        deleteAsignaturaToTeach2.setText("Quitar Asignatura");
-        popupAsignaturaToTeacher.add(deleteAsignaturaToTeach2);
+        deleteAsignatura.setText("Eliminar");
+        popupAsignatura.add(deleteAsignatura);
+
+        updateAsignatura.setText("Actualizar");
+        popupAsignatura.add(updateAsignatura);
+
+        asocAsignToteacher.setText("Asociar Asignatura");
+        popupAsignatura.add(asocAsignToteacher);
+
+        deleteAsignaturaToTeach.setText("Quitar Asignatura");
+        popupAsignaturaToTeacher.add(deleteAsignaturaToTeach);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         jLabel1.setText("Asignatura");
 
-        btnCreateAsignatura2.setText("Crear Asignatura");
-
-        jScrollPane1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Pendientes por asignar", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        jScrollPane1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Asignaturas Asociadas Al Docente", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
         tbAsignatura2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -71,14 +81,12 @@ public class AddAsignaturaToTeacherAdmin extends javax.swing.JDialog {
 
         btnCancelaAsignatura2.setText("Cancelar");
 
-        btnAdsignaturaTeacher2.setText("+");
-        btnAdsignaturaTeacher2.setToolTipText("Agregar Asignatura");
-
-        btnSaveAsignaturasToTeacher2.setText("Guardar");
+        btnCreateAsignatura2.setText("Guardar");
+        btnCreateAsignatura2.setToolTipText("Nueva Asignatura");
 
         txtTeacherAsign.setEnabled(false);
 
-        jScrollPane2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Asignaturas Actuales", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        jScrollPane2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Asignaturas", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
         tbAsignatura3.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -88,7 +96,7 @@ public class AddAsignaturaToTeacherAdmin extends javax.swing.JDialog {
 
             }
         ));
-        tbAsignatura3.setComponentPopupMenu(popupAsignaturaToTeacher);
+        tbAsignatura3.setComponentPopupMenu(popupAsignatura);
         jScrollPane2.setViewportView(tbAsignatura3);
 
         jLabel2.setText("Documento:");
@@ -103,42 +111,38 @@ public class AddAsignaturaToTeacherAdmin extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnCreateAsignatura2, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 506, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 506, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel1))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(txtDocTeacherAsign, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(btnCargarAsig)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(btnClear))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(txtNomAsignatura2, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btnAdsignaturaTeacher2, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btnCancelaAsignatura2))
-                                    .addComponent(txtTeacherAsign)))
-                            .addComponent(btnSaveAsignaturasToTeacher2))))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtNomAsignatura2, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtDocTeacherAsign, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnCargarAsig, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnCreateAsignatura2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(2, 2, 2)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnClear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(1, 1, 1))
+                            .addComponent(btnCancelaAsignatura2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(txtTeacherAsign, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(11, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -156,15 +160,12 @@ public class AddAsignaturaToTeacherAdmin extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel1)
-                    .addComponent(txtNomAsignatura2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAdsignaturaTeacher2)
                     .addComponent(btnCancelaAsignatura2)
+                    .addComponent(txtNomAsignatura2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCreateAsignatura2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnSaveAsignaturasToTeacher2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(11, 11, 11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -230,23 +231,25 @@ public class AddAsignaturaToTeacherAdmin extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    public javax.swing.JButton btnAdsignaturaTeacher2;
+    public javax.swing.JMenuItem asocAsignToteacher;
     public javax.swing.JButton btnCancelaAsignatura2;
     public javax.swing.JButton btnCargarAsig;
     public javax.swing.JButton btnClear;
     public javax.swing.JButton btnCreateAsignatura2;
-    public javax.swing.JButton btnSaveAsignaturasToTeacher2;
-    public javax.swing.JMenuItem deleteAsignaturaToTeach2;
+    public javax.swing.JMenuItem deleteAsignatura;
+    public javax.swing.JMenuItem deleteAsignaturaToTeach;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    public javax.swing.JPopupMenu popupAsignatura;
     public javax.swing.JPopupMenu popupAsignaturaToTeacher;
     public javax.swing.JTable tbAsignatura2;
     public javax.swing.JTable tbAsignatura3;
     public javax.swing.JTextField txtDocTeacherAsign;
-    public javax.swing.JComboBox<String> txtNomAsignatura2;
+    public javax.swing.JTextField txtNomAsignatura2;
     public javax.swing.JTextField txtTeacherAsign;
+    public javax.swing.JMenuItem updateAsignatura;
     // End of variables declaration//GEN-END:variables
 }

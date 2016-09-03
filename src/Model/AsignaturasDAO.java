@@ -64,7 +64,7 @@ public class AsignaturasDAO {
         return responseCreate;
     }
 
-    public String create(Asignaturas a, String opc) throws SQLException {
+    public String createT(Asignaturas a, String opc) throws SQLException {
         String responseCreate = null;
         try {
             if (opc.equals("C")) {
@@ -136,6 +136,27 @@ public class AsignaturasDAO {
         return ListAsignatura;
     }
 
+    public ArrayList<Asignaturas> getListAsignaturasAsocTeach(int dato) throws SQLException {
+        ArrayList ListAsignatura = new ArrayList();
+        try {
+            sql = "SELECT a.id_asignatura as id_asignatura, a.nombre_asig as nombre_asig "
+                    + "FROM test_asignaturas_profesor asi INNER JOIN test_asignaturas a ON a.id_asignatura = asi.id_asignatura "
+                    + "where asi.id_user = " + dato + "";
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            while (rs.next()) {
+                Asignaturas as = new Asignaturas();
+                as.setAsignatura(rs.getInt("id_asignatura"));
+                as.setNombreAsignatura(rs.getString("nombre_asig"));
+                ListAsignatura.add(as);
+            }
+
+        } catch (Exception e) {
+            System.out.println("error gato" + e);
+        }
+        return ListAsignatura;
+    }
+
     public ArrayList<Asignaturas> getAsignaturasByCuestionario(int grupo) {
         ArrayList ListAsignatura = new ArrayList();
         try {
@@ -176,7 +197,7 @@ public class AsignaturasDAO {
     public boolean existAsignatura(String asignatura) {
         boolean existe = false;
         try {
-            sql = "SELECT * FROM test_asignaturas WHERE nombre_asig = '" + asignatura + "' OR nombre_asig LIKE '%" + asignatura + "%'";
+            sql = "SELECT * FROM test_asignaturas WHERE nombre_asig = '" + asignatura + "'";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             if (rs.next()) {
@@ -212,6 +233,22 @@ public class AsignaturasDAO {
                 }
 
             }
+
+        } catch (SQLException e) {
+            System.out.println("error addao " + e);
+        }
+        return responseDelete;
+    }
+
+    public String deleteAsignaturaToteach(int idAsignatura, int Docente) {
+        String responseDelete = null;
+        try {
+            String sqlA = "DELETE FROM test_asignaturas_profesor WHERE id_asignatura = ? AND id_user = ?";
+            pstm = cn.prepareStatement(sqlA);
+            pstm.setInt(1, idAsignatura);
+            pstm.setInt(2, Docente);
+            pstm.executeUpdate();
+            responseDelete = "registro eliminado con exito..!";
 
         } catch (SQLException e) {
             System.out.println("error addao " + e);
@@ -256,32 +293,27 @@ public class AsignaturasDAO {
         return asignaruta;
     }
 
-    public String addAsignaturaToTeacher(ArrayList<Asignaturas> asignaturas, int id_user) throws SQLException {
+    public String addAsignaturaToTeacher(int asignaturas, int id_user) throws SQLException {
         String responseCreate = "bad";
         try {
             String sqlv = "SELECT * FROM test_asignaturas_profesor WHERE id_user = ? and id_asignatura = ?";
             sql = "INSERT INTO test_asignaturas_profesor (id_user, id_asignatura) VALUES (?, ?)";
-//            if (opc.equals("U")) {
-//                sql = "UPDATE test_asignaturas SET nombre_asig = ? WHERE id_asignatura = ?";
-//            }
-            Iterator<Asignaturas> ItrA = asignaturas.iterator();
-            while (ItrA.hasNext()) {
-                Asignaturas a = ItrA.next();
-                pstm = cn.prepareStatement(sqlv);
+            pstm = cn.prepareStatement(sqlv);
+            pstm.setInt(1, id_user);
+            pstm.setInt(2, asignaturas);
+            rs = pstm.executeQuery();
+            if (!rs.next()) {
+                pstm = cn.prepareStatement(sql);
                 pstm.setInt(1, id_user);
-                pstm.setInt(2, a.getAsignatura());
-                rs = pstm.executeQuery();
-                if (!rs.next()) {
-                    pstm = cn.prepareStatement(sql);
-                    pstm.setInt(1, id_user);
-                    pstm.setInt(2, a.getAsignatura());
-                    if (pstm.executeUpdate() > 0) {
-                        responseCreate = "ok";
-                    }
-                } else {
-                    System.out.println("existe");
+                pstm.setInt(2, asignaturas);
+                if (pstm.executeUpdate() > 0) {
+                    responseCreate = "ok";
                 }
+            } else {
+                responseCreate = "ok";
+                System.out.println("existe");
             }
+
         } catch (Exception e) {
             System.out.println("error cerdo: " + e + " " + e.getClass());
         }

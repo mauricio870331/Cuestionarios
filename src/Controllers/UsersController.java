@@ -211,8 +211,9 @@ public final class UsersController implements ActionListener, KeyListener {
                 if (rolU == 1) {
                     try {
                         AddAsignaturaToTeacher att = new AddAsignaturaToTeacher(null, true);
-                        AsignaturaController ac = new AsignaturaController(att, rolU);
-                        ac.cargarCboAsignaturasToteacher();
+                        AsignaturaController ac = new AsignaturaController(att, rolU, opc, idToUpdate);
+                        ac.cargarAsignaturasToasign();
+                        ac.cargarAsignaturasAsocTeah();
                         att.setLocationRelativeTo(null);
                         att.setVisible(true);
                     } catch (SQLException ex) {
@@ -352,8 +353,7 @@ public final class UsersController implements ActionListener, KeyListener {
         if (e.getSource() == pr.mnuAsigntoTeacher) {
             try {
                 AddAsignaturaToTeacherAdmin att = new AddAsignaturaToTeacherAdmin(null, true);
-                AsignaturaController ac = new AsignaturaController(att);
-                ac.cargarCboAsignaturasToteacher2();
+                AsignaturaController ac = new AsignaturaController(att);               
                 ac.cargarAsignaturasTeacher();
                 att.setLocationRelativeTo(null);
                 att.setVisible(true);
