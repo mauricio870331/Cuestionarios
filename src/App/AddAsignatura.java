@@ -31,6 +31,7 @@ public class AddAsignatura extends javax.swing.JDialog {
         popupAsignatura = new javax.swing.JPopupMenu();
         mnuUpdateAsignatura = new javax.swing.JMenuItem();
         mnuDeleteAsignatura = new javax.swing.JMenuItem();
+        asocAasignature = new javax.swing.JMenuItem();
         jLabel1 = new javax.swing.JLabel();
         txtNomAsignatura = new javax.swing.JTextField();
         btnCreateAsignatura = new javax.swing.JButton();
@@ -45,6 +46,9 @@ public class AddAsignatura extends javax.swing.JDialog {
 
         mnuDeleteAsignatura.setText("Eliminar");
         popupAsignatura.add(mnuDeleteAsignatura);
+
+        asocAasignature.setText("Asociar Asignatura");
+        popupAsignatura.add(asocAasignature);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -177,6 +181,7 @@ public class AddAsignatura extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    public javax.swing.JMenuItem asocAasignature;
     public javax.swing.JButton btnCancelaAsignatura;
     public javax.swing.JButton btnCreateAsignatura;
     private javax.swing.JLabel jLabel1;

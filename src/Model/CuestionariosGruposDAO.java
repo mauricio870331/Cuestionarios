@@ -67,7 +67,19 @@ public class CuestionariosGruposDAO {
             }
         } catch (SQLException e) {
             System.err.println("CuestionarioGrupoDao AddQuest : " + e);
-        } 
+        }
         return rpta;
+    }
+
+    public int getGrupoCuestionario(int cuestionario) throws SQLException {
+        int grupo = 0;
+        sql = "SELECT g.id_grupo as id_grupo FROM test_grupo g INNER JOIN test_cuestionarios_grupos cg ON g.id_grupo = cg.id_grupo "
+                + "WHERE cg.id_cuestionario = " + cuestionario;
+        pstm = cn.prepareStatement(sql);
+        rs = pstm.executeQuery();
+        if (rs.next()) {
+            grupo = rs.getInt("id_grupo");
+        }
+        return grupo;
     }
 }

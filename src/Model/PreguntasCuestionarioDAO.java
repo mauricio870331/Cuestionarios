@@ -44,6 +44,7 @@ public class PreguntasCuestionarioDAO {
                 prc.setPregunta(rs.getString("pregunta"));
                 prc.setIdCuestionario(rs.getInt("id_cuestionario"));
                 prc.setImagen(rs.getBinaryStream("imagen"));
+                prc.setEnunciado(rs.getString("enunciado"));
                 ListPreguntas.add(prc);
             }
         } catch (Exception e) {

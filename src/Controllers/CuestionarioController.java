@@ -152,6 +152,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
     String Ptemp = "";
     String Oldresp = "";
     String OldEstateResp = "";
+    String cuesti = "";
 
     public CuestionarioController(Principal pr, int idGrupo, int idUserLog, int rol) throws SQLException {
         this.pr = pr;
@@ -163,6 +164,8 @@ public final class CuestionarioController extends WindowAdapter implements Actio
     }
 
     private void cargarAll() throws SQLException {
+        this.pr.txtEnunciadoC.setLineWrap(true);
+        this.pr.txtPreguntaImg.setVisible(false);
         this.pr.cboAsignatura.addActionListener(this);
         this.pr.cboPreguntas.addActionListener(this);
         this.pr.btnNextQuestion.addActionListener(this);
@@ -183,6 +186,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         this.rr.btnExportReport.addActionListener(this);
         this.pr.tCuestionario.addActionListener(this);
         this.ac.addWindowListener(this);
+        this.pr.addWindowListener(this);
         this.pr.btnIniciarPrueba.addActionListener(this);//        this.pr.btnRegistrarCAlumno.addActionListener(this);
         this.pr.btnPreviousQuestion.setVisible(false);
         this.pr.reporteResultados.addActionListener(this);
@@ -202,8 +206,8 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         this.pr.btnChangeObjetive.addActionListener(this);
         this.pr.btnCancelarCuestionaryEdit.addActionListener(this);
         this.pr.deleteCuestionary.addActionListener(this);
-        
-
+        this.ac.cboCuestionaries.addActionListener(this);
+        this.ac.btnCancelCtoGroup.addActionListener(this);
         if (rol == 2) {
             activarCuestionarios();
             this.pr.tGrado.setText(grupdao.getListGrupoToString(idGrupo));
@@ -236,6 +240,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
             this.pr.txtDescripPregunta.setEnabled(false);
             this.pr.btnAddPregunta.setEnabled(false);
             this.pr.btnAddImagen.setEnabled(false);
+            this.pr.txtEnunciado.setEnabled(false);
 //        this.pr.jButton5.setEnabled(false);
         }
     }
@@ -326,7 +331,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
     public void llenarRespuestasAlumno() throws SQLException {
         System.out.println("aqui 1");
         TotalPreguntas = cuestionariodao.getPreguntasCuestionario(idCuest);
-        System.out.println("TotalPreguntas "+TotalPreguntas);
+        System.out.println("TotalPreguntas " + TotalPreguntas);
         pr.lbltotalp.setText("Total Preguntas: " + TotalPreguntas);
         pr.progress.setMaximum(TotalPreguntas);
         pr.lbltotalp.setText("Total Preguntas: " + TotalPreguntas);
@@ -358,14 +363,14 @@ public final class CuestionarioController extends WindowAdapter implements Actio
 
     public void cargarPreguntasInTable(JTable tbPreguntas) throws NoSuchFieldException, IOException {
         tbPreguntas.setDefaultRenderer(Object.class, new ImagensTabla());
-        String Titulos[] = {"", "Orden", "Descripcion", "Enunciado"};
+        String Titulos[] = {"", "Orden", "Descripcion", "Imagen", "Enunciado"};
         modelo = new DefaultTableModel(null, Titulos) {
             @Override
             public boolean isCellEditable(int row, int column) { //para evitar que las celdas sean editables
                 return column == 2 || column == 3;
             }
         };
-        Object[] columna = new Object[4];
+        Object[] columna = new Object[5];
         Iterator<PreguntasCuestionario> preguntas = ListPreguntas.iterator();
         while (preguntas.hasNext()) {
             PreguntasCuestionario pc = preguntas.next();
@@ -381,6 +386,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
             } else {
                 columna[3] = null;
             }
+            columna[4] = pc.getEnunciado();
             modelo.addRow(columna);
         }
         tbPreguntas.setModel(modelo);
@@ -548,13 +554,14 @@ public final class CuestionarioController extends WindowAdapter implements Actio
     }
 
     public void showPreguntasCuestionario(int p) {
-        System.out.println("pregunta "+p+" "+preguntasCList.size());
-        
+        System.out.println("pregunta " + p + " " + preguntasCList.size());
         int pregunta = p + 1;
         pr.txtPreguntas.setText(pregunta + ") " + preguntasCList.get(p).getPregunta());
+        pr.txtEnunciadoC.setText(preguntasCList.get(p).getEnunciado());
         InputStream img = null;
         img = preguntasCList.get(p).getImagen();
         if (img != null) {
+            pr.txtPreguntaImg.setVisible(true);
             try {
                 BufferedImage bi = ImageIO.read(img);
                 ii = new ImageIcon(bi);
@@ -565,6 +572,8 @@ public final class CuestionarioController extends WindowAdapter implements Actio
             } catch (IOException ex) {
                 System.out.println("error img " + ex);
             }
+        } else {
+            pr.txtPreguntaImg.setVisible(false);
         }
         cargarRespuestasCuestionario(p);
     }
@@ -619,18 +628,29 @@ public final class CuestionarioController extends WindowAdapter implements Actio
             cb[i] = new JCheckBox();
             cb[i].setText(g.getGrupo());
             cb[i].addItemListener(this);
+            if (cgruposDao.getGrupoCuestionario(cuestionariodao.getCuestionariosByName(cuesti)) == g.getIdGrupo()) {
+                cb[i].setSelected(true);
+            } else {
+                cb[i].setSelected(false);
+            }
             ac.pnGruposAdd.add(cb[i]);
             i++;
         }
-        cargarCuestionariesToAddGrup(ac);
         ac.pnGruposAdd.updateUI();
-        ac.setLocationRelativeTo(null);
-        ac.setVisible(true);
     }
 
     // ACTION PERFORMED
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == ac.cboCuestionaries) {
+            try {
+                cuesti = (String) ac.cboCuestionaries.getSelectedItem();
+                cargarGruposToCuestionary();
+            } catch (SQLException ex) {
+                System.out.println("error " + ex);
+            }
+        }
+
         if (e.getSource() == pr.btnIniciarPrueba) {
             t.start();
             pr.btnIniciarPrueba.setEnabled(false);
@@ -658,9 +678,12 @@ public final class CuestionarioController extends WindowAdapter implements Actio
 
         if (e.getSource() == pr.asignCuestionaryToGroup) {
             try {
+                cargarCuestionariesToAddGrup(ac);
                 cargarGruposToCuestionary();
+                ac.setLocationRelativeTo(null);
+                ac.setVisible(true);
             } catch (SQLException ex) {
-                Logger.getLogger(CuestionarioController.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("error " + ex);
             }
         }
 
@@ -707,6 +730,10 @@ public final class CuestionarioController extends WindowAdapter implements Actio
                     JOptionPane.showMessageDialog(null, "Elija un formato valido");
                 }
             }
+        }
+
+        if (e.getSource() == ac.btnCancelCtoGroup) {
+            ac.dispose();
         }
 
         if (e.getSource() == ac.btnSaveCtoGroup) {
@@ -783,6 +810,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
                 if (response == JOptionPane.YES_OPTION) {
                     pr.txtCantPreguntas.setEnabled(false);
                     this.pr.txtDescripPregunta.setEnabled(true);
+                    this.pr.txtEnunciado.setEnabled(true);
                     this.pr.btnAddPregunta.setEnabled(true);
                     this.pr.btnAddImagen.setEnabled(true);
                     pr.btnRegistrarCuestionary.setText("Guardar");
@@ -983,6 +1011,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         if (e.getSource() == pr.btnAddPregunta) {
             String pregunta = pr.txtDescripPregunta.getText();
             int cantPre = Integer.parseInt(pr.txtCantPreguntas.getText());
+            String enunciado = pr.txtEnunciado.getText();
             if (pregunta.equals("")) {
                 JOptionPane.showMessageDialog(null, "Debe ingresar la pregunta..");
                 pr.txtDescripPregunta.requestFocus();
@@ -995,6 +1024,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
             pc.setIdPregunta(deleteSpinner);
             pc.setPregunta(pregunta);
             pc.setLargo(foto);
+            pc.setEnunciado(enunciado);
             ListPreguntas.add(pc);
             ListPreguntasTemp.add(pc);
             try {
@@ -1006,10 +1036,12 @@ public final class CuestionarioController extends WindowAdapter implements Actio
                 cargarPreguntasToRespuestas(true);
             }
             pr.txtDescripPregunta.setText("");
+            pr.txtEnunciado.setText("");
             deleteSpinner++;
             tempCantPreguntas++;
             if (tempCantPreguntas == Integer.parseInt(pr.txtCantPreguntas.getText())) {
                 pr.txtDescripPregunta.setEnabled(false);
+                pr.txtEnunciado.setEnabled(false);
                 pr.btnAddPregunta.setEnabled(false);
                 pr.btnAddImagen.setEnabled(false);
                 enabledAnswer(true);
@@ -1464,6 +1496,7 @@ public final class CuestionarioController extends WindowAdapter implements Actio
         contPregunta = 0;
         deleteSpinner = 0;
         pr.txtDescCuestionary.setText("");
+        pr.txtEnunciado.setText("");
         pr.cboAsignature.setSelectedItem("-- Seleccione --");
         pr.txtDescripPregunta.setText("");
         pr.txtObjetivo.setText("");

@@ -19,6 +19,7 @@ public class PreguntasCuestionario {
     private int idCuestionario;
     private InputStream imagen;
     private String largo;
+    private String enunciado;
 
     public PreguntasCuestionario() {
         this.id = 0;
@@ -27,6 +28,7 @@ public class PreguntasCuestionario {
         this.idCuestionario = 0;
         this.imagen = null;
         this.largo = "";
+        this.enunciado = "";
     }
 
     public int getIdPregunta() {
@@ -75,6 +77,14 @@ public class PreguntasCuestionario {
 
     public void setLargo(String largo) {
         this.largo = largo;
+    }
+
+    public String getEnunciado() {
+        return enunciado;
+    }
+
+    public void setEnunciado(String enunciado) {
+        this.enunciado = enunciado;
     }
 
 }

@@ -231,7 +231,7 @@ public class CuestionarioDAO {
                     while (preguntas.hasNext()) {
                         try {
                             PreguntasCuestionario pc = preguntas.next();
-                            sql = "INSERT INTO test_preguntas_cuestionario (id_pregunta, pregunta, id_cuestionario, imagen) VALUES (?,?,?,?)";
+                            sql = "INSERT INTO test_preguntas_cuestionario (id_pregunta, pregunta, id_cuestionario, imagen, enunciado) VALUES (?,?,?,?,?)";
                             pstm = cn.prepareStatement(sql);
                             pstm.setInt(1, pc.getIdPregunta());
                             pstm.setString(2, pc.getPregunta());
@@ -243,7 +243,8 @@ public class CuestionarioDAO {
                             } else {
                                 pstm.setBinaryStream(4, null);
                             }
-                            int rowAfectedP = pstm.executeUpdate();
+                            pstm.setString(5, pc.getEnunciado());
+                            pstm.executeUpdate();
                         } catch (SQLException | FileNotFoundException e) {
                             System.err.println("CuestionarioDao AddQuest : " + e);
                         }
@@ -264,24 +265,20 @@ public class CuestionarioDAO {
                                 pstm.setString(2, rc.getRespuesta());
                                 pstm.setBoolean(3, rc.isEstado());
                                 pstm.setInt(4, rc.getIdfk());
-                                int rowAfectedR = pstm.executeUpdate();
+                                pstm.executeUpdate();
                             }
                         } catch (Exception e) {
                             System.err.println("CuestionarioDao AddRs : " + e);
                         }
 
                     }
-
                     if (opc.equals("C")) {
                         rpta = "Cuestionario creado con éxito";
                     } else {
                         rpta = "Cuestionario actualizado con éxito";
                     }
                 }
-            }
-            if (opc.equals("U")) {
-                //sql = "UPDATE test_areas SET area = ? WHERE id_area = ?";
-            }
+            }            
         } catch (Exception e) {
             System.out.println("error CuestionarioDao : " + e);
         } finally {

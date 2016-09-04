@@ -64,7 +64,6 @@ public class GrupoDAO {
             System.out.println("error" + e);
         }
         return ListaGrupo;
-
     }
 
     public ArrayList<Grupo> getListGrupoById(int idGrupo) {

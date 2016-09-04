@@ -10,7 +10,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  *
@@ -326,7 +325,7 @@ public class AsignaturasDAO {
         try {
             sql = "SELECT a.id_asignatura as id_asignatura, a.nombre_asig as nombre_asig "
                     + "FROM test_asignaturas a INNER JOIN test_asignaturas_profesor ta ON a.id_asignatura = ta.id_asignatura "
-                    + "WHERE id_user = " + id_uer + " ORDER BY nombre_asig";
+                    + "WHERE ta.id_user = " + id_uer + " ORDER BY nombre_asig";
             pstm = cn.prepareStatement(sql);
             rs = pstm.executeQuery();
             while (rs.next()) {
@@ -341,6 +340,23 @@ public class AsignaturasDAO {
         }
         return listaAsignaturas;
 
+    }
+
+    public boolean existAsignaturatooTeacher(String asignatura, int profesor) {
+        boolean existe = false;
+        try {
+            sql = "SELECT a.nombre_asig as nombre_asig "
+                    + "FROM test_asignaturas a INNER JOIN test_asignaturas_profesor ta ON a.id_asignatura = ta.id_asignatura "
+                    + "WHERE ta.id_user = " + profesor + " AND a.nombre_asig = '"+asignatura+"'";
+            pstm = cn.prepareStatement(sql);
+            rs = pstm.executeQuery();
+            if (rs.next()) {
+                existe = true;
+            }
+        } catch (Exception e) {
+            System.out.println("error mulk" + e);
+        }
+        return existe;
     }
 
 }

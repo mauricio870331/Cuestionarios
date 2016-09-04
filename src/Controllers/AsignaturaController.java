@@ -50,7 +50,7 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
     public AsignaturaController(Principal pr, int profesor) {
         aa = new AddAsignatura(null, true);
         this.pr = pr;
-        this.profesor = profesor;
+        this.profesor = profesor;        
         this.pr.btnAddAsignatura.addActionListener(this);
         aa.btnCreateAsignatura.addActionListener(this);
         aa.mnuUpdateAsignatura.addActionListener(this);
@@ -58,6 +58,7 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
         aa.txtFindAsignatura.addKeyListener(this);
         aa.btnCancelaAsignatura.addActionListener(this);
         aa.tbAsignatura.addMouseListener(this);
+        aa.asocAasignature.addActionListener(this);
     }
 
     public AsignaturaController(AddAsignaturaToTeacher att, int profesor, String opc, int update) throws SQLException {
@@ -234,7 +235,7 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
     public void actionPerformed(ActionEvent e) {
         if (pr != null) {
             if (e.getSource() == pr.btnAddAsignatura) {
-                try {
+                try {                    
                     cargarAsignaturas(aa.tbAsignatura, dato);
                     aa.setTitle("Asignaturas");
                     aa.setLocationRelativeTo(null);
@@ -536,6 +537,29 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
                 limpiarForm();
             }
 
+            if (e.getSource() == aa.asocAasignature) {
+                int fila = aa.tbAsignatura.getSelectedRow();                
+                if (fila >= 0) {
+                    int response = JOptionPane.showConfirmDialog(null, "Esta seguro de asociar la asignatura ?", "Aviso..!",
+                            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    if (response == JOptionPane.YES_OPTION) {
+                        try {
+                            String r = asignaturadao.addAsignaturaToTeacher(Integer.parseInt(aa.tbAsignatura.getValueAt(fila, 0).toString()), profesor);
+                            if (r.equals("ok")) {
+                                JOptionPane.showMessageDialog(null, "Asignatura Asociada a Docente, ahora puede seleccionarla");
+                            } else {
+                                JOptionPane.showMessageDialog(null, "No se pudo asociar la asignatura al docente");
+                            }
+
+                        } catch (SQLException ex) {
+                            Logger.getLogger(AsignaturaController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "No has seleccionado una asignatura..!");
+                }
+            }
+
             if (e.getSource() == aa.btnCreateAsignatura) {
                 try {
                     String asignatura = aa.txtNomAsignatura.getText();
@@ -679,8 +703,14 @@ public final class AsignaturaController extends MouseAdapter implements ActionLi
             if (e.getClickCount() == 2) {
                 int fila = aa.tbAsignatura.getSelectedRow();
                 if (fila >= 0) {
-                    pr.cboAsignature.setSelectedItem(aa.tbAsignatura.getValueAt(fila, 1).toString());
-                    aa.dispose();
+                    if (asignaturadao.existAsignaturatooTeacher(aa.tbAsignatura.getValueAt(fila, 1).toString(), profesor)) {
+                        pr.cboAsignature.addItem(aa.tbAsignatura.getValueAt(fila, 1).toString());
+                        pr.cboAsignature.setSelectedItem(aa.tbAsignatura.getValueAt(fila, 1).toString());
+                        aa.dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "La asignatura no esta asociada al docente, debe asociarla primero..!");
+                    }
+
                 } else {
                     JOptionPane.showMessageDialog(null, "No has seleccionado un registro..!");
                 }
